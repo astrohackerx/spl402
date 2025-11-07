@@ -1,6 +1,6 @@
 {
   "name": "spl402",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SPL-402: Solana Payment Layer 402 - HTTP-native payments for Solana",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -46,10 +46,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/spl402"
+    "url": "https://github.com/astrohackerx/spl402"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/spl402/issues"
+    "url": "https://github.com/astrohackerx/spl402/issues"
   },
-  "homepage": "https://github.com/yourusername/spl402#readme"
+  "homepage": "https://spl402.org"
 }
