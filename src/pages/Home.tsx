@@ -61,11 +61,11 @@ export default function Home() {
                 Docs
               </a>
                 <a
-                href="/"
+                href="https://pump.fun/coin/DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump"
                 target='_blank'
                 className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#14F195]/30 rounded-xl font-semibold transition-all"
               >
-                Trade spl402
+                Trade SPL402
               </a>
               
             </div>
