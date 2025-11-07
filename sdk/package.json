@@ -1,0 +1,55 @@
+{
+  "name": "spl402",
+  "version": "1.0.0",
+  "description": "SPL-402: Solana Payment Layer 402 - HTTP-native payments for Solana",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "test": "npm run build && node test.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "spl-402",
+    "solana",
+    "payments",
+    "micropayments",
+    "http402",
+    "blockchain",
+    "payment-layer"
+  ],
+  "author": "",
+  "license": "MIT",
+  "peerDependencies": {
+    "@solana/web3.js": "^1.95.0",
+    "bs58": "^6.0.0",
+    "react": "^18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@solana/web3.js": "^1.95.8",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.3.0",
+    "bs58": "^6.0.0",
+    "react": "^18.3.1",
+    "tsup": "^8.0.0",
+    "typescript": "^5.5.0"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/spl402"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/spl402/issues"
+  },
+  "homepage": "https://github.com/yourusername/spl402#readme"
+}
