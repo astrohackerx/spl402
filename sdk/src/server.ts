@@ -93,6 +93,10 @@ export class SPL402Server {
       return { authorized: false, reason: 'Route not found' };
     }
 
+    if (requirement.amount === 0) {
+      return { authorized: true };
+    }
+
     const paymentHeader = headers['x-payment'] || headers['X-Payment'];
 
     if (!paymentHeader) {

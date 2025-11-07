@@ -13,7 +13,7 @@ export default function App() {
             <a href="#docs" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Docs</a>
             <a href="#examples" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Examples</a>
             <a
-              href="https://github.com/yourusername/spl402"
+              href="https://github.com/astrohackerx/spl402"
               target="_blank"
               className="flex items-center gap-2 px-4 py-2 bg-[#9945FF] hover:bg-[#9945FF]/80 rounded-lg transition-colors text-sm font-medium"
             >
@@ -31,7 +31,7 @@ export default function App() {
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#14F195]/10 border border-[#14F195]/20 rounded-full mb-8">
               <Zap size={14} className="text-[#14F195]" />
-              <span className="text-sm text-[#14F195] font-medium">3-4x faster than alternatives</span>
+              <span className="text-sm text-[#14F195] font-medium">3-4x faster vs x402 | Built from scratch</span>
             </div>
 
             {/* Main Heading */}
@@ -630,7 +630,7 @@ app.listen(3000);`}</code>
           </p>
           <div className="flex items-center justify-center gap-4">
             <a
-              href="https://github.com/yourusername/spl402"
+              href="https://github.com/astrohackerx/spl402"
               target="_blank"
               className="group px-8 py-4 bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:opacity-90 rounded-xl font-semibold transition-opacity flex items-center gap-2"
             >
@@ -649,7 +649,7 @@ app.listen(3000);`}</code>
           <div className="flex items-center gap-8">
             <a href="#docs" className="text-gray-400 hover:text-[#14F195] text-sm transition-colors">Docs</a>
             <a href="#examples" className="text-gray-400 hover:text-[#14F195] text-sm transition-colors">Examples</a>
-            <a href="https://github.com/yourusername/spl402" target="_blank" className="text-gray-400 hover:text-[#14F195] text-sm transition-colors">GitHub</a>
+            <a href="https://github.com/astrohackerx/spl402" target="_blank" className="text-gray-400 hover:text-[#14F195] text-sm transition-colors">GitHub</a>
           </div>
         </div>
       </footer>

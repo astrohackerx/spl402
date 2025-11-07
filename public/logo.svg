@@ -1,0 +1,90 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle with gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#000000;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a1a;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="purpleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#9945FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7d3dd6;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#14F195;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0fc978;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#9945FF;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#19e6a0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#14F195;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Glow effect -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="strongGlow">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="200" cy="200" r="190" fill="url(#bgGradient)"/>
+
+  <!-- Outer ring glow -->
+  <circle cx="200" cy="200" r="175" fill="none" stroke="url(#mainGradient)" stroke-width="2" opacity="0.3"/>
+  <circle cx="200" cy="200" r="165" fill="none" stroke="url(#mainGradient)" stroke-width="1" opacity="0.2"/>
+
+  <!-- Lightning bolt - main shape, perfectly centered -->
+  <g filter="url(#strongGlow)">
+    <!-- Main lightning bolt -->
+    <path d="M 230 60 L 140 180 L 190 180 L 160 320 L 260 160 L 210 160 L 230 60 Z"
+          fill="url(#mainGradient)"
+          stroke="url(#greenGradient)"
+          stroke-width="3"/>
+
+    <!-- Inner lightning highlight -->
+    <path d="M 225 70 L 150 175 L 190 175 L 165 305 L 250 165 L 210 165 L 225 70 Z"
+          fill="none"
+          stroke="#ffffff"
+          stroke-width="2"
+          opacity="0.6"/>
+  </g>
+
+  <!-- Lightning energy particles -->
+  <circle cx="235" cy="55" r="4" fill="#14F195" opacity="0.8" filter="url(#glow)"/>
+  <circle cx="145" cy="175" r="3" fill="#9945FF" opacity="0.7" filter="url(#glow)"/>
+  <circle cx="265" cy="155" r="4.5" fill="#14F195" opacity="0.9" filter="url(#glow)"/>
+  <circle cx="165" cy="325" r="4" fill="#9945FF" opacity="0.8" filter="url(#glow)"/>
+
+  <!-- Small lightning streaks -->
+  <line x1="240" y1="50" x2="250" y2="35" stroke="url(#greenGradient)" stroke-width="2.5" opacity="0.6" filter="url(#glow)"/>
+  <line x1="270" y1="150" x2="285" y2="145" stroke="url(#greenGradient)" stroke-width="2.5" opacity="0.6" filter="url(#glow)"/>
+  <line x1="155" y1="330" x2="145" y2="345" stroke="url(#purpleGradient)" stroke-width="2.5" opacity="0.6" filter="url(#glow)"/>
+
+  <!-- Corner accents -->
+  <circle cx="60" cy="60" r="2" fill="#9945FF" opacity="0.4"/>
+  <circle cx="340" cy="60" r="2" fill="#14F195" opacity="0.4"/>
+  <circle cx="60" cy="340" r="2" fill="#14F195" opacity="0.4"/>
+  <circle cx="340" cy="340" r="2" fill="#9945FF" opacity="0.4"/>
+
+  <!-- Tech grid pattern -->
+  <g opacity="0.1" stroke="#14F195" stroke-width="0.5">
+    <line x1="50" y1="100" x2="80" y2="100"/>
+    <line x1="50" y1="110" x2="70" y2="110"/>
+    <line x1="320" y1="100" x2="350" y2="100"/>
+    <line x1="330" y1="110" x2="350" y2="110"/>
+  </g>
+</svg>
