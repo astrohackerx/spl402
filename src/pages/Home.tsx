@@ -41,7 +41,7 @@ export default function Home() {
             </h1>
 
             <p className="text-xl text-gray-400 mb-12 leading-relaxed max-w-2xl mx-auto">
-              Add Solana Payment Layer 402 to your API in minutes. Direct wallet-to-wallet transfers.
+              Native Solana payments for API's, Data, MCP, AI Agents. Direct wallet-to-wallet transfers.
               Zero platform fees. Only Solana network costs ~$0.00001
             </p>
 
