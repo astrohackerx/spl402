@@ -51,7 +51,7 @@ export default function App() {
 
   const { makeRequest } = useSPL402({
     network: 'mainnet-beta',
-    rpcUrl: 'https://api.mainnet-beta.solana.com'
+    rpcUrl: import.meta.env.VITE_SOLANA_RPC_URL || 'https://api.mainnet-beta.solana.com',
   });
 
   const fetchData = async (endpoint) => {
