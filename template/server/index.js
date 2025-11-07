@@ -28,6 +28,15 @@ const spl402 = createServer({
   ]
 });
 
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    network: 'mainnet-beta',
+    recipient: process.env.RECIPIENT_WALLET
+  });
+});
+
 app.use(createExpressMiddleware(spl402));
 
 app.get('/api/free-data', (req, res) => {
@@ -95,15 +104,6 @@ app.get('/api/enterprise-data', (req, res) => {
       timestamp: new Date().toISOString()
     },
     tier: 'enterprise'
-  });
-});
-
-app.get('/health', (req, res) => {
-  res.json({
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-    network: 'mainnet-beta',
-    recipient: process.env.RECIPIENT_WALLET
   });
 });
 
