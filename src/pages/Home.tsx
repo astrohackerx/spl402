@@ -30,7 +30,7 @@ export default function Home() {
           <div className="text-center max-w-4xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#14F195]/10 border border-[#14F195]/20 rounded-full mb-8">
               <Zap size={14} className="text-[#14F195]" />
-              <span className="text-sm text-[#14F195] font-medium">4x faster than x402 &nbsp;|&nbsp; Built from scratch &nbsp;|&nbsp; 0-dep</span>
+              <span className="text-sm text-[#14F195] font-medium">4x faster than x402 &nbsp;|&nbsp; Built from scratch</span>
             </div>
 
             <h1 className="text-7xl font-black tracking-tight mb-6">
@@ -60,6 +60,14 @@ export default function Home() {
               >
                 Docs
               </a>
+                <a
+                href="/"
+                target='_blank'
+                className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#14F195]/30 rounded-xl font-semibold transition-all"
+              >
+                Trade spl402
+              </a>
+              
             </div>
 
             <div className="py-6">
