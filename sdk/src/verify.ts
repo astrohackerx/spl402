@@ -7,12 +7,12 @@ import {
   VerifyPaymentResponse,
   SolanaNetwork,
 } from './types';
-import { createConnection, validatePublicKey, validateSignature, solToLamports } from './utils';
+import { createConnection, validatePublicKey, validateSignature, solToLamports, toTokenAmount } from './utils';
 
 const PAYMENT_TIMEOUT_MS = 5 * 60 * 1000;
 
 export async function verifyPayment(request: VerifyPaymentRequest): Promise<VerifyPaymentResponse> {
-  const { payment, expectedAmount, expectedRecipient, network } = request;
+  const { payment, expectedAmount, expectedRecipient, network, decimals } = request;
 
   if (payment.spl402Version !== 1) {
     return { valid: false, reason: 'Unsupported SPL-402 version' };
@@ -29,7 +29,7 @@ export async function verifyPayment(request: VerifyPaymentRequest): Promise<Veri
   if (payment.scheme === 'transfer') {
     return verifyTransfer(payment.payload as SolanaTransferPayload, expectedAmount, expectedRecipient, network);
   } else if (payment.scheme === 'token-transfer') {
-    return verifyTokenTransfer(payment.payload as SolanaTokenTransferPayload, expectedAmount, expectedRecipient, network);
+    return verifyTokenTransfer(payment.payload as SolanaTokenTransferPayload, expectedAmount, expectedRecipient, network, decimals);
   }
 
   return { valid: false, reason: 'Unsupported payment scheme' };
@@ -124,7 +124,8 @@ async function verifyTokenTransfer(
   payload: SolanaTokenTransferPayload,
   expectedAmount: number,
   expectedRecipient: string,
-  network: SolanaNetwork
+  network: SolanaNetwork,
+  decimals?: number
 ): Promise<VerifyPaymentResponse> {
   if (!validatePublicKey(payload.from)) {
     return { valid: false, reason: 'Invalid sender address' };
@@ -182,10 +183,14 @@ async function verifyTokenTransfer(
       return { valid: false, reason: 'Token transfer instruction not found' };
     }
 
-    if (transferAmount < expectedAmount) {
+    const expectedRawAmount = decimals !== undefined
+      ? toTokenAmount(expectedAmount, decimals)
+      : expectedAmount;
+
+    if (transferAmount < expectedRawAmount) {
       return {
         valid: false,
-        reason: `Insufficient payment amount. Expected ${expectedAmount}, received ${transferAmount}`,
+        reason: `Insufficient payment amount. Expected ${expectedAmount} tokens (${expectedRawAmount} raw), received ${transferAmount} raw`,
       };
     }
 
@@ -204,12 +209,14 @@ async function verifyTokenTransfer(
 export async function verifyPaymentLocal(
   payment: SPL402PaymentPayload,
   expectedAmount: number,
-  expectedRecipient: string
+  expectedRecipient: string,
+  decimals?: number
 ): Promise<VerifyPaymentResponse> {
   return verifyPayment({
     payment,
     expectedAmount,
     expectedRecipient,
     network: payment.network,
+    decimals,
   });
 }

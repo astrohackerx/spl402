@@ -34,6 +34,7 @@ export interface SPL402PaymentRequirement {
   network: SolanaNetwork;
   scheme: 'transfer' | 'token-transfer';
   mint?: string;
+  decimals?: number;
 }
 
 export interface SPL402Response {
@@ -47,6 +48,7 @@ export interface VerifyPaymentRequest {
   expectedAmount: number;
   expectedRecipient: string;
   network: SolanaNetwork;
+  decimals?: number;
 }
 
 export interface VerifyPaymentResponse {
@@ -81,4 +83,5 @@ export interface ServerConfig extends SPL402Config {
   routes: RoutePrice[];
   scheme?: 'transfer' | 'token-transfer';
   mint?: string;
+  decimals?: number;
 }

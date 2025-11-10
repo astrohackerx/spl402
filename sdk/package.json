@@ -1,6 +1,6 @@
 {
   "name": "spl402",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "SPL-402: Solana Payment Layer 402 - HTTP-native payments for Solana",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -23,6 +23,7 @@
   "license": "MIT",
   "peerDependencies": {
     "@solana/web3.js": "^1.95.0",
+    "@solana/spl-token": "^0.4.0",
     "bs58": "^6.0.0",
     "react": "^18.0.0"
   },

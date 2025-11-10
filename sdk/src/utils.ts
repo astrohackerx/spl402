@@ -51,3 +51,11 @@ export function solToLamports(sol: number): number {
 export function formatAmount(amount: number, decimals: number = 9): string {
   return (amount / Math.pow(10, decimals)).toFixed(decimals);
 }
+
+export function toTokenAmount(amount: number, decimals: number): number {
+  return Math.floor(amount * Math.pow(10, decimals));
+}
+
+export function fromTokenAmount(rawAmount: number, decimals: number): number {
+  return rawAmount / Math.pow(10, decimals);
+}

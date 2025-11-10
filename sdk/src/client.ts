@@ -6,13 +6,18 @@ import {
   VersionedTransaction,
 } from '@solana/web3.js';
 import {
+  getAssociatedTokenAddress,
+  createTransferInstruction,
+  createAssociatedTokenAccountInstruction,
+} from '@solana/spl-token';
+import {
   SPL402PaymentPayload,
   SPL402PaymentRequirement,
   SPL402Config,
   SolanaNetwork,
   SPL402_VERSION,
 } from './types';
-import { createConnection, solToLamports } from './utils';
+import { createConnection, solToLamports, toTokenAmount } from './utils';
 
 // Wallet adapter interface for browser wallets (Phantom, Solflare, etc.)
 export interface WalletAdapter {
@@ -37,7 +42,7 @@ export class SPL402Client {
     if (requirement.scheme === 'transfer') {
       return this.createTransferPayment(requirement, wallet);
     } else if (requirement.scheme === 'token-transfer') {
-      throw new Error('Token transfers not yet implemented');
+      return this.createTokenTransferPayment(requirement, wallet);
     } else {
       throw new Error(`Unsupported payment scheme: ${requirement.scheme}`);
     }
@@ -83,6 +88,80 @@ export class SPL402Client {
       payload: {
         from: wallet.publicKey.toBase58(),
         to: requirement.recipient,
+        amount: requirement.amount,
+        signature,
+        timestamp: Date.now(),
+      },
+    };
+  }
+
+  private async createTokenTransferPayment(
+    requirement: SPL402PaymentRequirement,
+    wallet: WalletAdapter
+  ): Promise<SPL402PaymentPayload> {
+    if (!wallet.publicKey) {
+      throw new Error('Wallet not connected');
+    }
+
+    if (!requirement.mint) {
+      throw new Error('Mint address required for token transfers');
+    }
+
+    if (requirement.decimals === undefined) {
+      throw new Error('Token decimals required for token transfers');
+    }
+
+    const mintPubkey = new PublicKey(requirement.mint);
+    const recipientPubkey = new PublicKey(requirement.recipient);
+    const tokenAmount = toTokenAmount(requirement.amount, requirement.decimals);
+
+    const senderAta = await getAssociatedTokenAddress(mintPubkey, wallet.publicKey);
+    const recipientAta = await getAssociatedTokenAddress(mintPubkey, recipientPubkey);
+
+    const transaction = new Transaction();
+
+    const recipientAccount = await this.connection.getAccountInfo(recipientAta);
+    if (!recipientAccount) {
+      transaction.add(
+        createAssociatedTokenAccountInstruction(
+          wallet.publicKey,
+          recipientAta,
+          recipientPubkey,
+          mintPubkey
+        )
+      );
+    }
+
+    transaction.add(
+      createTransferInstruction(
+        senderAta,
+        recipientAta,
+        wallet.publicKey,
+        tokenAmount
+      )
+    );
+
+    const { blockhash, lastValidBlockHeight } = await this.connection.getLatestBlockhash();
+    transaction.recentBlockhash = blockhash;
+    transaction.feePayer = wallet.publicKey;
+
+    const result = await wallet.signAndSendTransaction(transaction);
+    const signature = result.signature;
+
+    await this.connection.confirmTransaction({
+      signature,
+      blockhash,
+      lastValidBlockHeight,
+    }, 'confirmed');
+
+    return {
+      spl402Version: SPL402_VERSION,
+      scheme: 'token-transfer',
+      network: requirement.network,
+      payload: {
+        from: wallet.publicKey.toBase58(),
+        to: requirement.recipient,
+        mint: requirement.mint,
         amount: requirement.amount,
         signature,
         timestamp: Date.now(),

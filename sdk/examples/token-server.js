@@ -13,9 +13,10 @@ const spl402 = createServer({
   recipientAddress: 'YourSolanaWalletAddress', // Replace with your wallet address
   rpcUrl: process.env.SOLANA_RPC_URL || 'https://api.mainnet-beta.solana.com', // Use custom RPC!
   scheme: 'token-transfer',
-  mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', // Example: USDC mint
+  mint: 'DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump', // SPL402 token mint
+  decimals: 6, // SPL402 has 6 decimals
   routes: [
-    { path: '/api/token-data', price: 10, method: 'GET' }, // 10 USDC
+    { path: '/api/token-data', price: 10, method: 'GET' }, // 10 SPL402
   ],
 });
 
@@ -26,7 +27,7 @@ app.use(createExpressMiddleware(spl402));
 app.get('/api/token-data', (req, res) => {
   res.json({
     message: 'Premium token-gated content',
-    data: 'This costs 10 tokens'
+    data: 'This costs 10 SPL402 tokens'
   });
 });
 
@@ -36,7 +37,11 @@ app.listen(PORT, () => {
   console.log('\n⚠️  IMPORTANT: Using mainnet-beta network');
   console.log('   Set SOLANA_RPC_URL environment variable for best performance');
   console.log('   Example: export SOLANA_RPC_URL="https://your-rpc-url.com"');
-  console.log('\nThis server accepts SPL token payments instead of SOL');
+  console.log('\nThis server accepts SPL token payments (SPL402)');
+  console.log('Token: SPL402 (6 decimals)');
+  console.log('Mint: DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump');
   console.log('Protected endpoints:');
-  console.log('  GET /api/token-data - 10 tokens');
+  console.log('  GET /api/token-data - 10 SPL402');
+  console.log('\nCommon token decimals:');
+  console.log('  SPL402: 6, USDC: 6, USDT: 6, SOL: 9 (use "transfer" scheme for native SOL)');
 });

@@ -25,8 +25,11 @@ SPL-402 is a protocol that brings the HTTP 402 Payment Required status code to l
 - **Zero platform fees**: Only pay Solana network transaction fees (~$0.00001)
 - **HTTP-native**: Works with standard HTTP/fetch APIs
 - **Simple integration**: One middleware, one client call
+- **Token payments**: Accept native SOL or any SPL token (SPL402, USDC, USDT, etc.)
 
 Think of it as "pay-per-request" for your APIs, but without the overhead of traditional payment processors.
+
+> **SPL402 Token**: Use the native SPL402 token for payments! Mint: `DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump`
 
 ## Why SPL-402 vs x402?
 
@@ -91,16 +94,17 @@ Think of it as "pay-per-request" for your APIs, but without the overhead of trad
 ## Installation
 
 ```bash
-npm install spl402 @solana/web3.js
+npm install spl402 @solana/web3.js @solana/spl-token bs58
 ```
 
 **For React/Next.js apps:**
 ```bash
-npm install spl402 @solana/web3.js @solana/wallet-adapter-react @solana/wallet-adapter-react-ui
+npm install spl402 @solana/web3.js @solana/spl-token bs58 @solana/wallet-adapter-react @solana/wallet-adapter-react-ui
 ```
 
 **Peer dependencies:**
 - `@solana/web3.js` - Solana blockchain interaction
+- `@solana/spl-token` - SPL token operations
 - `bs58` - Base58 encoding (usually included)
 - `react` - Optional, only for React hooks
 
@@ -281,6 +285,7 @@ Creates an SPL-402 server instance.
   routes: RoutePrice[],            // Protected endpoints
   scheme?: 'transfer' | 'token-transfer',  // Default: 'transfer'
   mint?: string,                   // Required if scheme is 'token-transfer'
+  decimals?: number,               // Required if scheme is 'token-transfer'
   rpcUrl?: string                  // Custom RPC endpoint (HIGHLY RECOMMENDED)
 }
 ```
@@ -362,7 +367,7 @@ Check the [`examples/`](./examples) directory for production-ready TypeScript/Re
 - **[nextjs-app.tsx](./examples/nextjs-app.tsx)** - Next.js App Router implementation
 - **[vanilla-ts.ts](./examples/vanilla-ts.ts)** - Vanilla TypeScript with Phantom
 - **[basic-server.js](./examples/basic-server.js)** - Express server backend
-- **[token-server.js](./examples/token-server.js)** - Accept SPL tokens (USDC)
+- **[token-server.js](./examples/token-server.js)** - Accept SPL tokens (SPL402)
 - **[fetch-handler.js](./examples/fetch-handler.js)** - Edge runtime compatible
 
 See [examples/README.md](./examples/README.md) for detailed setup and implementation guides.
@@ -409,7 +414,7 @@ const spl402 = createServer({
 });
 ```
 
-### SPL Token Payments
+### SPL Token Payments (SPL402, USDC, USDT, etc.)
 
 ```typescript
 const spl402 = createServer({
@@ -417,12 +422,20 @@ const spl402 = createServer({
   recipientAddress: 'YOUR_WALLET',
   rpcUrl: process.env.SOLANA_RPC_URL,
   scheme: 'token-transfer',
-  mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', // USDC
+  mint: 'DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump', // SPL402 token mint
+  decimals: 6, // SPL402 has 6 decimals
   routes: [
-    { path: '/api/data', price: 1, method: 'GET' }, // 1 USDC
+    { path: '/api/data', price: 10, method: 'GET' }, // 10 SPL402
   ],
 });
 ```
+
+**Common SPL Token Decimals:**
+- SPL402: 6 decimals (mint: `DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump`)
+- USDC: 6 decimals (mint: `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`)
+- USDT: 6 decimals
+- SOL: 9 decimals (native, use 'transfer' scheme)
+- Most SPL tokens: Check on Solana Explorer
 
 ### Using Devnet for Testing
 

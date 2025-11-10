@@ -35,6 +35,7 @@ export class SPL402Server {
       network: this.config.network,
       scheme: this.config.scheme || 'transfer',
       mint: this.config.mint,
+      decimals: this.config.decimals,
     };
   }
 
@@ -45,7 +46,8 @@ export class SPL402Server {
     const result = await verifyPaymentLocal(
       payment,
       expectedAmount,
-      this.config.recipientAddress
+      this.config.recipientAddress,
+      this.config.decimals
     );
 
     return {

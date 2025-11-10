@@ -266,6 +266,42 @@ test('Zero price routes allowed', () => {
   assert(server !== null, 'Server should allow zero-price routes');
 });
 
+test('SOL payment requirement excludes mint and decimals', () => {
+  const server = createServer({
+    network: 'devnet',
+    recipientAddress: Keypair.generate().publicKey.toBase58(),
+    routes: [{ path: '/api/sol', price: 0.001 }]
+  });
+
+  const requirement = server.getPaymentRequirement('/api/sol', 'GET');
+
+  assert(requirement !== null, 'Should return payment requirement');
+  assert(requirement.scheme === 'transfer', 'Scheme should be transfer for SOL');
+  assert(requirement.mint === undefined, 'Mint should be undefined for SOL payments');
+  assert(requirement.decimals === undefined, 'Decimals should be undefined for SOL payments');
+  assert(requirement.amount === 0.001, 'Amount should match');
+});
+
+test('Token payment requirement includes mint and decimals', () => {
+  const mintAddress = Keypair.generate().publicKey.toBase58();
+  const server = createServer({
+    network: 'mainnet-beta',
+    recipientAddress: Keypair.generate().publicKey.toBase58(),
+    scheme: 'token-transfer',
+    mint: mintAddress,
+    decimals: 6,
+    routes: [{ path: '/api/tokens', price: 10 }]
+  });
+
+  const requirement = server.getPaymentRequirement('/api/tokens', 'GET');
+
+  assert(requirement !== null, 'Should return payment requirement');
+  assert(requirement.scheme === 'token-transfer', 'Scheme should be token-transfer');
+  assert(requirement.mint === mintAddress, 'Mint should be included');
+  assert(requirement.decimals === 6, 'Decimals should be included');
+  assert(requirement.amount === 10, 'Amount should match');
+});
+
 test('Exports are properly defined', () => {
   assert(typeof createServer === 'function', 'createServer should be exported');
   assert(typeof createClient === 'function', 'createClient should be exported');
