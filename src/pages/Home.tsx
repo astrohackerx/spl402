@@ -104,7 +104,7 @@ export default function Home() {
                 <div className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full">
                   <Download size={16} className="text-[#14F195]" />
                   <span className="text-sm text-gray-300">
-                    <span className="font-bold text-white">{npmDownloads.toLocaleString()}</span> downloads last month
+                    <span className="font-bold text-white">{npmDownloads.toLocaleString()}</span> SDK downloads last month
                   </span>
                 </div>
               </div>
