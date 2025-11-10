@@ -242,59 +242,59 @@ export default function Docs() {
                 <h2 className="text-2xl font-bold mb-4">Feature Comparison</h2>
                 <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl overflow-hidden">
                   <div className="overflow-x-auto">
-                    <table className="w-full">
+                    <table className="w-full min-w-[500px]">
                       <thead>
                         <tr className="border-b border-white/10 bg-[#0D0D0D]">
-                          <th className="text-left p-4 text-gray-400 font-semibold">Feature</th>
-                          <th className="text-left p-4 text-[#14F195] font-semibold">SPL-402</th>
-                          <th className="text-left p-4 text-gray-400 font-semibold">x402</th>
+                          <th className="text-left p-3 sm:p-4 text-gray-400 font-semibold text-sm">Feature</th>
+                          <th className="text-left p-3 sm:p-4 text-[#14F195] font-semibold text-sm">SPL-402</th>
+                          <th className="text-left p-3 sm:p-4 text-gray-400 font-semibold text-sm">x402</th>
                         </tr>
                       </thead>
-                      <tbody className="text-sm">
+                      <tbody className="text-xs sm:text-sm">
                         <tr className="border-b border-white/10 hover:bg-white/5">
-                          <td className="p-4 text-gray-400">Latency</td>
-                          <td className="p-4 text-[#14F195] font-bold">~500ms</td>
-                          <td className="p-4 text-gray-400">~2000ms</td>
+                          <td className="p-3 sm:p-4 text-gray-400">Latency</td>
+                          <td className="p-3 sm:p-4 text-[#14F195] font-bold">~500ms</td>
+                          <td className="p-3 sm:p-4 text-gray-400">~2000ms</td>
                         </tr>
                         <tr className="border-b border-white/10 hover:bg-white/5">
-                          <td className="p-4 text-gray-400">Platform Fees</td>
-                          <td className="p-4 text-[#14F195] font-bold">0%</td>
-                          <td className="p-4 text-gray-400">Variable</td>
+                          <td className="p-3 sm:p-4 text-gray-400">Platform Fees</td>
+                          <td className="p-3 sm:p-4 text-[#14F195] font-bold">0%</td>
+                          <td className="p-3 sm:p-4 text-gray-400">Variable</td>
                         </tr>
                         <tr className="border-b border-white/10 hover:bg-white/5">
-                          <td className="p-4 text-gray-400">Dependencies</td>
-                          <td className="p-4 text-[#14F195] font-bold">0 (peer only)</td>
-                          <td className="p-4 text-gray-400">Multiple</td>
+                          <td className="p-3 sm:p-4 text-gray-400">Dependencies</td>
+                          <td className="p-3 sm:p-4 text-[#14F195] font-bold">0</td>
+                          <td className="p-3 sm:p-4 text-gray-400">Multiple</td>
                         </tr>
                         <tr className="border-b border-white/10 hover:bg-white/5">
-                          <td className="p-4 text-gray-400">Transaction Cost</td>
-                          <td className="p-4 text-[#14F195] font-bold">~$0.00001</td>
-                          <td className="p-4 text-gray-400">Higher</td>
+                          <td className="p-3 sm:p-4 text-gray-400">Tx Cost</td>
+                          <td className="p-3 sm:p-4 text-[#14F195] font-bold">~$0.00001</td>
+                          <td className="p-3 sm:p-4 text-gray-400">Higher</td>
                         </tr>
                         <tr className="border-b border-white/10 hover:bg-white/5">
-                          <td className="p-4 text-gray-400">Speed</td>
-                          <td className="p-4 text-[#14F195] font-bold">3-4x faster</td>
-                          <td className="p-4 text-gray-400">Baseline</td>
+                          <td className="p-3 sm:p-4 text-gray-400">Speed</td>
+                          <td className="p-3 sm:p-4 text-[#14F195] font-bold">3-4x faster</td>
+                          <td className="p-3 sm:p-4 text-gray-400">Baseline</td>
                         </tr>
                         <tr className="border-b border-white/10 hover:bg-white/5">
-                          <td className="p-4 text-gray-400">Middleman</td>
-                          <td className="p-4 text-[#14F195] font-bold">None</td>
-                          <td className="p-4 text-gray-400">Yes</td>
+                          <td className="p-3 sm:p-4 text-gray-400">Middleman</td>
+                          <td className="p-3 sm:p-4 text-[#14F195] font-bold">None</td>
+                          <td className="p-3 sm:p-4 text-gray-400">Yes</td>
                         </tr>
                         <tr className="border-b border-white/10 hover:bg-white/5">
-                          <td className="p-4 text-gray-400">API Keys</td>
-                          <td className="p-4 text-[#14F195] font-bold">Not required</td>
-                          <td className="p-4 text-gray-400">Required</td>
+                          <td className="p-3 sm:p-4 text-gray-400">API Keys</td>
+                          <td className="p-3 sm:p-4 text-[#14F195] font-bold">Not required</td>
+                          <td className="p-3 sm:p-4 text-gray-400">Required</td>
                         </tr>
                         <tr className="border-b border-white/10 hover:bg-white/5">
-                          <td className="p-4 text-gray-400">Setup Time</td>
-                          <td className="p-4 text-[#14F195] font-bold">&lt; 5 minutes</td>
-                          <td className="p-4 text-gray-400">Longer</td>
+                          <td className="p-3 sm:p-4 text-gray-400">Setup Time</td>
+                          <td className="p-3 sm:p-4 text-[#14F195] font-bold">&lt; 5 min</td>
+                          <td className="p-3 sm:p-4 text-gray-400">Longer</td>
                         </tr>
                         <tr className="hover:bg-white/5">
-                          <td className="p-4 text-gray-400">Bundle Size</td>
-                          <td className="p-4 text-[#14F195] font-bold">Minimal</td>
-                          <td className="p-4 text-gray-400">Larger</td>
+                          <td className="p-3 sm:p-4 text-gray-400">Bundle Size</td>
+                          <td className="p-3 sm:p-4 text-[#14F195] font-bold">Minimal</td>
+                          <td className="p-3 sm:p-4 text-gray-400">Larger</td>
                         </tr>
                       </tbody>
                     </table>

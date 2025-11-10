@@ -82,9 +82,9 @@ export default function Home() {
       <section className="pt-32 pb-20 px-4 sm:px-6 relative">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#14F195]/10 border border-[#14F195]/20 rounded-full mb-8">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#14F195]/10 border border-[#14F195]/20 rounded-full mb-8 flex-wrap justify-center">
               <Zap size={14} className="text-[#14F195]" />
-              <span className="text-sm text-[#14F195] font-medium">4x faster than x402 &nbsp;|&nbsp; Built from scratch</span>
+              <span className="text-xs sm:text-sm text-[#14F195] font-medium text-center">4x faster than x402 &nbsp;|&nbsp; Built from scratch</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-6">
@@ -104,7 +104,7 @@ export default function Home() {
                 <div className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full">
                   <Download size={16} className="text-[#14F195]" />
                   <span className="text-sm text-gray-300">
-                    <span className="font-bold text-white">{npmDownloads.toLocaleString()}</span> SDK downloads last month
+                    <span className="font-bold text-white">{npmDownloads.toLocaleString()}</span> downloads last month
                   </span>
                 </div>
               </div>
@@ -146,7 +146,7 @@ export default function Home() {
                   className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#14F195]/30 rounded-xl font-semibold transition-all text-center flex items-center justify-center gap-2"
                 >
                   <Zap size={18} />
-                  Trade SPL402
+                  Trade Token
                 </a>
               </div>
             </div>
@@ -302,54 +302,54 @@ export default function Home() {
 
           <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full min-w-[600px]">
                 <thead>
                   <tr className="border-b border-white/10">
-                    <th className="text-left p-6 text-gray-400 font-semibold">Feature</th>
-                    <th className="text-left p-6 text-[#14F195] font-semibold">SPL-402</th>
-                    <th className="text-left p-6 text-gray-400 font-semibold">x402</th>
+                    <th className="text-left p-3 sm:p-6 text-gray-400 font-semibold text-sm">Feature</th>
+                    <th className="text-left p-3 sm:p-6 text-[#14F195] font-semibold text-sm">SPL-402</th>
+                    <th className="text-left p-3 sm:p-6 text-gray-400 font-semibold text-sm">x402</th>
                   </tr>
                 </thead>
-                <tbody className="font-mono text-sm">
+                <tbody className="font-mono text-xs sm:text-sm">
                   <tr className="border-b border-white/10 hover:bg-white/5">
-                    <td className="p-6 text-gray-400">Latency</td>
-                    <td className="p-6 text-[#14F195] font-bold">~500ms</td>
-                    <td className="p-6 text-gray-400">~2000ms</td>
+                    <td className="p-3 sm:p-6 text-gray-400">Latency</td>
+                    <td className="p-3 sm:p-6 text-[#14F195] font-bold">~500ms</td>
+                    <td className="p-3 sm:p-6 text-gray-400">~2000ms</td>
                   </tr>
                   <tr className="border-b border-white/10 hover:bg-white/5">
-                    <td className="p-6 text-gray-400">Platform Fees</td>
-                    <td className="p-6 text-[#14F195] font-bold">0%</td>
-                    <td className="p-6 text-gray-400">Variable</td>
+                    <td className="p-3 sm:p-6 text-gray-400">Platform Fees</td>
+                    <td className="p-3 sm:p-6 text-[#14F195] font-bold">0%</td>
+                    <td className="p-3 sm:p-6 text-gray-400">Variable</td>
                   </tr>
                   <tr className="border-b border-white/10 hover:bg-white/5">
-                    <td className="p-6 text-gray-400">Dependencies</td>
-                    <td className="p-6 text-[#14F195] font-bold">0 (peer only)</td>
-                    <td className="p-6 text-gray-400">Multiple</td>
+                    <td className="p-3 sm:p-6 text-gray-400">Dependencies</td>
+                    <td className="p-3 sm:p-6 text-[#14F195] font-bold">0</td>
+                    <td className="p-3 sm:p-6 text-gray-400">Multiple</td>
                   </tr>
                   <tr className="border-b border-white/10 hover:bg-white/5">
-                    <td className="p-6 text-gray-400">Transaction Cost</td>
-                    <td className="p-6 text-[#14F195] font-bold">~$0.00001</td>
-                    <td className="p-6 text-gray-400">Higher</td>
+                    <td className="p-3 sm:p-6 text-gray-400">Transaction Cost</td>
+                    <td className="p-3 sm:p-6 text-[#14F195] font-bold">~$0.00001</td>
+                    <td className="p-3 sm:p-6 text-gray-400">Higher</td>
                   </tr>
                   <tr className="border-b border-white/10 hover:bg-white/5">
-                    <td className="p-6 text-gray-400">Speed</td>
-                    <td className="p-6 text-[#14F195] font-bold">3-4x faster</td>
-                    <td className="p-6 text-gray-400">Baseline</td>
+                    <td className="p-3 sm:p-6 text-gray-400">Speed</td>
+                    <td className="p-3 sm:p-6 text-[#14F195] font-bold">3-4x faster</td>
+                    <td className="p-3 sm:p-6 text-gray-400">Baseline</td>
                   </tr>
                   <tr className="border-b border-white/10 hover:bg-white/5">
-                    <td className="p-6 text-gray-400">Middleman</td>
-                    <td className="p-6 text-[#14F195] font-bold">None</td>
-                    <td className="p-6 text-gray-400">Yes</td>
+                    <td className="p-3 sm:p-6 text-gray-400">Middleman</td>
+                    <td className="p-3 sm:p-6 text-[#14F195] font-bold">None</td>
+                    <td className="p-3 sm:p-6 text-gray-400">Yes</td>
                   </tr>
                   <tr className="border-b border-white/10 hover:bg-white/5">
-                    <td className="p-6 text-gray-400">API Keys</td>
-                    <td className="p-6 text-[#14F195] font-bold">Not required</td>
-                    <td className="p-6 text-gray-400">Required</td>
+                    <td className="p-3 sm:p-6 text-gray-400">API Keys</td>
+                    <td className="p-3 sm:p-6 text-[#14F195] font-bold">Not required</td>
+                    <td className="p-3 sm:p-6 text-gray-400">Required</td>
                   </tr>
                   <tr className="hover:bg-white/5">
-                    <td className="p-6 text-gray-400">Setup Time</td>
-                    <td className="p-6 text-[#14F195] font-bold">&lt; 5 minutes</td>
-                    <td className="p-6 text-gray-400">Longer</td>
+                    <td className="p-3 sm:p-6 text-gray-400">Setup Time</td>
+                    <td className="p-3 sm:p-6 text-[#14F195] font-bold">&lt; 5 min</td>
+                    <td className="p-3 sm:p-6 text-gray-400">Longer</td>
                   </tr>
                 </tbody>
               </table>
@@ -413,38 +413,40 @@ export default function Home() {
 
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
             <div className="order-2 lg:order-1">
-              <div className="sticky top-24">
-                <div className="bg-gradient-to-br from-[#0A0A0A] to-[#0D0D0D] border border-white/10 rounded-2xl p-8 backdrop-blur-sm">
+              <div className="lg:sticky lg:top-24">
+                <div className="bg-gradient-to-br from-[#0A0A0A] to-[#0D0D0D] border border-white/10 rounded-2xl p-4 sm:p-8 backdrop-blur-sm">
                   <div className="mb-4">
                     <span className="text-xs uppercase tracking-wider text-gray-400 font-semibold">Payment Flow Diagram</span>
                   </div>
-                  <pre className="text-[10px] leading-relaxed md:text-xs text-gray-400 overflow-x-auto font-mono">
-{`┌─────────┐          ┌─────────┐          ┌─────────┐
-│ Client  │          │  Your   │          │ Solana  │
-│         │          │  API    │          │ Network │
-└────┬────┘          └────┬────┘          └────┬────┘
-     │                    │                    │
-     │ 1. GET /api/data   │                    │
-     ├───────────────────>│                    │
-     │                    │                    │
-     │ 2. 402 Required    │                    │
-     │    + Details       │                    │
-     │<───────────────────┤                    │
-     │                    │                    │
-     │ 3. Create & Sign   │                    │
-     │────────────────────┼───────────────────>│
-     │                    │                    │
-     │ 4. GET + Proof     │                    │
-     ├───────────────────>│                    │
-     │                    │                    │
-     │                    │ 5. Verify          │
-     │                    │───────────────────>│
-     │                    │<───────────────────┤
-     │                    │                    │
-     │ 6. 200 OK + Data   │                    │
-     │<───────────────────┤                    │
-     │                    │                    │`}
-                  </pre>
+                  <div className="overflow-x-auto">
+                    <pre className="text-[9px] leading-relaxed sm:text-[10px] md:text-xs text-gray-400 font-mono min-w-max">
+{`┌─────────┐       ┌─────────┐       ┌─────────┐
+│ Client  │       │  Your   │       │ Solana  │
+│         │       │  API    │       │ Network │
+└────┬────┘       └────┬────┘       └────┬────┘
+     │                 │                 │
+     │ 1. GET request  │                 │
+     ├────────────────>│                 │
+     │                 │                 │
+     │ 2. 402 Required │                 │
+     │    + Details    │                 │
+     │<────────────────┤                 │
+     │                 │                 │
+     │ 3. Create & Sign│                 │
+     │─────────────────┼────────────────>│
+     │                 │                 │
+     │ 4. GET + Proof  │                 │
+     ├────────────────>│                 │
+     │                 │                 │
+     │                 │ 5. Verify       │
+     │                 │────────────────>│
+     │                 │<────────────────┤
+     │                 │                 │
+     │ 6. 200 OK       │                 │
+     │<────────────────┤                 │
+     │                 │                 │`}
+                    </pre>
+                  </div>
                 </div>
               </div>
             </div>
@@ -709,30 +711,30 @@ app.listen(3000);`}</code>
       <section className="py-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           <div className="bg-gradient-to-br from-[#9945FF]/10 to-[#14F195]/10 border border-[#14F195]/20 rounded-3xl p-12">
-            <div className="grid md:grid-cols-4 gap-8 text-center">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-center">
               <div>
-                <div className="text-4xl font-black bg-gradient-to-r from-[#9945FF] to-[#14F195] text-transparent bg-clip-text mb-2">
+                <div className="text-3xl sm:text-4xl font-black bg-gradient-to-r from-[#9945FF] to-[#14F195] text-transparent bg-clip-text mb-2">
                   ~500ms
                 </div>
-                <div className="text-gray-400">Payment Verification</div>
+                <div className="text-gray-400 text-sm sm:text-base">Payment Verification</div>
               </div>
               <div>
-                <div className="text-4xl font-black bg-gradient-to-r from-[#9945FF] to-[#14F195] text-transparent bg-clip-text mb-2">
+                <div className="text-3xl sm:text-4xl font-black bg-gradient-to-r from-[#9945FF] to-[#14F195] text-transparent bg-clip-text mb-2">
                   0%
                 </div>
-                <div className="text-gray-400">Platform Fees</div>
+                <div className="text-gray-400 text-sm sm:text-base">Platform Fees</div>
               </div>
               <div>
-                <div className="text-4xl font-black bg-gradient-to-r from-[#9945FF] to-[#14F195] text-transparent bg-clip-text mb-2">
+                <div className="text-3xl sm:text-4xl font-black bg-gradient-to-r from-[#9945FF] to-[#14F195] text-transparent bg-clip-text mb-2">
                   $0.00001
                 </div>
-                <div className="text-gray-400">Per Transaction</div>
+                <div className="text-gray-400 text-sm sm:text-base">Per Transaction</div>
               </div>
               <div>
-                <div className="text-4xl font-black bg-gradient-to-r from-[#9945FF] to-[#14F195] text-transparent bg-clip-text mb-2">
+                <div className="text-3xl sm:text-4xl font-black bg-gradient-to-r from-[#9945FF] to-[#14F195] text-transparent bg-clip-text mb-2">
                   5min
                 </div>
-                <div className="text-gray-400">To Production</div>
+                <div className="text-gray-400 text-sm sm:text-base">To Production</div>
               </div>
             </div>
           </div>
