@@ -8,13 +8,13 @@ export function Logo({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
   const { container, icon, text } = sizes[size];
 
   return (
-    <div className={`${container} flex items-center gap-3`}>
+    <a href="/" className={`${container} flex items-center gap-3 hover:opacity-80 transition-opacity`}>
       {/* <img src="/logo-icon.svg" alt="SPL-402" className={icon} /> */}
       <div className={`font-mono font-black tracking-tighter ${text}`}>
         <span className="text-[#14F195]">spl</span>
         <span className="text-[#9945FF]">402</span>
       </div>
-    </div>
+    </a>
   );
 }
 

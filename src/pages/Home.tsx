@@ -1,13 +1,38 @@
-import { Code, Zap, Lock, Globe, ArrowRight, Github, Check, ExternalLink } from 'lucide-react';
+import { Code, Zap, Lock, Globe, ArrowRight, Github, Check, ExternalLink, Menu, X, Download, Sparkles, Rocket, BookOpen } from 'lucide-react';
 import { Logo } from '../components/Logo';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [npmDownloads, setNpmDownloads] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch('https://api.npmjs.org/downloads/point/last-month/spl402')
+      .then(res => res.json())
+      .then(data => {
+        if (data.downloads) {
+          setNpmDownloads(data.downloads);
+        }
+      })
+      .catch(() => {
+        // Silently fail if we can't fetch downloads
+      });
+  }, []);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText('npm install spl402 @solana/web3.js');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <div className="min-h-screen bg-black text-white">
       <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-[#14F195]/10">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <Logo size="sm" />
-          <nav className="flex items-center gap-8">
+
+          <nav className="hidden lg:flex items-center gap-8">
             <a href="/" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Home</a>
             <a href="#compare" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Compare</a>
             <a href="#how" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">How it works</a>
@@ -22,10 +47,39 @@ export default function Home() {
               GitHub
             </a>
           </nav>
+
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden p-2 text-gray-400 hover:text-white transition-colors"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
+
+        {mobileMenuOpen && (
+          <div className="lg:hidden border-t border-white/10 bg-black/95 backdrop-blur-xl">
+            <nav className="flex flex-col px-4 py-4 space-y-3">
+              <a href="/" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Home</a>
+              <a href="#compare" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Compare</a>
+              <a href="#how" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>How it works</a>
+              <a href="#features" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Features</a>
+              <a href="/docs" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Docs</a>
+              <a
+                href="https://github.com/astrohackerx/spl402"
+                target="_blank"
+                className="flex items-center justify-center gap-2 px-4 py-2 bg-[#9945FF] hover:bg-[#9945FF]/80 rounded-lg transition-colors text-sm font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Github size={16} />
+                GitHub
+              </a>
+            </nav>
+          </div>
+        )}
       </header>
 
-      <section className="pt-32 pb-20 px-6 relative">
+      <section className="pt-32 pb-20 px-4 sm:px-6 relative">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-4xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#14F195]/10 border border-[#14F195]/20 rounded-full mb-8">
@@ -33,41 +87,68 @@ export default function Home() {
               <span className="text-sm text-[#14F195] font-medium">4x faster than x402 &nbsp;|&nbsp; Built from scratch</span>
             </div>
 
-            <h1 className="text-7xl font-black tracking-tight mb-6">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-6">
               HTTP 402 for{' '}
               <span className="bg-gradient-to-r from-[#9945FF] to-[#14F195] text-transparent bg-clip-text">
                 Solana
               </span>
             </h1>
 
-            <p className="text-xl text-gray-400 mb-12 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-gray-400 mb-8 leading-relaxed max-w-2xl mx-auto">
               Native Solana payments for API's, Data, MCP, AI Agents. Direct wallet-to-wallet transfers.
               Zero platform fees. Only Solana network costs ~$0.00001
             </p>
 
-            <div className="flex items-center justify-center gap-4">
-              <a
-                href="https://live.spl402.org"
-                target='_blank'
-                className="group px-8 py-4 bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:opacity-90 rounded-xl font-semibold transition-opacity flex items-center gap-2"
-              >
-                Try it now
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-              </a>
-              <a
-                href="/docs"
-                className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#14F195]/30 rounded-xl font-semibold transition-all"
-              >
-                Docs
-              </a>
+            {npmDownloads && (
+              <div className="flex items-center justify-center gap-2 mb-8">
+                <div className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full">
+                  <Download size={16} className="text-[#14F195]" />
+                  <span className="text-sm text-gray-300">
+                    <span className="font-bold text-white">{npmDownloads.toLocaleString()}</span> downloads last month
+                  </span>
+                </div>
+              </div>
+            )}
+
+            <div className="flex flex-col items-center gap-4 mb-6">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full max-w-2xl">
                 <a
-                href="https://pump.fun/coin/DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump"
-                target='_blank'
-                className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#14F195]/30 rounded-xl font-semibold transition-all"
-              >
-                Trade SPL402
-              </a>
-              
+                  href="https://live.spl402.org"
+                  target='_blank'
+                  className="group px-8 py-4 bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:opacity-90 rounded-xl font-semibold transition-opacity flex items-center justify-center gap-2"
+                >
+                  <Rocket size={18} />
+                  Mainnet Starter Kit
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                </a>
+                <a
+                  href="https://ai.spl402.org"
+                  target='_blank'
+                  className="group px-8 py-4 bg-[#9945FF] hover:bg-[#9945FF]/80 rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
+                >
+                  <Sparkles size={18} />
+                  AI Agent Marketplace
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                </a>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full max-w-2xl">
+                <a
+                  href="/docs"
+                  className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#14F195]/30 rounded-xl font-semibold transition-all text-center flex items-center justify-center gap-2"
+                >
+                  <BookOpen size={18} />
+                  Documentation
+                </a>
+                <a
+                  href="https://pump.fun/coin/DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump"
+                  target='_blank'
+                  className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#14F195]/30 rounded-xl font-semibold transition-all text-center flex items-center justify-center gap-2"
+                >
+                  <Zap size={18} />
+                  Trade SPL402
+                </a>
+              </div>
             </div>
 
             <div className="py-6">
@@ -119,10 +200,22 @@ export default function Home() {
               <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-6">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm text-gray-400">Quick Install</span>
-                  <button className="text-xs text-[#14F195] hover:text-[#14F195]/80">Copy</button>
+                  <button
+                    onClick={handleCopy}
+                    className="flex items-center gap-1 text-xs text-[#14F195] hover:text-[#14F195]/80 transition-colors"
+                  >
+                    {copied ? (
+                      <>
+                        <Check size={14} />
+                        Copied!
+                      </>
+                    ) : (
+                      'Copy'
+                    )}
+                  </button>
                 </div>
                 <code className="text-sm font-mono text-[#14F195]">
-                  npm install spl402 @solana/web3.js
+                  npm install spl402
                 </code>
               </div>
             </div>
@@ -132,10 +225,10 @@ export default function Home() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-gradient-to-br from-[#9945FF]/20 to-[#14F195]/20 blur-3xl -z-10" />
       </section>
 
-      <section className="py-20 px-6 bg-gradient-to-b from-black to-[#0D0D0D]">
+      <section className="py-20 px-4 sm:px-6 bg-gradient-to-b from-black to-[#0D0D0D]">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-black mb-4">What is SPL-402?</h2>
+            <h2 className="text-3xl sm:text-4xl font-black mb-4">What is SPL-402?</h2>
             <p className="text-xl text-gray-400 leading-relaxed">
               Solana Payment Layer 402 brings the HTTP 402 Payment Required status code to life on Solana
             </p>
@@ -200,10 +293,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="compare" className="py-20 px-6 bg-[#0D0D0D]">
+      <section id="compare" className="py-20 px-4 sm:px-6 bg-[#0D0D0D]">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-black mb-4">SPL-402 vs x402</h2>
+            <h2 className="text-3xl sm:text-4xl font-black mb-4">SPL-402 vs x402</h2>
             <p className="text-gray-400 text-lg">Why we're 3-4x faster</p>
           </div>
 
@@ -311,10 +404,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="how" className="py-20 px-6 bg-black">
+      <section id="how" className="py-20 px-4 sm:px-6 bg-black">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-black mb-4">How It Works</h2>
+            <h2 className="text-3xl sm:text-4xl font-black mb-4">How It Works</h2>
             <p className="text-gray-400 text-lg">Simple 6-step payment flow</p>
           </div>
 
@@ -451,10 +544,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="features" className="py-20 px-6 bg-[#0D0D0D]">
+      <section id="features" className="py-20 px-4 sm:px-6 bg-[#0D0D0D]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-black mb-4">Features</h2>
+            <h2 className="text-3xl sm:text-4xl font-black mb-4">Features</h2>
             <p className="text-gray-400 text-lg">Everything you need for production</p>
           </div>
 
@@ -528,10 +621,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="docs" className="py-20 px-6 bg-gradient-to-b from-black to-[#0D0D0D]">
+      <section id="docs" className="py-20 px-4 sm:px-6 bg-gradient-to-b from-black to-[#0D0D0D]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-black mb-4">Quick Start</h2>
+            <h2 className="text-3xl sm:text-4xl font-black mb-4">Quick Start</h2>
             <p className="text-gray-400 text-lg">Production-ready in minutes</p>
           </div>
 
@@ -613,7 +706,7 @@ app.listen(3000);`}</code>
         </div>
       </section>
 
-      <section className="py-20 px-6">
+      <section className="py-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           <div className="bg-gradient-to-br from-[#9945FF]/10 to-[#14F195]/10 border border-[#14F195]/20 rounded-3xl p-12">
             <div className="grid md:grid-cols-4 gap-8 text-center">
@@ -646,9 +739,9 @@ app.listen(3000);`}</code>
         </div>
       </section>
 
-      <section className="py-20 px-6">
+      <section className="py-20 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-5xl font-black mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-6">
             Ready to add payments?
           </h2>
           <p className="text-xl text-gray-400 mb-8">
@@ -668,8 +761,8 @@ app.listen(3000);`}</code>
         </div>
       </section>
 
-      <footer className="border-t border-white/10 py-12 px-6">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <footer className="border-t border-white/10 py-12 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <Logo size="sm" />
           <div className="flex items-center gap-8">
             <a href="#docs" className="text-gray-400 hover:text-[#14F195] text-sm transition-colors">Docs</a>
