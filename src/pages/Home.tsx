@@ -146,7 +146,7 @@ export default function Home() {
                   className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#14F195]/30 rounded-xl font-semibold transition-all text-center flex items-center justify-center gap-2"
                 >
                   <Zap size={18} />
-                  Trade Token
+                  Trade SPL402
                 </a>
               </div>
             </div>
