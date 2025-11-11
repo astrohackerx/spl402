@@ -47,9 +47,9 @@ Think of it as "pay-per-request" for your APIs, but without the overhead of trad
 **Why is SPL-402 faster?**
 
 1. **No facilitator**: Payments go directly from payer to recipient
-2. **Minimal verification**: Only checks on-chain signature, no third-party APIs
-3. **Optimized code**: Zero external dependencies, pure Solana primitives
-4. **Local-first**: Can verify payments without external RPC calls in many cases
+2. **Optimized verification**: Balanced mode checks signature status first, then validates amount
+3. **Smart caching**: In-memory replay attack prevention without database queries
+4. **Pure Solana**: Zero external dependencies, pure Solana RPC primitives
 
 ## How It Works
 
@@ -286,7 +286,8 @@ Creates an SPL-402 server instance.
   scheme?: 'transfer' | 'token-transfer',  // Default: 'transfer'
   mint?: string,                   // Required if scheme is 'token-transfer'
   decimals?: number,               // Required if scheme is 'token-transfer'
-  rpcUrl?: string                  // Custom RPC endpoint (HIGHLY RECOMMENDED)
+  rpcUrl?: string,                 // Custom RPC endpoint (HIGHLY RECOMMENDED)
+  verificationMode?: 'strict' | 'balanced'  // Default: 'strict'
 }
 ```
 
@@ -350,6 +351,35 @@ const data = await response.json();
 ```
 
 ### Verification API
+
+#### Verification Modes
+
+SPL-402 supports two verification modes:
+
+**`strict` (default)**: Full verification (~800ms)
+- Fetches complete transaction from blockchain
+- Verifies exact amount transferred
+- Confirms recipient received payment
+- Checks transaction success status
+- Most secure, slower
+
+**`balanced` (recommended)**: Optimized verification (~150-200ms)
+- Fast signature existence check
+- Verifies transaction didn't fail
+- Validates exact amount transferred
+- Confirms recipient received payment
+- **3-4x faster than strict mode**
+- Same security as strict mode
+
+Configure in server setup:
+```typescript
+const spl402 = createServer({
+  network: 'mainnet-beta',
+  recipientAddress: 'YOUR_WALLET',
+  verificationMode: 'balanced',  // Use optimized mode
+  routes: [{ path: '/api/data', price: 0.001 }],
+});
+```
 
 #### `verifyPayment(request: VerifyPaymentRequest)`
 
