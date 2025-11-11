@@ -4,7 +4,6 @@ import {
   ServerConfig,
   RoutePrice,
   SPL402_VERSION,
-  VerificationMode,
 } from './types';
 import { verifyPaymentLocal, verifyPaymentBalanced } from './verify';
 
@@ -44,27 +43,11 @@ export class SPL402Server {
     valid: boolean;
     reason?: string;
   }> {
-    const mode = this.config.verificationMode || 'strict';
-
-    if (mode === 'balanced') {
-      const result = await verifyPaymentBalanced(
-        payment,
-        expectedAmount,
-        this.config.recipientAddress,
-        this.config.network
-      );
-
-      return {
-        valid: result.valid,
-        reason: result.reason,
-      };
-    }
-
-    const result = await verifyPaymentLocal(
+    const result = await verifyPaymentBalanced(
       payment,
       expectedAmount,
       this.config.recipientAddress,
-      this.config.decimals
+      this.config.network
     );
 
     return {

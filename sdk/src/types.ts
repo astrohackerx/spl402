@@ -78,13 +78,10 @@ export interface RoutePrice {
   method?: string;
 }
 
-export type VerificationMode = 'strict' | 'balanced';
-
 export interface ServerConfig extends SPL402Config {
   recipientAddress: string;
   routes: RoutePrice[];
   scheme?: 'transfer' | 'token-transfer';
   mint?: string;
   decimals?: number;
-  verificationMode?: VerificationMode;
 }
