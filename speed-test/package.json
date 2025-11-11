@@ -1,0 +1,16 @@
+{
+  "name": "spl402-test",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "SPL402 vs x402 real payment flow comparison test",
+  "main": "test.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "@solana/spl-token": "^0.4.14",
+    "@solana/web3.js": "^1.95.8",
+    "bs58": "^6.0.0",
+    "dotenv": "^16.4.7"
+  }
+}
