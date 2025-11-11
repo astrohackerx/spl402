@@ -11,6 +11,200 @@ import { createConnection, validatePublicKey, validateSignature, solToLamports, 
 
 const PAYMENT_TIMEOUT_MS = 5 * 60 * 1000;
 
+class SignatureCache {
+  private cache: Map<string, { timestamp: number; verified: boolean }> = new Map();
+  private readonly maxAge = 5 * 60 * 1000;
+  private readonly maxSize = 10000;
+
+  has(signature: string): boolean {
+    const entry = this.cache.get(signature);
+    if (!entry) return false;
+
+    if (Date.now() - entry.timestamp > this.maxAge) {
+      this.cache.delete(signature);
+      return false;
+    }
+
+    return true;
+  }
+
+  add(signature: string, verified: boolean = true): void {
+    if (this.cache.size >= this.maxSize) {
+      const oldestKey = this.cache.keys().next().value;
+      if (oldestKey) {
+        this.cache.delete(oldestKey);
+      }
+    }
+
+    this.cache.set(signature, {
+      timestamp: Date.now(),
+      verified
+    });
+  }
+
+  clear(): void {
+    this.cache.clear();
+  }
+
+  size(): number {
+    return this.cache.size;
+  }
+}
+
+const signatureCache = new SignatureCache();
+
+interface BackgroundVerification {
+  payment: SPL402PaymentPayload;
+  expectedAmount: number;
+  expectedRecipient: string;
+  network: SolanaNetwork;
+  decimals?: number;
+}
+
+class BackgroundVerificationQueue {
+  private queue: BackgroundVerification[] = [];
+  private processing = false;
+
+  add(verification: BackgroundVerification): void {
+    this.queue.push(verification);
+    this.process();
+  }
+
+  private async process(): Promise<void> {
+    if (this.processing || this.queue.length === 0) return;
+
+    this.processing = true;
+
+    while (this.queue.length > 0) {
+      const item = this.queue.shift();
+      if (!item) break;
+
+      try {
+        await verifyPayment({
+          payment: item.payment,
+          expectedAmount: item.expectedAmount,
+          expectedRecipient: item.expectedRecipient,
+          network: item.network,
+          decimals: item.decimals
+        });
+      } catch (error) {
+        console.error('Background verification failed:', error);
+      }
+    }
+
+    this.processing = false;
+  }
+}
+
+const backgroundQueue = new BackgroundVerificationQueue();
+
+export async function verifyPaymentBalanced(
+  payment: SPL402PaymentPayload,
+  expectedAmount: number,
+  expectedRecipient: string,
+  network: SolanaNetwork
+): Promise<VerifyPaymentResponse> {
+  if (payment.spl402Version !== 1) {
+    return { valid: false, reason: 'Unsupported SPL-402 version' };
+  }
+
+  if (payment.network !== network) {
+    return { valid: false, reason: 'Network mismatch' };
+  }
+
+  if (!validatePublicKey(expectedRecipient)) {
+    return { valid: false, reason: 'Invalid recipient address' };
+  }
+
+  const payload = payment.payload as any;
+
+  if (!validateSignature(payload.signature)) {
+    return { valid: false, reason: 'Invalid transaction signature' };
+  }
+
+  if (signatureCache.has(payload.signature)) {
+    return { valid: false, reason: 'Signature already used (replay attack blocked)' };
+  }
+
+  if (payload.to !== expectedRecipient) {
+    return { valid: false, reason: 'Recipient address mismatch' };
+  }
+
+  const now = Date.now();
+  if (Math.abs(now - payload.timestamp) > PAYMENT_TIMEOUT_MS) {
+    return { valid: false, reason: 'Payment timestamp expired' };
+  }
+
+  try {
+    const connection = createConnection(network);
+    const statuses = await connection.getSignatureStatuses([payload.signature]);
+
+    if (!statuses || !statuses.value || !statuses.value[0]) {
+      return { valid: false, reason: 'Transaction not found' };
+    }
+
+    const status = statuses.value[0];
+
+    if (status.err) {
+      return { valid: false, reason: 'Transaction failed on chain' };
+    }
+
+    if (!status.confirmationStatus) {
+      return { valid: false, reason: 'Transaction not confirmed' };
+    }
+
+    const tx = await connection.getTransaction(payload.signature, {
+      maxSupportedTransactionVersion: 0,
+    });
+
+    if (!tx || !tx.meta) {
+      return { valid: false, reason: 'Transaction details not available' };
+    }
+
+    if (payment.scheme === 'transfer') {
+      const expectedLamports = solToLamports(expectedAmount);
+      const preBalance = tx.meta.preBalances[0];
+      const postBalance = tx.meta.postBalances[0];
+      const actualAmount = preBalance - postBalance - tx.meta.fee;
+
+      if (actualAmount < expectedLamports) {
+        return {
+          valid: false,
+          reason: `Insufficient payment: expected ${expectedAmount} SOL, got ${actualAmount / 1e9} SOL`,
+        };
+      }
+
+      const accountKeys = tx.transaction.message.getAccountKeys();
+      const recipientIndex = accountKeys.staticAccountKeys.findIndex(
+        (key: PublicKey) => key.toBase58() === expectedRecipient
+      );
+      if (recipientIndex === -1) {
+        return { valid: false, reason: 'Recipient not found in transaction' };
+      }
+
+      const recipientPreBalance = tx.meta.preBalances[recipientIndex];
+      const recipientPostBalance = tx.meta.postBalances[recipientIndex];
+      const recipientReceived = recipientPostBalance - recipientPreBalance;
+
+      if (recipientReceived < expectedLamports) {
+        return { valid: false, reason: 'Recipient did not receive expected amount' };
+      }
+    }
+
+    signatureCache.add(payload.signature, true);
+
+    return {
+      valid: true,
+      txHash: payload.signature,
+    };
+  } catch (error) {
+    return {
+      valid: false,
+      reason: `Verification error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    };
+  }
+}
+
 export async function verifyPayment(request: VerifyPaymentRequest): Promise<VerifyPaymentResponse> {
   const { payment, expectedAmount, expectedRecipient, network, decimals } = request;
 
