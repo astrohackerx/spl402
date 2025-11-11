@@ -10,6 +10,7 @@ import {
 import { createConnection, validatePublicKey, validateSignature, solToLamports, toTokenAmount } from './utils';
 
 const PAYMENT_TIMEOUT_MS = 5 * 60 * 1000;
+const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
 
 class SignatureCache {
   private cache: Map<string, { timestamp: number; verified: boolean }> = new Map();
@@ -153,44 +154,6 @@ export async function verifyPaymentBalanced(
       return { valid: false, reason: 'Transaction not confirmed' };
     }
 
-    const tx = await connection.getTransaction(payload.signature, {
-      maxSupportedTransactionVersion: 0,
-    });
-
-    if (!tx || !tx.meta) {
-      return { valid: false, reason: 'Transaction details not available' };
-    }
-
-    if (payment.scheme === 'transfer') {
-      const expectedLamports = solToLamports(expectedAmount);
-      const preBalance = tx.meta.preBalances[0];
-      const postBalance = tx.meta.postBalances[0];
-      const actualAmount = preBalance - postBalance - tx.meta.fee;
-
-      if (actualAmount < expectedLamports) {
-        return {
-          valid: false,
-          reason: `Insufficient payment: expected ${expectedAmount} SOL, got ${actualAmount / 1e9} SOL`,
-        };
-      }
-
-      const accountKeys = tx.transaction.message.getAccountKeys();
-      const recipientIndex = accountKeys.staticAccountKeys.findIndex(
-        (key: PublicKey) => key.toBase58() === expectedRecipient
-      );
-      if (recipientIndex === -1) {
-        return { valid: false, reason: 'Recipient not found in transaction' };
-      }
-
-      const recipientPreBalance = tx.meta.preBalances[recipientIndex];
-      const recipientPostBalance = tx.meta.postBalances[recipientIndex];
-      const recipientReceived = recipientPostBalance - recipientPreBalance;
-
-      if (recipientReceived < expectedLamports) {
-        return { valid: false, reason: 'Recipient did not receive expected amount' };
-      }
-    }
-
     signatureCache.add(payload.signature, true);
 
     return {
@@ -235,20 +198,8 @@ async function verifyTransfer(
   expectedRecipient: string,
   network: SolanaNetwork
 ): Promise<VerifyPaymentResponse> {
-  if (!validatePublicKey(payload.from)) {
-    return { valid: false, reason: 'Invalid sender address' };
-  }
-
-  if (!validatePublicKey(payload.to)) {
-    return { valid: false, reason: 'Invalid recipient address' };
-  }
-
   if (!validateSignature(payload.signature)) {
     return { valid: false, reason: 'Invalid transaction signature' };
-  }
-
-  if (payload.to !== expectedRecipient) {
-    return { valid: false, reason: 'Recipient address mismatch' };
   }
 
   const now = Date.now();
@@ -270,27 +221,23 @@ async function verifyTransfer(
       return { valid: false, reason: 'Transaction failed on chain' };
     }
 
-    const fromPubkey = new PublicKey(payload.from);
-    const toPubkey = new PublicKey(payload.to);
-
+    const expectedRecipientPubkey = new PublicKey(expectedRecipient);
     const preBalances = tx.meta?.preBalances || [];
     const postBalances = tx.meta?.postBalances || [];
     const accountKeys = tx.transaction.message.getAccountKeys().staticAccountKeys;
 
-    let fromIndex = -1;
-    let toIndex = -1;
+    let recipientIndex = -1;
 
     accountKeys.forEach((key, index) => {
-      if (key.equals(fromPubkey)) fromIndex = index;
-      if (key.equals(toPubkey)) toIndex = index;
+      if (key.equals(expectedRecipientPubkey)) recipientIndex = index;
     });
 
-    if (fromIndex === -1 || toIndex === -1) {
-      return { valid: false, reason: 'Payment addresses not found in transaction' };
+    if (recipientIndex === -1) {
+      return { valid: false, reason: 'Expected recipient not found in transaction' };
     }
 
-    const amountTransferred = preBalances[toIndex] !== undefined && postBalances[toIndex] !== undefined
-      ? postBalances[toIndex] - preBalances[toIndex]
+    const amountTransferred = preBalances[recipientIndex] !== undefined && postBalances[recipientIndex] !== undefined
+      ? postBalances[recipientIndex] - preBalances[recipientIndex]
       : 0;
 
     const expectedLamports = solToLamports(expectedAmount);
@@ -321,24 +268,12 @@ async function verifyTokenTransfer(
   network: SolanaNetwork,
   decimals?: number
 ): Promise<VerifyPaymentResponse> {
-  if (!validatePublicKey(payload.from)) {
-    return { valid: false, reason: 'Invalid sender address' };
-  }
-
-  if (!validatePublicKey(payload.to)) {
-    return { valid: false, reason: 'Invalid recipient address' };
-  }
-
-  if (!validatePublicKey(payload.mint)) {
-    return { valid: false, reason: 'Invalid token mint address' };
-  }
-
   if (!validateSignature(payload.signature)) {
     return { valid: false, reason: 'Invalid transaction signature' };
   }
 
-  if (payload.to !== expectedRecipient) {
-    return { valid: false, reason: 'Recipient address mismatch' };
+  if (!validatePublicKey(payload.mint)) {
+    return { valid: false, reason: 'Invalid token mint address in payload' };
   }
 
   const now = Date.now();
@@ -360,21 +295,60 @@ async function verifyTokenTransfer(
       return { valid: false, reason: 'Transaction failed on chain' };
     }
 
+    const accountKeys = tx.transaction.message.getAccountKeys().staticAccountKeys;
     const instructions = tx.transaction.message.compiledInstructions;
+    const expectedRecipientPubkey = new PublicKey(expectedRecipient);
+    const expectedMintPubkey = new PublicKey(payload.mint);
+
     let tokenTransferFound = false;
     let transferAmount = 0;
+    let destinationAccountIndex = -1;
 
     for (const ix of instructions) {
+      const programIdIndex = ix.programIdIndex;
+      const programId = accountKeys[programIdIndex];
+
+      if (!programId.equals(TOKEN_PROGRAM_ID)) continue;
+
       const data = Buffer.from(ix.data);
+
       if (data.length >= 9 && (data[0] === 3 || data[0] === 12)) {
         transferAmount = Number(data.readBigUInt64LE(1));
+        destinationAccountIndex = ix.accountKeyIndexes[1];
         tokenTransferFound = true;
         break;
       }
     }
 
-    if (!tokenTransferFound) {
+    if (!tokenTransferFound || destinationAccountIndex === -1) {
       return { valid: false, reason: 'Token transfer instruction not found' };
+    }
+
+    const destinationAccount = accountKeys[destinationAccountIndex];
+    const destinationAccountInfo = await connection.getAccountInfo(destinationAccount);
+
+    if (!destinationAccountInfo) {
+      return { valid: false, reason: 'Destination token account not found' };
+    }
+
+    const destinationOwnerOffset = 32;
+    const destinationOwner = new PublicKey(destinationAccountInfo.data.slice(destinationOwnerOffset, destinationOwnerOffset + 32));
+
+    if (!destinationOwner.equals(expectedRecipientPubkey)) {
+      return {
+        valid: false,
+        reason: `Token transfer recipient mismatch. Expected ${expectedRecipient}, got ${destinationOwner.toString()}`,
+      };
+    }
+
+    const mintOffset = 0;
+    const actualMint = new PublicKey(destinationAccountInfo.data.slice(mintOffset, mintOffset + 32));
+
+    if (!actualMint.equals(expectedMintPubkey)) {
+      return {
+        valid: false,
+        reason: `Token mint mismatch. Expected ${payload.mint}, got ${actualMint.toString()}`,
+      };
     }
 
     const expectedRawAmount = decimals !== undefined
