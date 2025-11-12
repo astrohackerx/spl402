@@ -118,7 +118,7 @@ export default function Home() {
                   className="group px-8 py-4 bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:opacity-90 rounded-xl font-semibold transition-opacity flex items-center justify-center gap-2"
                 >
                   <Rocket size={18} />
-                  Mainnet Starter Kit
+                  Starter Kit
                   <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </a>
                    <a
