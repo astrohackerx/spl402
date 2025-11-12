@@ -111,7 +111,7 @@ export default function Home() {
             )}
 
             <div className="flex flex-col items-center gap-4 mb-6">
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full max-w-2xl">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full max-w-3xl">
                 <a
                   href="https://live.spl402.org"
                   target='_blank'
