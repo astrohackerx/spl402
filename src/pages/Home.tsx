@@ -121,6 +121,15 @@ export default function Home() {
                   Mainnet Starter Kit
                   <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </a>
+                   <a
+                  href="https://gpt.spl402.org"
+                  target='_blank'
+                  className="group px-8 py-4 bg-[#9945FF] hover:bg-[#9945FF]/80 rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
+                >
+                  <Sparkles size={18} />
+                  GPT-402
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                </a>
                 <a
                   href="https://ai.spl402.org"
                   target='_blank'
