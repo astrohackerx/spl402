@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Logo } from '../components/Logo';
-import { Book, Code, Server, Wallet, ArrowRight, Github, ChevronRight, Copy, Check, Zap, Menu, X } from 'lucide-react';
+import { Book, Code, Server, Wallet, ArrowRight, Github, ChevronRight, Copy, Check, Zap } from 'lucide-react';
+import { Header } from '../components/Header';
+import { Footer } from '../components/Footer';
 
 export default function Docs() {
   const [activeSection, setActiveSection] = useState('getting-started');
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleCopy = (code: string, id: string) => {
     navigator.clipboard.writeText(code);
@@ -27,50 +27,7 @@ export default function Docs() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-[#14F195]/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <Logo size="sm" />
-
-          <nav className="hidden lg:flex items-center gap-8">
-            <a href="/" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Home</a>
-            <a href="/docs" className="text-[#14F195] transition-colors text-sm font-medium">Docs</a>
-            <a
-              href="https://github.com/astrohackerx/spl402"
-              target="_blank"
-              className="flex items-center gap-2 px-4 py-2 bg-[#9945FF] hover:bg-[#9945FF]/80 rounded-lg transition-colors text-sm font-medium"
-            >
-              <Github size={16} />
-              GitHub
-            </a>
-          </nav>
-
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 text-gray-400 hover:text-white transition-colors"
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-
-        {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-white/10 bg-black/95 backdrop-blur-xl">
-            <nav className="flex flex-col px-4 py-4 space-y-3">
-              <a href="/" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Home</a>
-              <a href="/docs" className="text-[#14F195] transition-colors text-sm font-medium py-2" onClick={() => setMobileMenuOpen(false)}>Docs</a>
-              <a
-                href="https://github.com/astrohackerx/spl402"
-                target="_blank"
-                className="flex items-center justify-center gap-2 px-4 py-2 bg-[#9945FF] hover:bg-[#9945FF]/80 rounded-lg transition-colors text-sm font-medium"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <Github size={16} />
-                GitHub
-              </a>
-            </nav>
-          </div>
-        )}
-      </header>
+      <Header />
 
       <div className="pt-20 flex">
         <aside className="hidden lg:block fixed left-0 top-20 bottom-0 w-64 border-r border-white/10 bg-black/50 backdrop-blur-sm overflow-y-auto">
@@ -1636,6 +1593,7 @@ app.use(middleware);`}
           )}
         </main>
       </div>
+      <Footer />
     </div>
   );
 }

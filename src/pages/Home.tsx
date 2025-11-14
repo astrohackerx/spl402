@@ -1,9 +1,9 @@
-import { Code, Zap, Lock, Globe, ArrowRight, Github, Check, ExternalLink, Menu, X, Download, Sparkles, Rocket, BookOpen } from 'lucide-react';
-import { Logo } from '../components/Logo';
+import { Code, Zap, Lock, Globe, ArrowRight, Github, Check, ExternalLink, Download, Sparkles, Rocket, BookOpen } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { Header } from '../components/Header';
+import { Footer } from '../components/Footer';
 
 export default function Home() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [npmDownloads, setNpmDownloads] = useState<number | null>(null);
 
@@ -28,56 +28,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-[#14F195]/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <Logo size="sm" />
-
-          <nav className="hidden lg:flex items-center gap-8">
-            <a href="/" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Home</a>
-            <a href="#compare" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Compare</a>
-            <a href="#how" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">How it works</a>
-            <a href="#features" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Features</a>
-            <a href="/docs" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Docs</a>
-            <a
-              href="https://github.com/astrohackerx/spl402"
-              target="_blank"
-              className="flex items-center gap-2 px-4 py-2 bg-[#9945FF] hover:bg-[#9945FF]/80 rounded-lg transition-colors text-sm font-medium"
-            >
-              <Github size={16} />
-              GitHub
-            </a>
-          </nav>
-
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 text-gray-400 hover:text-white transition-colors"
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-
-        {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-white/10 bg-black/95 backdrop-blur-xl">
-            <nav className="flex flex-col px-4 py-4 space-y-3">
-              <a href="/" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Home</a>
-              <a href="#compare" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Compare</a>
-              <a href="#how" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>How it works</a>
-              <a href="#features" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Features</a>
-              <a href="/docs" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Docs</a>
-              <a
-                href="https://github.com/astrohackerx/spl402"
-                target="_blank"
-                className="flex items-center justify-center gap-2 px-4 py-2 bg-[#9945FF] hover:bg-[#9945FF]/80 rounded-lg transition-colors text-sm font-medium"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <Github size={16} />
-                GitHub
-              </a>
-            </nav>
-          </div>
-        )}
-      </header>
+      <Header />
 
       <section className="pt-32 pb-20 px-4 sm:px-6 relative">
         <div className="max-w-7xl mx-auto">
@@ -772,16 +723,7 @@ app.listen(3000);`}</code>
         </div>
       </section>
 
-      <footer className="border-t border-white/10 py-12 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <Logo size="sm" />
-          <div className="flex items-center gap-8">
-            <a href="#docs" className="text-gray-400 hover:text-[#14F195] text-sm transition-colors">Docs</a>
-            <a href="#examples" className="text-gray-400 hover:text-[#14F195] text-sm transition-colors">Examples</a>
-            <a href="https://github.com/astrohackerx/spl402" target="_blank" className="text-gray-400 hover:text-[#14F195] text-sm transition-colors">GitHub</a>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
