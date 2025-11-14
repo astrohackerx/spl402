@@ -84,7 +84,7 @@ export default function Home() {
           <div className="text-center max-w-4xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#14F195]/10 border border-[#14F195]/20 rounded-full mb-8 flex-wrap justify-center">
               <Zap size={14} className="text-[#14F195]" />
-              <span className="text-xs sm:text-sm text-[#14F195] font-medium text-center">3-4x faster vs x402 &nbsp;|&nbsp; Built from scratch</span>
+              <span className="text-xs sm:text-sm text-[#14F195] font-medium text-center">4x faster than x402 &nbsp;|&nbsp; Built from scratch</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-6">
