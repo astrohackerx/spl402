@@ -84,7 +84,7 @@ export default function Home() {
           <div className="text-center max-w-4xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#14F195]/10 border border-[#14F195]/20 rounded-full mb-8 flex-wrap justify-center">
               <Zap size={14} className="text-[#14F195]" />
-              <span className="text-xs sm:text-sm text-[#14F195] font-medium text-center">4x faster than x402 &nbsp;|&nbsp; Built from scratch</span>
+              <span className="text-xs sm:text-sm text-[#14F195] font-medium text-center">3-4x faster vs x402 &nbsp;|&nbsp; Built from scratch</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-6">
@@ -104,7 +104,7 @@ export default function Home() {
                 <div className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full">
                   <Download size={16} className="text-[#14F195]" />
                   <span className="text-sm text-gray-300">
-                    <span className="font-bold text-white">{npmDownloads.toLocaleString()}</span> downloads last month
+                    <span className="font-bold text-white">{npmDownloads.toLocaleString()}</span> SDK downloads last month
                   </span>
                 </div>
               </div>
@@ -286,8 +286,8 @@ export default function Home() {
                   <Code size={16} className="text-[#14F195]" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold mb-2">Simple Integration</h3>
-                  <p className="text-gray-400 text-sm">One middleware, one client call</p>
+                  <h3 className="text-lg font-bold mb-2">Token Flexibility</h3>
+                  <p className="text-gray-400 text-sm">Accept SOL, USDC, USDT, or any SPL token</p>
                 </div>
               </div>
             </div>
@@ -306,7 +306,7 @@ export default function Home() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-black mb-4">SPL-402 vs x402</h2>
-            <p className="text-gray-400 text-lg">Why we're 3-4x faster</p>
+            <p className="text-gray-400 text-lg">Why we're 2-3x faster with zero platform fees</p>
           </div>
 
           <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl overflow-hidden">
@@ -342,7 +342,7 @@ export default function Home() {
                   </tr>
                   <tr className="border-b border-white/10 hover:bg-white/5">
                     <td className="p-3 sm:p-6 text-gray-400">Speed</td>
-                    <td className="p-3 sm:p-6 text-[#14F195] font-bold">3-4x faster</td>
+                    <td className="p-3 sm:p-6 text-[#14F195] font-bold">2-3x faster</td>
                     <td className="p-3 sm:p-6 text-gray-400">Baseline</td>
                   </tr>
                   <tr className="border-b border-white/10 hover:bg-white/5">
@@ -570,7 +570,7 @@ export default function Home() {
                   <Zap size={24} className="text-[#9945FF]" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">Lightning Fast</h3>
-                <p className="text-gray-400">~500ms payment verification. 3-4x faster than alternatives. Zero middlemen.</p>
+                <p className="text-gray-400">~500ms payment verification. 2-3x faster than alternatives. Zero middlemen.</p>
               </div>
             </div>
 
@@ -622,10 +622,10 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
               <div className="relative">
                 <div className="w-12 h-12 bg-[#14F195]/10 border border-[#14F195]/20 rounded-xl flex items-center justify-center mb-4">
-                  <Zap size={24} className="text-[#14F195]" />
+                  <Lock size={24} className="text-[#14F195]" />
                 </div>
-                <h3 className="text-xl font-bold mb-2">Zero Dependencies</h3>
-                <p className="text-gray-400">Only peer dependencies. Minimal bundle size. Pure Solana primitives.</p>
+                <h3 className="text-xl font-bold mb-2">Secure by Default</h3>
+                <p className="text-gray-400">Built-in replay attack prevention. On-chain verification. No trust required.</p>
               </div>
             </div>
           </div>
