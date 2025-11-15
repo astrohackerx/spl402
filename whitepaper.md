@@ -133,7 +133,7 @@ SAS ensures decentralized, cryptographic trust for all participating servers:
 ## Roadmap & Ecosystem
 
 1. ✅ **Phase 1:** Mainnet deployment, SPL402 SDK launch for client/server.  
-2. ✅ **Phase 2:** Starter Kit & GPT-420 AI Agent integration demo.  
+2. ✅ **Phase 2:** Starter Kit, GPT-420 AI Agent integration demo. AI Agent Marketplace.  
 3. ✅ **Phase 3:** SAS-based automated server verification.  
 4. 🆕 **Phase 4:** Decentralized P2P API network.  
 5. 🆕 **Phase 5:** DAO governance and protocol expansion.  
