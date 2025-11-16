@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import Docs from './pages/Docs';
 import { Verify } from './pages/Verify';
 import { Explorer } from './pages/Explorer';
+import { ServerProfile } from './pages/ServerProfile';
 
 export default function App() {
   const endpoint = 'https://api.mainnet-beta.solana.com';
@@ -24,6 +25,7 @@ export default function App() {
               <Route path="/docs" element={<Docs />} />
               <Route path="/verify" element={<Verify />} />
               <Route path="/explorer" element={<Explorer />} />
+              <Route path="/server/:attestationPda" element={<ServerProfile />} />
             </Routes>
           </BrowserRouter>
         </WalletModalProvider>

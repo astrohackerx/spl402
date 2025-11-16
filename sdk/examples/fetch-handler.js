@@ -9,6 +9,11 @@ const spl402 = createServer({
   network: 'mainnet-beta',
   recipientAddress: 'YourSolanaWalletAddress', // Replace with your wallet address
   rpcUrl: process.env.SOLANA_RPC_URL || 'https://api.mainnet-beta.solana.com', // Use custom RPC!
+  serverInfo: {
+    name: 'Fetch Handler API',
+    description: 'SPL-402 API using fetch handler pattern',
+    contact: 'https://myapi.com',
+  },
   routes: [
     { path: '/api/data', price: 0.001, method: 'GET' },
   ],
@@ -39,6 +44,12 @@ async function handleRequest(request) {
 console.log('Fetch-based handler example');
 console.log('\n⚠️  IMPORTANT: Using mainnet-beta network');
 console.log('   Set SOLANA_RPC_URL environment variable for best performance');
+console.log('\nStandard endpoints (auto-registered):');
+console.log('  GET  /health                    - Health check');
+console.log('  GET  /status                    - Status check');
+console.log('  GET  /.well-known/spl402.json   - Server metadata');
+console.log('\nProtected endpoints:');
+console.log('  GET  /api/data - 0.001 SOL');
 console.log('\nUse this pattern for:');
 console.log('  - Cloudflare Workers');
 console.log('  - Deno Deploy');

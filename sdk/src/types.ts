@@ -84,4 +84,31 @@ export interface ServerConfig extends SPL402Config {
   scheme?: 'transfer' | 'token-transfer';
   mint?: string;
   decimals?: number;
+  serverInfo?: {
+    name?: string;
+    description?: string;
+    contact?: string;
+    capabilities?: string[];
+  };
+}
+
+export interface ServerMetadata {
+  version: string;
+  server?: {
+    name?: string;
+    description?: string;
+    contact?: string;
+  };
+  wallet: string;
+  network: SolanaNetwork;
+  scheme: 'transfer' | 'token-transfer';
+  mint?: string;
+  decimals?: number;
+  routes: Array<{
+    path: string;
+    method: string;
+    price: number;
+    description?: string;
+  }>;
+  capabilities?: string[];
 }

@@ -10,9 +10,11 @@ Now with **Solana Attestation Service (SAS)** integration for on-chain server id
 
 - [What is SPL-402?](#what-is-spl-402)
 - [Why SPL-402 vs x402?](#why-spl-402-vs-x402)
+- [What's New in v2.0.1](#whats-new-in-v201)
 - [How It Works](#how-it-works)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
+- [Standard Routes (v2.0.1)](#standard-routes-v201)
 - [Important: RPC Configuration](#important-rpc-configuration)
 - [Solana Attestation Service (SAS) Integration](#solana-attestation-service-sas-integration)
 - [API Reference](#api-reference)
@@ -66,6 +68,53 @@ Think of it as "pay-per-request" for your APIs, without payment processors, subs
 3. **Smart caching**: In-memory replay attack prevention - no database queries needed
 4. **Pure Solana**: Zero external dependencies, leverages native Solana RPC primitives
 5. **Efficient protocol**: Minimal overhead - just standard HTTP + Solana transaction verification
+
+## What's New in v2.0.1
+
+### 🎉 Standard Routes Implementation
+
+**Every SPL-402 server now automatically includes these public endpoints:**
+
+- **`GET /health`** - Health check endpoint (returns `{ status: "ok", timestamp: ... }`)
+- **`GET /status`** - Alias for `/health`
+- **`GET /.well-known/spl402.json`** - Server metadata following RFC 8615 standard
+
+These routes are:
+- ✅ **Auto-registered** - No configuration needed
+- ✅ **Free to access** - No payment required
+- ✅ **Production ready** - Used by SPL-402 Explorer for status checks
+
+### 📊 Server Metadata Configuration
+
+Add optional metadata to your server:
+
+```typescript
+const server = createServer({
+  network: 'mainnet-beta',
+  recipientAddress: 'YOUR_WALLET',
+  serverInfo: {                    // NEW in v2.0.1!
+    name: 'My API Server',
+    description: 'Premium data API with SPL-402 payments',
+    contact: 'https://myapi.com',
+    capabilities: ['data-api', 'ai-inference']
+  },
+  routes: [
+    { path: '/api/premium', price: 0.001 }
+  ]
+});
+```
+
+### 🔧 New Server Methods
+
+- `getServerMetadata()` - Returns complete server metadata
+- `createHealthResponse()` - Generates health check response
+- `createMetadataResponse()` - Generates metadata response
+
+### 🔄 100% Backwards Compatible
+
+All v2.0.0 code works without changes! The `serverInfo` field is optional, and standard routes are added automatically.
+
+**[View full release notes →](../tests/RELEASE_NOTES_2.0.1.md)**
 
 ## How It Works
 
@@ -142,6 +191,12 @@ const spl402 = createServer({
   network: 'mainnet-beta',
   recipientAddress: 'YOUR_WALLET_ADDRESS', // Your Solana wallet
   rpcUrl: process.env.SOLANA_RPC_URL,      // CRITICAL: Use custom RPC endpoint!
+  serverInfo: {                             // Optional (v2.0.1+)
+    name: 'My API Server',
+    description: 'Premium data API',
+    contact: 'https://myapi.com',
+    capabilities: ['data-api']
+  },
   routes: [
     { path: '/api/premium', price: 0.001, method: 'GET' },  // 0.001 SOL
     { path: '/api/data', price: 0.0005, method: 'GET' },    // 0.0005 SOL
@@ -150,6 +205,11 @@ const spl402 = createServer({
 
 const app = express();
 app.use(createExpressMiddleware(spl402));
+
+// Standard routes are auto-registered:
+// GET /health          → 200 OK (free)
+// GET /status          → 200 OK (free)
+// GET /.well-known/spl402.json → metadata (free)
 
 app.get('/api/premium', (req, res) => {
   res.json({ message: 'Protected content!' });
@@ -230,10 +290,20 @@ const spl402 = createServer({
   network: 'mainnet-beta',
   recipientAddress: 'YOUR_WALLET_ADDRESS',
   rpcUrl: process.env.SOLANA_RPC_URL, // IMPORTANT: Use custom RPC!
+  serverInfo: {                        // Optional (v2.0.1+)
+    name: 'Edge API Server',
+    description: 'Serverless API with SPL-402',
+    contact: 'https://myapi.com'
+  },
   routes: [{ path: '/api/data', price: 0.001 }],
 });
 
 const middleware = createFetchMiddleware(spl402);
+
+// Standard routes are handled automatically by middleware:
+// GET /health          → 200 OK (free)
+// GET /status          → 200 OK (free)
+// GET /.well-known/spl402.json → metadata (free)
 
 export default {
   async fetch(request: Request) {
@@ -299,6 +369,144 @@ Or use environment variables:
 export SOLANA_RPC_URL="https://your-rpc-endpoint.com"
 ```
 
+## Standard Routes (v2.0.1)
+
+### Overview
+
+Every SPL-402 server automatically exposes these standard endpoints:
+
+#### `GET /health`
+Health check endpoint for monitoring and uptime verification.
+
+**Response:**
+```json
+{
+  "status": "ok",
+  "timestamp": 1763322021055
+}
+```
+
+**Use Cases:**
+- Load balancer health checks
+- Monitoring tools (Uptime Robot, Pingdom, etc.)
+- Status dashboards
+- Automated alerting systems
+
+#### `GET /status`
+Alias for `/health` endpoint. Returns identical response.
+
+#### `GET /.well-known/spl402.json`
+Server metadata endpoint following RFC 8615 (Well-Known URIs).
+
+**Response:**
+```json
+{
+  "version": "1.0",
+  "server": {
+    "name": "My API Server",
+    "description": "Premium data API with SPL-402 payments",
+    "contact": "https://myapi.com"
+  },
+  "wallet": "YourSolanaWalletAddress",
+  "network": "mainnet-beta",
+  "scheme": "transfer",
+  "routes": [
+    {
+      "path": "/api/premium",
+      "method": "GET",
+      "price": 0.001
+    },
+    {
+      "path": "/api/data",
+      "method": "GET",
+      "price": 0.0005
+    }
+  ],
+  "capabilities": ["data-api", "premium-content"]
+}
+```
+
+**Use Cases:**
+- API discovery and documentation
+- Automatic pricing display in explorers
+- Client capability negotiation
+- P2P network node discovery (Phase 4)
+
+### Standard Routes Configuration
+
+Standard routes are **automatically registered** and require **no payment**. They don't interfere with your custom routes.
+
+```typescript
+const server = createServer({
+  network: 'mainnet-beta',
+  recipientAddress: 'YOUR_WALLET',
+  serverInfo: {                // Optional metadata
+    name: 'My API Server',
+    description: 'API description',
+    contact: 'https://myapi.com',
+    capabilities: ['data-api', 'ai-inference']
+  },
+  routes: [
+    { path: '/api/data', price: 0.001 }
+  ]
+});
+
+// These routes are automatically available:
+// GET /health
+// GET /status
+// GET /.well-known/spl402.json
+```
+
+### Accessing Standard Routes
+
+**In Express:**
+```typescript
+const app = express();
+app.use(createExpressMiddleware(spl402));
+// /health, /status, /.well-known/spl402.json are automatically handled
+```
+
+**In Fetch/Edge:**
+```typescript
+const middleware = createFetchMiddleware(spl402);
+// Middleware automatically handles standard routes
+```
+
+**Testing:**
+```bash
+# Health check
+curl http://localhost:3000/health
+
+# Server metadata
+curl http://localhost:3000/.well-known/spl402.json
+```
+
+### New Server Methods (v2.0.1)
+
+#### `getServerMetadata()`
+Returns the complete server metadata object.
+
+```typescript
+const metadata = server.getServerMetadata();
+console.log(metadata);
+```
+
+#### `createHealthResponse()`
+Generates a standardized health check response.
+
+```typescript
+const healthResponse = server.createHealthResponse();
+// Returns: { status: 200, headers: {...}, body: {...} }
+```
+
+#### `createMetadataResponse()`
+Generates a standardized metadata response.
+
+```typescript
+const metadataResponse = server.createMetadataResponse();
+// Returns: { status: 200, headers: {...}, body: {...} }
+```
+
 ## API Reference
 
 ### Server API
@@ -317,6 +525,12 @@ Creates an SPL-402 server instance.
   mint?: string,                   // Required if scheme is 'token-transfer'
   decimals?: number,               // Required if scheme is 'token-transfer'
   rpcUrl?: string,                 // Custom RPC endpoint (HIGHLY RECOMMENDED)
+  serverInfo?: {                   // Optional (v2.0.1+)
+    name?: string,                 // Display name for your server
+    description?: string,          // Server description
+    contact?: string,              // Contact URL or email
+    capabilities?: string[]        // Server capabilities/features
+  }
 }
 ```
 
@@ -542,8 +756,15 @@ For information about registering your API server and creating attestations, vis
 - ✅ Cryptographic signature validation
 - ✅ Multiple routes with individual pricing
 - ✅ Two verification modes (strict & balanced)
-- ✅ **NEW: On-chain attestation verification support**
-- ✅ **NEW: Client-side server identity verification**
+- ✅ **On-chain attestation verification support**
+- ✅ **Client-side server identity verification**
+
+**Standard Routes (v2.0.1):**
+- ✅ Automatic `/health` endpoint
+- ✅ Automatic `/status` endpoint
+- ✅ Automatic `/.well-known/spl402.json` metadata endpoint
+- ✅ Server metadata configuration
+- ✅ RFC 8615 compliance
 
 **Integration:**
 - ✅ React hooks (`useSPL402`)
@@ -557,13 +778,17 @@ For information about registering your API server and creating attestations, vis
 - ✅ Zero dependencies (only peer dependencies)
 - ✅ Comprehensive examples and documentation
 - ✅ Works with all major Solana wallets
+- ✅ 65 comprehensive tests (100% pass rate)
 
 ### 🔄 Roadmap
 
-**Recently Shipped (v2.0):**
-- ✅ Client-side attestation verification support
-- ✅ Documentation for on-chain server identity verification
-- ✅ Integration with decentralized API server discovery
+**Recently Shipped:**
+- ✅ **v2.0.1**: Standard routes (`/health`, `/status`, `/.well-known/spl402.json`)
+- ✅ **v2.0.1**: Server metadata configuration
+- ✅ **v2.0.1**: Health check and metadata endpoints
+- ✅ **v2.0**: Client-side attestation verification support
+- ✅ **v2.0**: Documentation for on-chain server identity verification
+- ✅ **v2.0**: Integration with decentralized API server discovery
 
 **Coming Soon:**
 - [ ] Payment session management (avoid repeated payments)
@@ -574,7 +799,7 @@ For information about registering your API server and creating attestations, vis
 - [ ] Subscription/recurring payment patterns
 - [ ] Multi-currency support
 - [ ] WebSocket payment streaming
-- [ ] P2P decentralized API discovery network
+- [ ] P2P decentralized API discovery network (Phase 4)
 
 ## Configuration Examples
 
@@ -641,8 +866,23 @@ Run the test suite:
 npm test
 ```
 
+**v2.0.1 Test Results:**
+```
+============================================================
+Test Summary
+============================================================
+✅ Passed: 65
+❌ Failed: 0
+📊 Total:  65
+============================================================
+```
+
 **Test Coverage:**
 - ✅ Server creation and configuration
+- ✅ Standard routes auto-registration (v2.0.1)
+- ✅ Health check responses (v2.0.1)
+- ✅ Metadata endpoint (v2.0.1)
+- ✅ ServerInfo configuration (v2.0.1)
 - ✅ Client instance creation
 - ✅ Payment payload generation
 - ✅ Cryptographic signature verification
@@ -650,11 +890,18 @@ npm test
 - ✅ Fetch middleware functionality
 - ✅ Route matching and pricing
 - ✅ Error handling
+- ✅ Backwards compatibility (v2.0.1)
 
 **Development:**
 ```bash
 npm run build  # Build TypeScript
 npm run dev    # Watch mode for development
+```
+
+**Run Specific Tests:**
+```bash
+cd tests
+npm run test:standard-routes  # Test v2.0.1 features
 ```
 
 ## Security Considerations

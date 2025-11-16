@@ -13,6 +13,12 @@ const spl402 = createServer({
   network: 'mainnet-beta',
   recipientAddress: 'YourSolanaWalletAddress', // Replace with your wallet address
   rpcUrl: process.env.SOLANA_RPC_URL || 'https://api.mainnet-beta.solana.com', // Use custom RPC!
+  serverInfo: {
+    name: 'My API Server',
+    description: 'Premium data API with SPL-402 payments',
+    contact: 'https://myapi.com',
+    capabilities: ['data-api', 'premium-content'],
+  },
   routes: [
     { path: '/api/premium', price: 0.001, method: 'GET' },
     { path: '/api/data', price: 0.0005, method: 'GET' },
@@ -58,6 +64,10 @@ app.listen(PORT, () => {
   console.log('\n⚠️  IMPORTANT: Using mainnet-beta network');
   console.log('   Set SOLANA_RPC_URL environment variable for best performance');
   console.log('   Example: export SOLANA_RPC_URL="https://your-rpc-url.com"');
+  console.log('\nStandard endpoints (auto-registered):');
+  console.log('  GET  /health                    - Health check');
+  console.log('  GET  /status                    - Status check (alias)');
+  console.log('  GET  /.well-known/spl402.json   - Server metadata');
   console.log('\nProtected endpoints:');
   console.log('  GET  /api/premium - 0.001 SOL');
   console.log('  GET  /api/data    - 0.0005 SOL');

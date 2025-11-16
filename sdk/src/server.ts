@@ -4,6 +4,7 @@ import {
   ServerConfig,
   RoutePrice,
   SPL402_VERSION,
+  ServerMetadata,
 } from './types';
 import { verifyPaymentLocal, verifyPaymentBalanced } from './verify';
 
@@ -15,7 +16,13 @@ export class SPL402Server {
     this.config = config;
     this.routeMap = new Map();
 
-    config.routes.forEach(route => {
+    const standardRoutes: RoutePrice[] = [
+      { path: '/health', price: 0, method: 'GET' },
+      { path: '/status', price: 0, method: 'GET' },
+      { path: '/.well-known/spl402.json', price: 0, method: 'GET' },
+    ];
+
+    [...standardRoutes, ...config.routes].forEach(route => {
       const key = `${route.method || 'GET'}:${route.path}`;
       this.routeMap.set(key, route);
     });
@@ -130,6 +137,59 @@ export class SPL402Server {
   getConfig(): ServerConfig {
     return { ...this.config };
   }
+
+  getServerMetadata(): ServerMetadata {
+    return {
+      version: '1.0',
+      server: this.config.serverInfo ? {
+        name: this.config.serverInfo.name,
+        description: this.config.serverInfo.description,
+        contact: this.config.serverInfo.contact,
+      } : undefined,
+      wallet: this.config.recipientAddress,
+      network: this.config.network,
+      scheme: this.config.scheme || 'transfer',
+      mint: this.config.mint,
+      decimals: this.config.decimals,
+      routes: this.config.routes.map(route => ({
+        path: route.path,
+        method: route.method || 'GET',
+        price: route.price,
+      })),
+      capabilities: this.config.serverInfo?.capabilities,
+    };
+  }
+
+  createHealthResponse(): {
+    status: number;
+    headers: Record<string, string>;
+    body: { status: string; timestamp: number };
+  } {
+    return {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: {
+        status: 'ok',
+        timestamp: Date.now(),
+      },
+    };
+  }
+
+  createMetadataResponse(): {
+    status: number;
+    headers: Record<string, string>;
+    body: ServerMetadata;
+  } {
+    return {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: this.getServerMetadata(),
+    };
+  }
 }
 
 export function createServer(config: ServerConfig): SPL402Server {
@@ -138,6 +198,20 @@ export function createServer(config: ServerConfig): SPL402Server {
 
 export function createExpressMiddleware(server: SPL402Server) {
   return async (req: any, res: any, next: any) => {
+    if (req.path === '/health' || req.path === '/status') {
+      const response = server.createHealthResponse();
+      return res.status(response.status)
+        .set(response.headers)
+        .json(response.body);
+    }
+
+    if (req.path === '/.well-known/spl402.json') {
+      const response = server.createMetadataResponse();
+      return res.status(response.status)
+        .set(response.headers)
+        .json(response.body);
+    }
+
     const result = await server.handleRequest(
       req.path,
       req.method,
@@ -165,6 +239,23 @@ export function createExpressMiddleware(server: SPL402Server) {
 export function createFetchMiddleware(server: SPL402Server) {
   return async (request: Request): Promise<Response | null> => {
     const url = new URL(request.url);
+
+    if (url.pathname === '/health' || url.pathname === '/status') {
+      const response = server.createHealthResponse();
+      return new Response(JSON.stringify(response.body), {
+        status: response.status,
+        headers: response.headers,
+      });
+    }
+
+    if (url.pathname === '/.well-known/spl402.json') {
+      const response = server.createMetadataResponse();
+      return new Response(JSON.stringify(response.body), {
+        status: response.status,
+        headers: response.headers,
+      });
+    }
+
     const headers: Record<string, string> = {};
     request.headers.forEach((value, key) => {
       headers[key] = value;

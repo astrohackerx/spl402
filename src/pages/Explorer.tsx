@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { ExternalLink, Globe, Calendar, User, CheckCircle, XCircle, Server, Activity, Shield, FileText } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ExternalLink, Globe, Calendar, User, CheckCircle, XCircle, Server, Activity, Shield, FileText, Play } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
+import { useServerHealth } from '../hooks/useServerHealth';
 
 interface ApiServer {
   id: string;
@@ -32,6 +34,7 @@ interface AttestationData {
 type TabType = 'nodes' | 'attestations';
 
 export function Explorer() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>('nodes');
   const [servers, setServers] = useState<ApiServer[]>([]);
   const [attestations, setAttestations] = useState<AttestationData[]>([]);
@@ -42,6 +45,9 @@ export function Explorer() {
   const [currentPageNodes, setCurrentPageNodes] = useState(1);
   const [currentPageAttestations, setCurrentPageAttestations] = useState(1);
   const itemsPerPage = 15;
+
+  const serverEndpoints = servers.map(s => s.api_endpoint);
+  const { healthStatus } = useServerHealth(serverEndpoints);
 
   useEffect(() => {
     loadData();
@@ -337,10 +343,13 @@ export function Explorer() {
               ) : (
                 <>
                   <div className="grid gap-6 mb-8">
-                    {paginatedServers.map((server) => (
+                    {paginatedServers.map((server) => {
+                      const serverHealth = healthStatus[server.api_endpoint];
+                      return (
                   <div
                     key={server.id}
-                    className="group bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-6 sm:p-8 transition-all relative overflow-hidden"
+                    className="group bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-6 sm:p-8 transition-all relative overflow-hidden cursor-pointer"
+                    onClick={() => navigate(`/server/${server.attestation_address}`)}
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 transition-all" />
 
@@ -353,16 +362,39 @@ export function Explorer() {
                           </div>
                           <p className="text-gray-400 text-sm sm:text-base leading-relaxed">API: {server.api_endpoint}</p>
                         </div>
-                        <div className="flex-shrink-0">
-                          {server.is_verified ? (
-                            <div className="flex items-center gap-2 px-4 py-2 bg-[#14F195]/10 text-[#14F195] border border-[#14F195]/20 rounded-full">
-                              <CheckCircle size={16} />
-                              <span className="text-sm font-medium">Verified</span>
-                            </div>
-                          ) : (
-                            <div className="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-full">
-                              <XCircle size={16} />
-                              <span className="text-sm font-medium">Unverified</span>
+                        <div className="flex flex-col gap-2">
+                          <div className="flex gap-2">
+                            {server.is_verified ? (
+                              <div className="flex items-center gap-2 px-4 py-2 bg-[#14F195]/10 text-[#14F195] border border-[#14F195]/20 rounded-full">
+                                <CheckCircle size={16} />
+                                <span className="text-sm font-medium">Verified</span>
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-full">
+                                <XCircle size={16} />
+                                <span className="text-sm font-medium">Unverified</span>
+                              </div>
+                            )}
+                          </div>
+                          {serverHealth && (
+                            <div
+                              className={`flex items-center gap-2 px-4 py-2 rounded-full border ${
+                                serverHealth.isOnline
+                                  ? 'bg-green-500/10 text-green-400 border-green-500/20'
+                                  : 'bg-gray-500/10 text-gray-400 border-gray-500/20'
+                              }`}
+                            >
+                              <div
+                                className={`w-2 h-2 rounded-full ${
+                                  serverHealth.isOnline ? 'bg-green-400 animate-pulse' : 'bg-gray-400'
+                                }`}
+                              />
+                              <span className="text-sm font-medium">
+                                {serverHealth.isOnline ? 'Online' : 'Offline'}
+                              </span>
+                              {serverHealth.responseTime && (
+                                <span className="text-xs">({serverHealth.responseTime}ms)</span>
+                              )}
                             </div>
                           )}
                         </div>
@@ -370,55 +402,16 @@ export function Explorer() {
 
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div className="bg-black/30 border border-white/5 rounded-xl p-4">
-                          <div className="flex items-center gap-2 mb-3">
-                            <User size={16} className="text-[#9945FF]" />
-                            <p className="text-gray-500 text-sm font-medium">Wallet Address</p>
-                          </div>
-                          <a
-                            href={`https://solscan.io/account/${server.wallet_address}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-[#14F195] hover:text-[#14F195]/80 transition-colors group/link"
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(`/server/${server.attestation_address}`);
+                            }}
+                            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:opacity-90 rounded-lg font-semibold transition-all text-sm"
                           >
-                            <span className="font-mono text-xs sm:text-sm break-all">{server.wallet_address}</span>
-                            <ExternalLink size={14} className="flex-shrink-0 opacity-0 group-hover/link:opacity-100 transition-opacity" />
-                          </a>
-                        </div>
-
-                        <div className="bg-black/30 border border-white/5 rounded-xl p-4">
-                          <div className="flex items-center gap-2 mb-3">
-                            <Globe size={16} className="text-[#9945FF]" />
-                            <p className="text-gray-500 text-sm font-medium">Project</p>
-                          </div>
-                          <a
-                            href={
-                              server.contact.startsWith('http://') || server.contact.startsWith('https://')
-                                ? server.contact
-                                : `https://${server.contact}`
-                            }
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-[#14F195] hover:text-[#14F195]/80 transition-colors group/link"
-                          >
-                            <span className="text-sm break-all">{server.contact}</span>
-                            <ExternalLink size={14} className="flex-shrink-0 opacity-0 group-hover/link:opacity-100 transition-opacity" />
-                          </a>
-                        </div>
-
-                        <div className="bg-black/30 border border-white/5 rounded-xl p-4">
-                          <div className="flex items-center gap-2 mb-3">
-                            <CheckCircle size={16} className="text-[#9945FF]" />
-                            <p className="text-gray-500 text-sm font-medium">Attestation PDA</p>
-                          </div>
-                          <a
-                            href={`https://solscan.io/account/${server.attestation_address}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-[#14F195] hover:text-[#14F195]/80 transition-colors group/link"
-                          >
-                            <span className="font-mono text-xs sm:text-sm break-all">{server.attestation_address}</span>
-                            <ExternalLink size={14} className="flex-shrink-0 opacity-0 group-hover/link:opacity-100 transition-opacity" />
-                          </a>
+                            <Play size={16} />
+                            View Profile & Test API
+                          </button>
                         </div>
 
                         <div className="bg-black/30 border border-white/5 rounded-xl p-4">
@@ -434,10 +427,45 @@ export function Explorer() {
                             })}
                           </p>
                         </div>
+
+                        <div className="bg-black/30 border border-white/5 rounded-xl p-4">
+                          <div className="flex items-center gap-2 mb-3">
+                            <User size={16} className="text-[#9945FF]" />
+                            <p className="text-gray-500 text-sm font-medium">Wallet Address</p>
+                          </div>
+                          <a
+                            href={`https://solscan.io/account/${server.wallet_address}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="flex items-center gap-2 text-[#14F195] hover:text-[#14F195]/80 transition-colors group/link"
+                          >
+                            <span className="font-mono text-xs sm:text-sm break-all">{server.wallet_address}</span>
+                            <ExternalLink size={14} className="flex-shrink-0 opacity-0 group-hover/link:opacity-100 transition-opacity" />
+                          </a>
+                        </div>
+
+                        <div className="bg-black/30 border border-white/5 rounded-xl p-4">
+                          <div className="flex items-center gap-2 mb-3">
+                            <CheckCircle size={16} className="text-[#9945FF]" />
+                            <p className="text-gray-500 text-sm font-medium">Attestation PDA</p>
+                          </div>
+                          <a
+                            href={`https://solscan.io/account/${server.attestation_address}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="flex items-center gap-2 text-[#14F195] hover:text-[#14F195]/80 transition-colors group/link"
+                          >
+                            <span className="font-mono text-xs sm:text-sm break-all">{server.attestation_address}</span>
+                            <ExternalLink size={14} className="flex-shrink-0 opacity-0 group-hover/link:opacity-100 transition-opacity" />
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </div>
-                ))}
+                      );
+                    })}
               </div>
 
                   <div className="flex flex-col items-center gap-6">
