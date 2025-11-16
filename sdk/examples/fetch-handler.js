@@ -1,4 +1,4 @@
-const { createServer, createFetchMiddleware } = require('../dist/index.js');
+const { createServer, createFetchMiddleware } = require('spl402');
 
 // IMPORTANT: Use a reliable RPC endpoint for mainnet
 // Default Solana public RPC has rate limits and may not work properly

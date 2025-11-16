@@ -1,4 +1,4 @@
-const { createServer, createExpressMiddleware } = require('../dist/index.js');
+const { createServer, createExpressMiddleware } = require('spl402');
 const express = require('express');
 
 // IMPORTANT: Use a reliable RPC endpoint for mainnet
