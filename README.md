@@ -4,6 +4,8 @@
 
 A lightweight, zero-dependency implementation of HTTP 402 Payment Required for Solana. Accept direct wallet-to-wallet payments on your API endpoints with no middlemen, platforms, or facilitators.
 
+Now with **Solana Attestation Service (SAS)** integration for on-chain server identity verification and decentralized API discovery.
+
 ## Table of Contents
 
 - [What is SPL-402?](#what-is-spl-402)
@@ -12,6 +14,7 @@ A lightweight, zero-dependency implementation of HTTP 402 Payment Required for S
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [Important: RPC Configuration](#important-rpc-configuration)
+- [Solana Attestation Service (SAS) Integration](#solana-attestation-service-sas-integration)
 - [API Reference](#api-reference)
 - [Configuration Examples](#configuration-examples)
 - [Examples](#examples)
@@ -31,6 +34,8 @@ SPL-402 is a protocol that brings the HTTP 402 Payment Required status code to l
 - **Simple integration**: Add one middleware to your server, one function call on client
 - **Token flexibility**: Accept native SOL or any SPL token (SPL402, USDC, USDT, etc.)
 - **Lightning fast**: 2-3x faster than alternative solutions (500-1000ms vs ~2000-2500ms)
+- **On-chain verification**: SAS attestations prove server identity and ownership
+- **Decentralized registry**: Join the growing network of verified API servers
 
 Think of it as "pay-per-request" for your APIs, without payment processors, subscriptions, or API key management.
 
@@ -410,6 +415,122 @@ Check the [`examples/`](./examples) directory for production-ready code:
 **Complete Setup Guide:**
 See [examples/README.md](./examples/README.md) for detailed setup instructions, environment configuration, and implementation patterns.
 
+## Solana Attestation Service (SAS) Integration
+
+SPL402 2.0 introduces support for on-chain server attestations. Server operators can create verifiable attestations on Solana blockchain that prove they control the wallet receiving payments.
+
+### What is SAS?
+
+Solana Attestation Service provides cryptographic proof of server identity and ownership stored on-chain:
+
+- **Server wallet address** - Proves operator controls the payment recipient
+- **API endpoint URL** - Links the on-chain identity to the API server
+- **Immutable timestamp** - Permanent record on Solana blockchain
+- **Public verification** - Anyone can verify attestations on-chain
+
+### Why Use Attestations?
+
+**Benefits:**
+- **Trust**: Clients verify the API server owns the payment wallet
+- **Transparency**: All attestations are publicly auditable on Solana
+- **Decentralization**: Enables discovery of verified API servers
+- **Censorship Resistance**: No central authority controls registration
+
+### Client-Side Verification
+
+The SDK provides functions to verify server attestations on-chain:
+
+**1. Query All Verified Servers**
+
+```typescript
+import { queryVerifiedServers } from 'spl402';
+
+// Get all verified SPL402 servers
+const servers = await queryVerifiedServers('mainnet-beta');
+
+servers.forEach(server => {
+  console.log('Wallet:', server.wallet);
+  console.log('Endpoint:', server.endpoint);
+  console.log('Description:', server.description);
+  console.log('Attestation PDA:', server.attestationPda);
+});
+```
+
+**2. Check Server by Wallet Address**
+
+```typescript
+import { checkAttestationByWallet } from 'spl402';
+
+const result = await checkAttestationByWallet(
+  'SERVER_WALLET_ADDRESS',
+  'mainnet-beta'
+);
+
+if (result.isVerified) {
+  console.log('✅ Server verified!');
+  console.log('API Endpoint:', result.data?.endpoint);
+  console.log('Attestation:', result.attestationPda);
+} else {
+  console.log('❌ Not verified:', result.error);
+}
+```
+
+**3. Check Server by API Endpoint**
+
+```typescript
+import { checkAttestationByEndpoint } from 'spl402';
+
+const result = await checkAttestationByEndpoint(
+  'https://api.example.com',
+  'mainnet-beta'
+);
+
+if (result.isVerified) {
+  console.log('✅ API server verified!');
+  console.log('Wallet:', result.data?.wallet);
+} else {
+  console.log('❌ Not verified:', result.error);
+}
+```
+
+**4. Get Attestation by PDA**
+
+```typescript
+import { getAttestationByPda } from 'spl402';
+
+const result = await getAttestationByPda(
+  'ATTESTATION_PDA_ADDRESS',
+  'mainnet-beta'
+);
+
+if (result.isVerified) {
+  console.log('Server Data:', result.data);
+}
+```
+
+### Types
+
+```typescript
+interface VerifiedServer {
+  wallet: string;
+  endpoint: string;
+  description: string;
+  contact: string;
+  attestationPda: string;
+}
+
+interface AttestationCheckResult {
+  isVerified: boolean;
+  attestationPda?: string;
+  data?: VerifiedServer;
+  error?: string;
+}
+```
+
+### Server Registration
+
+For information about registering your API server and creating attestations, visit [spl402.org](https://spl402.org)
+
 ## Features
 
 ### ✅ Current Features
@@ -421,6 +542,8 @@ See [examples/README.md](./examples/README.md) for detailed setup instructions, 
 - ✅ Cryptographic signature validation
 - ✅ Multiple routes with individual pricing
 - ✅ Two verification modes (strict & balanced)
+- ✅ **NEW: On-chain attestation verification support**
+- ✅ **NEW: Client-side server identity verification**
 
 **Integration:**
 - ✅ React hooks (`useSPL402`)
@@ -437,6 +560,11 @@ See [examples/README.md](./examples/README.md) for detailed setup instructions, 
 
 ### 🔄 Roadmap
 
+**Recently Shipped (v2.0):**
+- ✅ Client-side attestation verification support
+- ✅ Documentation for on-chain server identity verification
+- ✅ Integration with decentralized API server discovery
+
 **Coming Soon:**
 - [ ] Payment session management (avoid repeated payments)
 - [ ] Webhook notifications for payment events
@@ -446,6 +574,7 @@ See [examples/README.md](./examples/README.md) for detailed setup instructions, 
 - [ ] Subscription/recurring payment patterns
 - [ ] Multi-currency support
 - [ ] WebSocket payment streaming
+- [ ] P2P decentralized API discovery network
 
 ## Configuration Examples
 
@@ -582,6 +711,53 @@ Client works in:
 **Problem**: Transaction might not be confirmed yet, or RPC is slow
 **Solution**: Wait a moment and retry, or use a faster RPC endpoint
 
+## Decentralized API Network
+
+SPL402 is building toward a fully decentralized, peer-to-peer API network:
+
+### Current Architecture
+
+```
+AI Agent / Client
+       ↓
+SPL402-enabled API Server
+       ↓
+Solana Blockchain (Payment + Attestation Verification)
+```
+
+### Future Vision: P2P Mesh Network
+
+```
+[AI Agent + API Server] ←→ [AI Agent + API Server] ←→ [AI Agent + API Server]
+         ↓                          ↓                          ↓
+         └──────────────────────────┴──────────────────────────┘
+                                    ↓
+                         Solana Blockchain
+                    (Settlement + Attestations)
+```
+
+**Key Features:**
+- **Self-Verifying Network**: Every node verifies peers through SAS attestations
+- **Open Discovery**: Browse verified APIs via SPL402 Explorer
+- **No Central Authority**: No gatekeepers, registries, or central control
+- **Censorship Resistant**: Impossible to block or throttle individual servers
+- **Scalable**: Network grows organically as nodes join
+- **Economic Incentives**: Token-based payment flows between nodes
+
+**Use Cases:**
+- AI agents discovering and paying for API services
+- Decentralized data marketplaces
+- Cross-service micropayments
+- Machine-to-machine economy
+- Censorship-resistant API infrastructure
+
+**Current Status:**
+- ✅ Phase 1: Payment protocol (live)
+- ✅ Phase 2: SAS attestation integration (live)
+- ✅ Phase 3: Server registration & verification (live)
+- 🔄 Phase 4: P2P discovery protocol (in development)
+- 📋 Phase 5: DAO governance (planned)
+
 ## Contributing
 
 Contributions welcome! Please check the issues or submit PRs.
@@ -592,10 +768,13 @@ MIT
 
 ## Links
 
+**SPL402 Resources:**
 - [Website](https://spl402.org)
 - [GitHub Repository](https://github.com/astrohackerx/spl402)
 - [NPM Package](https://www.npmjs.com/package/spl402)
+- [Twitter/X](https://x.com/spl402)
 
+**Documentation:**
 - [Solana Docs](https://docs.solana.com)
 - [HTTP 402 Status Code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/402)
 

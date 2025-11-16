@@ -4,7 +4,41 @@ Professional TypeScript/React examples for real Solana developers.
 
 ## Quick Start
 
-### 1. React Hook Example
+### 1. Verify Server Attestation
+
+Check if an API server is verified on-chain:
+
+```typescript
+import { checkAttestationByEndpoint } from 'spl402';
+
+const result = await checkAttestationByEndpoint(
+  'https://api.example.com',
+  'mainnet-beta'
+);
+
+if (result.isVerified) {
+  console.log('✅ Server verified!');
+  console.log('Wallet:', result.data?.wallet);
+} else {
+  console.log('❌ Not verified');
+}
+```
+
+### 2. Discover All Servers
+
+Find all verified SPL402 servers:
+
+```typescript
+import { queryVerifiedServers } from 'spl402';
+
+const servers = await queryVerifiedServers('mainnet-beta');
+
+servers.forEach(server => {
+  console.log(server.endpoint, '-', server.description);
+});
+```
+
+### 3. Make Paid Request
 
 Use the `useSPL402` hook with Solana Wallet Adapter:
 
@@ -36,7 +70,7 @@ function MyComponent() {
 }
 ```
 
-### 2. Vanilla TypeScript Example
+### 4. Vanilla TypeScript
 
 No framework? No problem:
 
@@ -63,7 +97,9 @@ npm install spl402 @solana/web3.js @solana/wallet-adapter-react @solana/wallet-a
 
 ## Examples
 
-### React Component (`react-example.tsx`)
+### Payment Examples
+
+#### React Component (`react-example.tsx`)
 
 Full React component with:
 - Wallet connection handling
@@ -73,7 +109,7 @@ Full React component with:
 
 **Use case:** React apps (CRA, Vite)
 
-### Vanilla TypeScript (`vanilla-ts.ts`)
+#### Vanilla TypeScript (`vanilla-ts.ts`)
 
 Pure TypeScript with Phantom wallet:
 - Direct wallet integration
@@ -82,7 +118,7 @@ Pure TypeScript with Phantom wallet:
 
 **Use case:** Vanilla JS/TS projects, simple integrations
 
-### Next.js App Router (`nextjs-app.tsx`)
+#### Next.js App Router (`nextjs-app.tsx`)
 
 Modern Next.js 14+ example:
 - App Router compatible
@@ -91,7 +127,7 @@ Modern Next.js 14+ example:
 
 **Use case:** Next.js applications
 
-### Express Server (`basic-server.js`)
+#### Express Server (`basic-server.js`)
 
 Backend API server:
 - Multiple protected routes
@@ -100,7 +136,7 @@ Backend API server:
 
 **Use case:** Node.js backend
 
-### Token Payments (`token-server.js`)
+#### Token Payments (`token-server.js`)
 
 Accept SPL tokens (USDC, etc.):
 - Token-based pricing
@@ -108,7 +144,7 @@ Accept SPL tokens (USDC, etc.):
 
 **Use case:** Stablecoin payments
 
-### Edge Functions (`fetch-handler.js`)
+#### Edge Functions (`fetch-handler.js`)
 
 Serverless/edge compatible:
 - Cloudflare Workers
@@ -116,6 +152,46 @@ Serverless/edge compatible:
 - Deno Deploy
 
 **Use case:** Edge runtimes
+
+### SAS Attestation Examples
+
+#### Server Verification (`verify-server.js`)
+
+Verify server attestations before payment:
+- Check server wallet is verified on-chain
+- Verify API endpoint has attestation
+- Get server details (description, contact)
+
+**Use case:** Client-side trust verification
+
+#### Server Discovery (`discover-servers.js`)
+
+Discover all verified SPL402 servers:
+- Query all on-chain attestations
+- Search servers by description
+- Build server directory/marketplace
+
+**Use case:** P2P network discovery, server listings
+
+#### React Attestation UI (`react-attestation.tsx`)
+
+React components for attestation UI:
+- `ServerVerificationBadge` - Show verified status
+- `ServerDiscoveryList` - Display all servers
+- Loading/error states
+- Tailwind CSS styled
+
+**Use case:** React apps with attestation verification
+
+#### Next.js Discovery Page (`nextjs-discovery.tsx`)
+
+Full Next.js server discovery page:
+- List all verified servers
+- Search by wallet address
+- Beautiful UI with Tailwind CSS
+- Real-time verification
+
+**Use case:** Next.js marketplace or directory
 
 ## Server Setup
 

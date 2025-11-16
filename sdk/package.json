@@ -1,7 +1,7 @@
 {
   "name": "spl402",
-  "version": "1.0.5",
-  "description": "SPL-402: Solana Payment Layer 402 - HTTP-native payments for Solana",
+  "version": "2.0.0",
+  "description": "SPL-402: Solana Payment Layer 402 - HTTP-native payments for Solana with SAS verification",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -21,6 +21,10 @@
   ],
   "author": "",
   "license": "MIT",
+  "dependencies": {
+    "@solana/kit": "^2.1.7",
+    "sas-lib": "latest"
+  },
   "peerDependencies": {
     "@solana/web3.js": "^1.95.0",
     "@solana/spl-token": "^0.4.0",
@@ -38,6 +42,7 @@
     "@types/react": "^18.3.0",
     "bs58": "^6.0.0",
     "react": "^18.3.1",
+    "sas-lib": "latest",
     "tsup": "^8.0.0",
     "typescript": "^5.5.0"
   },
