@@ -517,7 +517,7 @@ export function Explorer() {
                       const fullUrl = contactUrl.startsWith('http://') || contactUrl.startsWith('https://')
                         ? contactUrl
                         : `https://${contactUrl}`;
-                      const proofUrl = `https://explorer.solana.com/address/${attestation.address}`;
+                      const proofUrl = `https://explorer.solana.com/address/${attestation.address}/attestation`;
 
                       return (
                       <div
