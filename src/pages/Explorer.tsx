@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ExternalLink, Globe, Calendar, User, CheckCircle, XCircle, Server, Activity, Shield, FileText, Play } from 'lucide-react';
+import { ExternalLink, Globe, Calendar, User, CheckCircle, XCircle, Server, Activity, Shield, FileText, Play, Tag, DollarSign } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
@@ -192,25 +192,25 @@ export function Explorer() {
             <div className="bg-gradient-to-br from-[#14F195]/10 to-[#14F195]/5 border border-[#14F195]/20 rounded-2xl p-6">
               <div className="flex items-center justify-between mb-3">
                 <div className="p-2 bg-[#14F195]/20 rounded-lg">
-                  <CheckCircle size={24} className="text-[#14F195]" />
+                  <Activity size={24} className="text-[#14F195]" />
                 </div>
               </div>
               <div className="text-3xl font-bold text-white mb-1">
-                {servers.filter(s => s.is_verified).length}
+                {Object.values(healthStatus).filter(h => h.isOnline).length}
               </div>
-              <div className="text-sm text-gray-400">Verified</div>
+              <div className="text-sm text-gray-400">Online</div>
             </div>
 
-            <div className="bg-gradient-to-br from-red-500/10 to-red-500/5 border border-red-500/20 rounded-2xl p-6">
+            <div className="bg-gradient-to-br from-gray-500/10 to-gray-500/5 border border-gray-500/20 rounded-2xl p-6">
               <div className="flex items-center justify-between mb-3">
-                <div className="p-2 bg-red-500/20 rounded-lg">
-                  <Activity size={24} className="text-red-400" />
+                <div className="p-2 bg-gray-500/20 rounded-lg">
+                  <XCircle size={24} className="text-gray-400" />
                 </div>
               </div>
               <div className="text-3xl font-bold text-white mb-1">
-                {servers.filter(s => !s.is_verified).length}
+                {servers.length - Object.values(healthStatus).filter(h => h.isOnline).length}
               </div>
-              <div className="text-sm text-gray-400">Unverified</div>
+              <div className="text-sm text-gray-400">Offline</div>
             </div>
           </div>
           )}
@@ -358,9 +358,39 @@ export function Explorer() {
                         <div className="flex-1 min-w-0">
                           <div className="flex flex-wrap items-center gap-3 mb-3">
                             <Globe size={24} className="text-[#14F195] flex-shrink-0" />
-                            <h3 className="text-xl sm:text-2xl font-bold break-all">{server.description}</h3>
+                            <h3 className="text-xl sm:text-2xl font-bold break-all">
+                              {serverHealth?.metadata?.server?.name || server.description}
+                            </h3>
+                            {serverHealth && (
+                              serverHealth.hasMetadataEndpoint ? (
+                                <div className="flex items-center gap-1 px-2 py-1 bg-[#9945FF]/10 text-[#9945FF] border border-[#9945FF]/20 rounded-md">
+                                  <Shield size={12} />
+                                  <span className="text-xs font-medium">v2.0.1+</span>
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-1 px-2 py-1 bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 rounded-md">
+                                  <span className="text-xs font-medium">Needs Upgrade</span>
+                                </div>
+                              )
+                            )}
                           </div>
-                          <p className="text-gray-400 text-sm sm:text-base leading-relaxed">API: {server.api_endpoint}</p>
+                          <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-2">
+                            {serverHealth?.metadata?.server?.description || server.description}
+                          </p>
+                          <p className="text-gray-500 text-xs sm:text-sm">API: {server.api_endpoint}</p>
+                          {serverHealth?.metadata?.server?.contact && (
+                            <a
+                              href={serverHealth.metadata.server.contact.startsWith('http') ? serverHealth.metadata.server.contact : `https://${serverHealth.metadata.server.contact}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="inline-flex items-center gap-1 text-[#14F195] hover:text-[#14F195]/80 text-xs mt-1 transition-colors"
+                            >
+                              <Globe size={12} />
+                              <span>{serverHealth.metadata.server.contact}</span>
+                              <ExternalLink size={10} />
+                            </a>
+                          )}
                         </div>
                         <div className="flex flex-col gap-2">
                           <div className="flex gap-2">
@@ -399,6 +429,51 @@ export function Explorer() {
                           )}
                         </div>
                       </div>
+
+                      {serverHealth?.metadata?.capabilities && serverHealth.metadata.capabilities.length > 0 && (
+                        <div className="mb-6">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Tag size={14} className="text-[#9945FF]" />
+                            <span className="text-xs text-gray-400 font-medium">Capabilities</span>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {serverHealth.metadata.capabilities.map((cap, idx) => (
+                              <span
+                                key={idx}
+                                className="px-3 py-1 bg-[#9945FF]/10 text-[#9945FF] border border-[#9945FF]/20 rounded-full text-xs font-medium"
+                              >
+                                {cap}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {serverHealth?.metadata?.routes && serverHealth.metadata.routes.length > 0 && (
+                        <div className="mb-6">
+                          <div className="flex items-center gap-2 mb-3">
+                            <DollarSign size={14} className="text-[#14F195]" />
+                            <span className="text-xs text-gray-400 font-medium">Route Pricing</span>
+                          </div>
+                          <div className="bg-black/30 border border-white/5 rounded-xl p-4 max-h-40 overflow-y-auto">
+                            <div className="space-y-2">
+                              {serverHealth.metadata.routes.map((route, idx) => (
+                                <div key={idx} className="flex items-center justify-between text-xs">
+                                  <div className="flex items-center gap-2">
+                                    <span className="px-2 py-0.5 bg-[#14F195]/10 text-[#14F195] rounded font-mono">
+                                      {route.method}
+                                    </span>
+                                    <span className="text-gray-300 font-mono">{route.path}</span>
+                                  </div>
+                                  <span className="text-[#14F195] font-semibold">
+                                    {route.price === 0 ? 'FREE' : `${route.price} SOL`}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      )}
 
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div className="bg-black/30 border border-white/5 rounded-xl p-4">

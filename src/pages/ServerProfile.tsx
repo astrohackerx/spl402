@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ExternalLink, Globe, Calendar, User, CheckCircle, XCircle, ArrowLeft, Activity, Play } from 'lucide-react';
+import { ExternalLink, Globe, Calendar, User, CheckCircle, XCircle, ArrowLeft, Activity, Play, Shield, Tag, DollarSign } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
@@ -110,11 +110,28 @@ export function ServerProfile() {
             <div className="bg-gradient-to-br from-[#9945FF]/20 to-[#14F195]/20 p-8 sm:p-12 border-b border-white/10">
               <div className="flex flex-col sm:flex-row items-start justify-between gap-6">
                 <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-4">
+                  <div className="flex items-center gap-3 mb-4 flex-wrap">
                     <Globe size={32} className="text-[#14F195]" />
-                    <h1 className="text-3xl sm:text-4xl font-bold">{server.description}</h1>
+                    <h1 className="text-3xl sm:text-4xl font-bold">
+                      {serverHealth?.metadata?.server?.name || server.description}
+                    </h1>
+                    {serverHealth && (
+                      serverHealth.hasMetadataEndpoint ? (
+                        <div className="flex items-center gap-1 px-3 py-1 bg-[#9945FF]/20 text-[#9945FF] border border-[#9945FF]/30 rounded-md">
+                          <Shield size={14} />
+                          <span className="text-xs font-medium">v2.0.1+</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1 px-3 py-1 bg-yellow-500/20 text-yellow-500 border border-yellow-500/30 rounded-md">
+                          <span className="text-xs font-medium">Legacy SDK. Needs Upgrade to v2.0.1+</span>
+                        </div>
+                      )
+                    )}
                   </div>
-                  <p className="text-gray-300 text-lg mb-4">{server.api_endpoint}</p>
+                  <p className="text-gray-300 text-lg mb-2">
+                    {serverHealth?.metadata?.server?.description || server.description}
+                  </p>
+                  <p className="text-gray-400 text-sm mb-4">{server.api_endpoint}</p>
                   <div className="flex flex-wrap gap-3">
                     {server.is_verified ? (
                       <div className="flex items-center gap-2 px-4 py-2 bg-[#14F195]/20 text-[#14F195] border border-[#14F195]/30 rounded-full">
@@ -190,15 +207,16 @@ export function ServerProfile() {
                       </div>
                       <a
                         href={
-                          server.contact.startsWith('http://') || server.contact.startsWith('https://')
-                            ? server.contact
-                            : `https://${server.contact}`
+                          (serverHealth?.metadata?.server?.contact || server.contact).startsWith('http://') ||
+                          (serverHealth?.metadata?.server?.contact || server.contact).startsWith('https://')
+                            ? (serverHealth?.metadata?.server?.contact || server.contact)
+                            : `https://${serverHealth?.metadata?.server?.contact || server.contact}`
                         }
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 text-[#14F195] hover:text-[#14F195]/80 transition-colors group"
                       >
-                        <span className="text-sm break-all">{server.contact}</span>
+                        <span className="text-sm break-all">{serverHealth?.metadata?.server?.contact || server.contact}</span>
                         <ExternalLink size={14} className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
                       </a>
                     </div>
@@ -281,6 +299,51 @@ export function ServerProfile() {
                 </div>
               </div>
 
+              {serverHealth?.metadata?.capabilities && serverHealth.metadata.capabilities.length > 0 && (
+                <div className="mt-8 bg-black/30 border border-white/5 rounded-xl p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Tag size={18} className="text-[#9945FF]" />
+                    <h2 className="text-xl font-bold">Capabilities</h2>
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    {serverHealth.metadata.capabilities.map((cap, idx) => (
+                      <span
+                        key={idx}
+                        className="px-4 py-2 bg-[#9945FF]/10 text-[#9945FF] border border-[#9945FF]/20 rounded-full text-sm font-medium"
+                      >
+                        {cap}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {serverHealth?.metadata?.routes && serverHealth.metadata.routes.length > 0 && (
+                <div className="mt-8 bg-black/30 border border-white/5 rounded-xl p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <DollarSign size={18} className="text-[#14F195]" />
+                    <h2 className="text-xl font-bold">API Routes & Pricing</h2>
+                  </div>
+                  <div className="bg-black/50 border border-white/5 rounded-lg p-4 max-h-96 overflow-y-auto">
+                    <div className="space-y-3">
+                      {serverHealth.metadata.routes.map((route, idx) => (
+                        <div key={idx} className="flex items-center justify-between p-3 bg-[#0D0D0D] border border-white/5 rounded-lg">
+                          <div className="flex items-center gap-3">
+                            <span className="px-3 py-1 bg-[#14F195]/10 text-[#14F195] border border-[#14F195]/20 rounded font-mono text-sm font-medium">
+                              {route.method}
+                            </span>
+                            <span className="text-gray-200 font-mono text-sm">{route.path}</span>
+                          </div>
+                          <span className="text-[#14F195] font-bold text-sm">
+                            {route.price === 0 ? 'FREE' : `${route.price} SOL`}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="mt-8 bg-[#9945FF]/5 border border-[#9945FF]/20 rounded-xl p-6">
                 <h2 className="text-xl font-bold mb-4">Integration Example</h2>
                 <p className="text-gray-400 text-sm mb-4">
@@ -313,7 +376,7 @@ const data = await response.json();`}
         isOpen={testModalOpen}
         onClose={() => setTestModalOpen(false)}
         serverEndpoint={server.api_endpoint}
-        serverName={server.description}
+        serverName={serverHealth?.metadata?.server?.name || server.description}
       />
 
       <Footer />
