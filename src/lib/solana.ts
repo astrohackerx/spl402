@@ -26,7 +26,7 @@ export function formatPrice(
   let symbol: string;
 
   if (scheme === 'token-transfer' && tokenDecimals !== undefined) {
-    actualAmount = price / Math.pow(10, tokenDecimals);
+    actualAmount = price;
     symbol = tokenSymbol || 'tokens';
   } else {
     actualAmount = price;
