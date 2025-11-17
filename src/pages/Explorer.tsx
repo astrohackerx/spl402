@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { useServerHealth } from '../hooks/useServerHealth';
+import { PriceDisplay } from '../components/PriceDisplay';
 
 interface ApiServer {
   id: string;
@@ -466,7 +467,12 @@ export function Explorer() {
                                     <span className="text-gray-300 font-mono">{route.path}</span>
                                   </div>
                                   <span className="text-[#14F195] font-semibold">
-                                    {route.price === 0 ? 'FREE' : `${route.price} SOL`}
+                                    <PriceDisplay
+                                      price={route.price}
+                                      scheme={serverHealth.metadata.scheme}
+                                      decimals={serverHealth.metadata.decimals}
+                                      mint={serverHealth.metadata.mint}
+                                    />
                                   </span>
                                 </div>
                               ))}

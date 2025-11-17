@@ -6,6 +6,7 @@ import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { ApiTestModal } from '../components/ApiTestModal';
 import { useServerHealth } from '../hooks/useServerHealth';
+import { PriceDisplay } from '../components/PriceDisplay';
 
 interface ApiServer {
   id: string;
@@ -335,7 +336,12 @@ export function ServerProfile() {
                             <span className="text-gray-200 font-mono text-sm">{route.path}</span>
                           </div>
                           <span className="text-[#14F195] font-bold text-sm">
-                            {route.price === 0 ? 'FREE' : `${route.price} SOL`}
+                            <PriceDisplay
+                              price={route.price}
+                              scheme={serverHealth.metadata.scheme}
+                              decimals={serverHealth.metadata.decimals}
+                              mint={serverHealth.metadata.mint}
+                            />
                           </span>
                         </div>
                       ))}
