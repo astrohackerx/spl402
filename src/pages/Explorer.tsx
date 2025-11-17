@@ -469,9 +469,9 @@ export function Explorer() {
                                   <span className="text-[#14F195] font-semibold">
                                     <PriceDisplay
                                       price={route.price}
-                                      scheme={serverHealth.metadata.scheme}
-                                      decimals={serverHealth.metadata.decimals}
-                                      mint={serverHealth.metadata.mint}
+                                      scheme={serverHealth.metadata?.scheme}
+                                      decimals={serverHealth.metadata?.decimals}
+                                      mint={serverHealth.metadata?.mint}
                                     />
                                   </span>
                                 </div>

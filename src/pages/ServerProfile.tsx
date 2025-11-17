@@ -170,13 +170,15 @@ export function ServerProfile() {
                     )}
                   </div>
                 </div>
-                <button
-                  onClick={() => setTestModalOpen(true)}
-                  className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:opacity-90 rounded-xl font-semibold transition-all whitespace-nowrap"
-                >
-                  <Play size={18} />
-                  Test API
-                </button>
+                {serverHealth?.hasMetadataEndpoint && (
+                  <button
+                    onClick={() => setTestModalOpen(true)}
+                    className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:opacity-90 rounded-xl font-semibold transition-all whitespace-nowrap"
+                  >
+                    <Play size={18} />
+                    Test API
+                  </button>
+                )}
               </div>
             </div>
 
@@ -307,7 +309,7 @@ export function ServerProfile() {
                     <h2 className="text-xl font-bold">Capabilities</h2>
                   </div>
                   <div className="flex flex-wrap gap-3">
-                    {serverHealth.metadata.capabilities.map((cap, idx) => (
+                    {serverHealth.metadata?.capabilities.map((cap, idx) => (
                       <span
                         key={idx}
                         className="px-4 py-2 bg-[#9945FF]/10 text-[#9945FF] border border-[#9945FF]/20 rounded-full text-sm font-medium"
@@ -327,7 +329,7 @@ export function ServerProfile() {
                   </div>
                   <div className="bg-black/50 border border-white/5 rounded-lg p-4 max-h-96 overflow-y-auto">
                     <div className="space-y-3">
-                      {serverHealth.metadata.routes.map((route, idx) => (
+                      {serverHealth.metadata?.routes.map((route, idx) => (
                         <div key={idx} className="flex items-center justify-between p-3 bg-[#0D0D0D] border border-white/5 rounded-lg">
                           <div className="flex items-center gap-3">
                             <span className="px-3 py-1 bg-[#14F195]/10 text-[#14F195] border border-[#14F195]/20 rounded font-mono text-sm font-medium">
@@ -338,9 +340,9 @@ export function ServerProfile() {
                           <span className="text-[#14F195] font-bold text-sm">
                             <PriceDisplay
                               price={route.price}
-                              scheme={serverHealth.metadata.scheme}
-                              decimals={serverHealth.metadata.decimals}
-                              mint={serverHealth.metadata.mint}
+                              scheme={serverHealth.metadata?.scheme}
+                              decimals={serverHealth.metadata?.decimals}
+                              mint={serverHealth.metadata?.mint}
                             />
                           </span>
                         </div>
