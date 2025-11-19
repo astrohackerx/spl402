@@ -93,6 +93,15 @@ export default function Home() {
               </div>
 
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full max-w-2xl">
+                  <a
+                  href="https://aiagent.spl402.org"
+                  target='_blank'
+                className="group px-8 py-4 bg-[#9945FF] hover:bg-[#9945FF]/80 rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
+>
+                  <Sparkles size={18} />
+                  Decider Agent
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                </a>
                 <a
                   href="/docs"
                   className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#14F195]/30 rounded-xl font-semibold transition-all text-center flex items-center justify-center gap-2"
