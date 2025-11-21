@@ -102,7 +102,25 @@ export default function Home() {
                   Decider Agent
                   <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </a>
-                <a
+                      <a
+                  href="https://openrouter.spl402.org"
+                  target='_blank'
+                className="group px-8 py-4 bg-[#9945FF] hover:bg-[#9945FF]/80 rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
+>
+                  <Sparkles size={18} />
+                  OpenRouter
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                </a>
+                    <a
+                  href="https://pump.fun/coin/DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump"
+                  target='_blank'
+                  className="group px-8 py-4 bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:opacity-90 rounded-xl font-semibold transition-opacity flex items-center justify-center gap-2"
+                >
+                  <Rocket size={18} />
+                  Trade SPL402
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                </a>
+                {/* <a
                   href="/docs"
                   className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#14F195]/30 rounded-xl font-semibold transition-all text-center flex items-center justify-center gap-2"
                 >
@@ -116,7 +134,7 @@ export default function Home() {
                 >
                   <Zap size={18} />
                   Trade SPL402
-                </a>
+                </a> */}
               </div>
             </div>
 
