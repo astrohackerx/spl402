@@ -6,7 +6,7 @@ import {
   SPL402_VERSION,
   ServerMetadata,
 } from './types';
-import { verifyPaymentLocal, verifyPaymentBalanced } from './verify';
+import { verifyPayment } from './verify';
 
 export class SPL402Server {
   private config: ServerConfig;
@@ -50,11 +50,12 @@ export class SPL402Server {
     valid: boolean;
     reason?: string;
   }> {
-    const result = await verifyPaymentBalanced(
+    const result = await verifyPayment(
       payment,
       expectedAmount,
       this.config.recipientAddress,
-      this.config.network
+      this.config.network,
+      this.config.decimals
     );
 
     return {

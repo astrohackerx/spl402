@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { SPL402Client } from './client';
 import type { WalletAdapter } from './client';
 import type { SPL402Config } from './types';
@@ -17,6 +17,7 @@ export interface UseSPL402Return {
 
 /**
  * React hook for making SPL-402 payment-protected requests
+ * Compatible with React 18 and React 19
  *
  * @example
  * ```tsx
@@ -36,7 +37,13 @@ export function useSPL402(options: UseSPL402Options): UseSPL402Return {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const client = new SPL402Client(options);
+  const client = useMemo(
+    () => new SPL402Client({
+      network: options.network,
+      rpcUrl: options.rpcUrl,
+    }),
+    [options.network, options.rpcUrl]
+  );
 
   const makeRequest = useCallback(async (
     url: string,
@@ -58,7 +65,7 @@ export function useSPL402(options: UseSPL402Options): UseSPL402Return {
     } finally {
       setLoading(false);
     }
-  }, [client, options]);
+  }, [client, options.onSuccess, options.onError]);
 
   const reset = useCallback(() => {
     setLoading(false);

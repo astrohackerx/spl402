@@ -43,14 +43,6 @@ export interface SPL402Response {
   body?: unknown;
 }
 
-export interface VerifyPaymentRequest {
-  payment: SPL402PaymentPayload;
-  expectedAmount: number;
-  expectedRecipient: string;
-  network: SolanaNetwork;
-  decimals?: number;
-}
-
 export interface VerifyPaymentResponse {
   valid: boolean;
   reason?: string;

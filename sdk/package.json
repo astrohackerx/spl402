@@ -1,6 +1,6 @@
 {
   "name": "spl402",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "SPL-402: Solana Payment Layer 402 - HTTP-native payments for Solana with SAS verification",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -19,7 +19,7 @@
     "blockchain",
     "payment-layer"
   ],
-  "author": "",
+  "author": "AstrohackerX",
   "license": "MIT",
   "dependencies": {
     "@solana/kit": "^2.1.7",
@@ -48,7 +48,8 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "repository": {
     "type": "git",

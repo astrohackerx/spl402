@@ -7,7 +7,7 @@ export * from './attestation';
 
 export { SPL402Client, createClient, WalletAdapter } from './client';
 export { SPL402Server, createServer, createExpressMiddleware, createFetchMiddleware } from './server';
-export { verifyPayment, verifyPaymentLocal } from './verify';
+export { verifyPayment } from './verify';
 
 export {
   queryVerifiedServers,

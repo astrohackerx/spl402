@@ -3,7 +3,7 @@ const {
   createClient,
   createExpressMiddleware,
   createFetchMiddleware,
-  verifyPaymentLocal,
+  verifyPayment,
   SPL402_VERSION
 } = require('spl402');
 const { Keypair, PublicKey } = require('@solana/web3.js');
@@ -154,32 +154,8 @@ test('createFetchMiddleware returns function', () => {
   assert(typeof middleware === 'function', 'Middleware should be a function');
 });
 
-test('verifyPaymentLocal function exists', () => {
-  assert(typeof verifyPaymentLocal === 'function', 'verifyPaymentLocal should be a function');
-
-  const keypair = Keypair.generate();
-  const recipient = Keypair.generate();
-
-  const payload = {
-    spl402Version: SPL402_VERSION,
-    scheme: 'transfer',
-    network: 'devnet',
-    payload: {
-      from: keypair.publicKey.toBase58(),
-      to: recipient.publicKey.toBase58(),
-      amount: 1000000,
-      signature: 'test-signature',
-      timestamp: Date.now()
-    }
-  };
-
-  const dummySignature = '1'.repeat(88);
-
-  try {
-    const result = verifyPaymentLocal(payload, dummySignature);
-    assert(typeof result === 'object' || result === undefined, 'Should return result object or undefined');
-  } catch (e) {
-  }
+test('verifyPayment function exists', () => {
+  assert(typeof verifyPayment === 'function', 'verifyPayment should be a function');
 });
 
 test('Payment payload structure', () => {
@@ -307,7 +283,7 @@ test('Exports are properly defined', () => {
   assert(typeof createClient === 'function', 'createClient should be exported');
   assert(typeof createExpressMiddleware === 'function', 'createExpressMiddleware should be exported');
   assert(typeof createFetchMiddleware === 'function', 'createFetchMiddleware should be exported');
-  assert(typeof verifyPaymentLocal === 'function', 'verifyPaymentLocal should be exported');
+  assert(typeof verifyPayment === 'function', 'verifyPayment should be exported');
   assert(typeof SPL402_VERSION === 'number', 'SPL402_VERSION should be exported');
 });
 

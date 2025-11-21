@@ -3,7 +3,6 @@ import {
   SPL402PaymentPayload,
   SolanaTransferPayload,
   SolanaTokenTransferPayload,
-  VerifyPaymentRequest,
   VerifyPaymentResponse,
   SolanaNetwork,
 } from './types';
@@ -54,123 +53,13 @@ class SignatureCache {
 
 const signatureCache = new SignatureCache();
 
-interface BackgroundVerification {
-  payment: SPL402PaymentPayload;
-  expectedAmount: number;
-  expectedRecipient: string;
-  network: SolanaNetwork;
-  decimals?: number;
-}
-
-class BackgroundVerificationQueue {
-  private queue: BackgroundVerification[] = [];
-  private processing = false;
-
-  add(verification: BackgroundVerification): void {
-    this.queue.push(verification);
-    this.process();
-  }
-
-  private async process(): Promise<void> {
-    if (this.processing || this.queue.length === 0) return;
-
-    this.processing = true;
-
-    while (this.queue.length > 0) {
-      const item = this.queue.shift();
-      if (!item) break;
-
-      try {
-        await verifyPayment({
-          payment: item.payment,
-          expectedAmount: item.expectedAmount,
-          expectedRecipient: item.expectedRecipient,
-          network: item.network,
-          decimals: item.decimals
-        });
-      } catch (error) {
-        console.error('Background verification failed:', error);
-      }
-    }
-
-    this.processing = false;
-  }
-}
-
-const backgroundQueue = new BackgroundVerificationQueue();
-
-export async function verifyPaymentBalanced(
+export async function verifyPayment(
   payment: SPL402PaymentPayload,
   expectedAmount: number,
   expectedRecipient: string,
-  network: SolanaNetwork
+  network: SolanaNetwork,
+  decimals?: number
 ): Promise<VerifyPaymentResponse> {
-  if (payment.spl402Version !== 1) {
-    return { valid: false, reason: 'Unsupported SPL-402 version' };
-  }
-
-  if (payment.network !== network) {
-    return { valid: false, reason: 'Network mismatch' };
-  }
-
-  if (!validatePublicKey(expectedRecipient)) {
-    return { valid: false, reason: 'Invalid recipient address' };
-  }
-
-  const payload = payment.payload as any;
-
-  if (!validateSignature(payload.signature)) {
-    return { valid: false, reason: 'Invalid transaction signature' };
-  }
-
-  if (signatureCache.has(payload.signature)) {
-    return { valid: false, reason: 'Signature already used (replay attack blocked)' };
-  }
-
-  if (payload.to !== expectedRecipient) {
-    return { valid: false, reason: 'Recipient address mismatch' };
-  }
-
-  const now = Date.now();
-  if (Math.abs(now - payload.timestamp) > PAYMENT_TIMEOUT_MS) {
-    return { valid: false, reason: 'Payment timestamp expired' };
-  }
-
-  try {
-    const connection = createConnection(network);
-    const statuses = await connection.getSignatureStatuses([payload.signature]);
-
-    if (!statuses || !statuses.value || !statuses.value[0]) {
-      return { valid: false, reason: 'Transaction not found' };
-    }
-
-    const status = statuses.value[0];
-
-    if (status.err) {
-      return { valid: false, reason: 'Transaction failed on chain' };
-    }
-
-    if (!status.confirmationStatus) {
-      return { valid: false, reason: 'Transaction not confirmed' };
-    }
-
-    signatureCache.add(payload.signature, true);
-
-    return {
-      valid: true,
-      txHash: payload.signature,
-    };
-  } catch (error) {
-    return {
-      valid: false,
-      reason: `Verification error: ${error instanceof Error ? error.message : 'Unknown error'}`,
-    };
-  }
-}
-
-export async function verifyPayment(request: VerifyPaymentRequest): Promise<VerifyPaymentResponse> {
-  const { payment, expectedAmount, expectedRecipient, network, decimals } = request;
-
   if (payment.spl402Version !== 1) {
     return { valid: false, reason: 'Unsupported SPL-402 version' };
   }
@@ -200,6 +89,10 @@ async function verifyTransfer(
 ): Promise<VerifyPaymentResponse> {
   if (!validateSignature(payload.signature)) {
     return { valid: false, reason: 'Invalid transaction signature' };
+  }
+
+  if (signatureCache.has(payload.signature)) {
+    return { valid: false, reason: 'Signature already used (replay attack blocked)' };
   }
 
   const now = Date.now();
@@ -249,6 +142,8 @@ async function verifyTransfer(
       };
     }
 
+    signatureCache.add(payload.signature, true);
+
     return {
       valid: true,
       txHash: payload.signature,
@@ -274,6 +169,10 @@ async function verifyTokenTransfer(
 
   if (!validatePublicKey(payload.mint)) {
     return { valid: false, reason: 'Invalid token mint address in payload' };
+  }
+
+  if (signatureCache.has(payload.signature)) {
+    return { valid: false, reason: 'Signature already used (replay attack blocked)' };
   }
 
   const now = Date.now();
@@ -362,6 +261,8 @@ async function verifyTokenTransfer(
       };
     }
 
+    signatureCache.add(payload.signature, true);
+
     return {
       valid: true,
       txHash: payload.signature,
@@ -372,19 +273,4 @@ async function verifyTokenTransfer(
       reason: `Verification error: ${error instanceof Error ? error.message : 'Unknown error'}`,
     };
   }
-}
-
-export async function verifyPaymentLocal(
-  payment: SPL402PaymentPayload,
-  expectedAmount: number,
-  expectedRecipient: string,
-  decimals?: number
-): Promise<VerifyPaymentResponse> {
-  return verifyPayment({
-    payment,
-    expectedAmount,
-    expectedRecipient,
-    network: payment.network,
-    decimals,
-  });
 }
