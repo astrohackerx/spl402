@@ -4,13 +4,15 @@
 
 'use client';
 
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useSPL402 } from 'spl402';
 import { useState } from 'react';
+import { Transaction } from '@solana/web3.js';
 
 export default function PremiumAPIPage() {
-  const { publicKey, signAndSendTransaction } = useWallet();
+  const { publicKey, sendTransaction } = useWallet();
+  const { connection } = useConnection();
   const [content, setContent] = useState<any>(null);
 
   const { makeRequest, loading, error } = useSPL402({
@@ -19,12 +21,17 @@ export default function PremiumAPIPage() {
   });
 
   const fetchPremiumData = async () => {
-    if (!publicKey || !signAndSendTransaction) return;
+    if (!publicKey || !sendTransaction) return;
 
-    const response = await makeRequest('/api/premium', {
+    const walletAdapter = {
       publicKey,
-      signAndSendTransaction,
-    });
+      signAndSendTransaction: async (transaction: Transaction) => {
+        const signature = await sendTransaction(transaction, connection);
+        return { signature };
+      }
+    };
+
+    const response = await makeRequest('/api/premium', walletAdapter);
 
     const data = await response.json();
     setContent(data);

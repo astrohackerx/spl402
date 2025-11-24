@@ -6,6 +6,10 @@ A lightweight, zero-dependency implementation of HTTP 402 Payment Required for S
 
 Now with **Solana Attestation Service (SAS)** integration for on-chain server identity verification and decentralized API discovery.
 
+## Quick Start
+
+**New to SPL-402? Start here:** [QUICKSTART.md](QUICKSTART.md)
+
 ## Table of Contents
 
 - [What is SPL-402?](#what-is-spl-402)
