@@ -117,6 +117,75 @@ routes: [
 
 Routes NOT listed in the `routes` array will return 404.
 
+## Using with Express Routers
+
+The middleware works with Express routers! Just use full paths in your route config:
+
+```javascript
+const express = require('express');
+const { createServer, createExpressMiddleware } = require('spl402');
+
+const app = express();
+const apiRouter = express.Router();
+
+// Configure with FULL paths (including router mount point)
+const spl402 = createServer({
+  network: 'mainnet-beta',
+  recipientAddress: 'YOUR_WALLET',
+  rpcUrl: process.env.SOLANA_RPC_URL,
+  routes: [
+    { path: '/api/premium', price: 0.001 },  // Full path: /api/premium
+    { path: '/api/public', price: 0 }        // Full path: /api/public
+  ]
+});
+
+// Apply middleware to the router OR to app - both work!
+apiRouter.use(createExpressMiddleware(spl402));
+
+// Define routes in router (relative paths)
+apiRouter.get('/premium', (req, res) => {
+  res.json({ message: 'Premium!' });
+});
+
+apiRouter.get('/public', (req, res) => {
+  res.json({ message: 'Free!' });
+});
+
+// Mount router at /api
+app.use('/api', apiRouter);
+
+app.listen(3000);
+```
+
+**Key Point:** Always use the **full URL path** in your routes config, including any router mount points.
+
+## Dynamic Route Parameters
+
+SPL-402 supports Express-style dynamic parameters:
+
+```javascript
+const spl402 = createServer({
+  network: 'mainnet-beta',
+  recipientAddress: 'YOUR_WALLET',
+  rpcUrl: process.env.SOLANA_RPC_URL,
+  routes: [
+    { path: '/api/games/:code', price: 0.001 },        // Matches /api/games/abc123
+    { path: '/api/users/:id/profile', price: 0.002 },  // Matches /api/users/42/profile
+    { path: '/api/files/:filename', price: 0.005 }     // Matches /api/files/document.pdf
+  ]
+});
+
+app.get('/api/games/:code', (req, res) => {
+  const { code } = req.params;
+  res.json({ game: code });
+});
+```
+
+**How it works:**
+- `:code`, `:id`, `:filename` are dynamic parameters
+- Routes match any value in those positions
+- All matching requests require the same payment
+
 ## Important Notes
 
 ### RPC URL Required

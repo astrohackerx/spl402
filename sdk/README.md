@@ -6,9 +6,25 @@ A lightweight, zero-dependency implementation of HTTP 402 Payment Required for S
 
 Now with **Solana Attestation Service (SAS)** integration for on-chain server identity verification and decentralized API discovery.
 
+## Installation
+
+```bash
+npm install spl402
+```
+
+**Peer dependencies:**
+```bash
+npm install @solana/web3.js @solana/spl-token bs58
+```
+
+**For React/Next.js:**
+```bash
+npm install @solana/wallet-adapter-react @solana/wallet-adapter-react-ui @solana/wallet-adapter-wallets
+```
+
 ## Quick Start
 
-**New to SPL-402? Start here:** [QUICKSTART.md](QUICKSTART.md)
+**New to SPL-402? Start here:** [QUICKSTART.md](QUICKSTART.md) for the simplest setup guide.
 
 ## Table of Contents
 
@@ -160,96 +176,185 @@ All v2.0.0 code works without changes! The `serverInfo` field is optional, and s
 5. **Server verifies payment** → Checks signature on-chain
 6. **Server returns content** → Client receives requested data
 
-## Installation
+## Key Features
 
-**Basic installation:**
-```bash
-npm install spl402 @solana/web3.js @solana/spl-token bs58
+### Free Routes (No Payment)
+
+Mix free and paid routes! Set `price: 0` for free routes:
+
+```javascript
+routes: [
+  { path: '/api/premium', price: 0.001 },  // Paid
+  { path: '/api/public', price: 0 },       // FREE - no payment needed
+  { path: '/api/free-data', price: 0 }     // FREE - no payment needed
+]
 ```
 
-**For React/Next.js apps:**
-```bash
-npm install spl402 @solana/web3.js @solana/spl-token bs58 @solana/wallet-adapter-react @solana/wallet-adapter-react-ui @solana/wallet-adapter-wallets
+Routes with `price: 0` automatically pass through without requiring payment.
+
+### Dynamic Route Parameters
+
+SPL-402 supports Express-style dynamic parameters:
+
+```javascript
+const spl402 = createServer({
+  network: 'mainnet-beta',
+  recipientAddress: 'YOUR_WALLET',
+  rpcUrl: process.env.SOLANA_RPC_URL,
+  routes: [
+    { path: '/api/games/:code', price: 0.001 },        // Matches /api/games/abc123
+    { path: '/api/users/:id/profile', price: 0.002 },  // Matches /api/users/42/profile
+    { path: '/api/files/:filename', price: 0.005 }     // Matches /api/files/document.pdf
+  ]
+});
+
+app.get('/api/games/:code', (req, res) => {
+  const { code } = req.params;
+  res.json({ game: code });
+});
 ```
 
-**Using Yarn:**
-```bash
-yarn add spl402 @solana/web3.js @solana/spl-token bs58
+**How it works:**
+- `:code`, `:id`, `:filename` are dynamic parameters
+- Routes match any value in those positions
+- All matching requests require the same payment
+
+### Express Router Support
+
+The middleware works with Express routers! Just use full paths in your route config:
+
+```javascript
+const express = require('express');
+const { createServer, createExpressMiddleware } = require('spl402');
+
+const app = express();
+const apiRouter = express.Router();
+
+// Configure with FULL paths (including router mount point)
+const spl402 = createServer({
+  network: 'mainnet-beta',
+  recipientAddress: 'YOUR_WALLET',
+  rpcUrl: process.env.SOLANA_RPC_URL,
+  routes: [
+    { path: '/api/premium', price: 0.001 },  // Full path: /api/premium
+    { path: '/api/public', price: 0 }        // Full path: /api/public
+  ]
+});
+
+// Apply middleware to the router OR to app - both work!
+apiRouter.use(createExpressMiddleware(spl402));
+
+// Define routes in router (relative paths)
+apiRouter.get('/premium', (req, res) => {
+  res.json({ message: 'Premium!' });
+});
+
+// Mount router at /api
+app.use('/api', apiRouter);
+
+app.listen(3000);
 ```
 
-**Peer dependencies:**
-- `@solana/web3.js` (^1.95.0) - Core Solana blockchain interaction
-- `@solana/spl-token` (^0.4.0) - SPL token transfer operations
-- `bs58` (^6.0.0) - Base58 encoding/decoding for signatures
-- `react` (^18.0.0) - Optional, only required for React hooks (`useSPL402`)
+**Key Point:** Always use the **full URL path** in your routes config, including any router mount points.
 
 ## Quick Start
 
 ### Server Setup (Express)
 
-```typescript
-import { createServer, createExpressMiddleware } from 'spl402';
-import express from 'express';
+```javascript
+const express = require('express');
+const { createServer, createExpressMiddleware } = require('spl402');
 
+const app = express();
+
+// Create SPL-402 server
 const spl402 = createServer({
   network: 'mainnet-beta',
-  recipientAddress: 'YOUR_WALLET_ADDRESS', // Your Solana wallet
-  rpcUrl: process.env.SOLANA_RPC_URL,      // CRITICAL: Use custom RPC endpoint!
-  serverInfo: {                             // Optional (v2.0.1+)
+  recipientAddress: 'YOUR_WALLET_ADDRESS',  // Your Solana wallet
+  rpcUrl: process.env.SOLANA_RPC_URL,       // Get free RPC from https://www.helius.dev
+  serverInfo: {                              // Optional (v2.0.1+)
     name: 'My API Server',
     description: 'Premium data API',
     contact: 'https://myapi.com',
     capabilities: ['data-api']
   },
   routes: [
-    { path: '/api/premium', price: 0.001, method: 'GET' },  // 0.001 SOL
-    { path: '/api/data', price: 0.0005, method: 'GET' },    // 0.0005 SOL
-  ],
+    { path: '/api/premium', price: 0.001 },     // 0.001 SOL - requires payment
+    { path: '/api/data', price: 0.005 },        // 0.005 SOL - requires payment
+    { path: '/api/public', price: 0 }           // FREE - no payment needed
+  ]
 });
 
-const app = express();
+// Add payment middleware ONCE for all routes
+// Free routes (price: 0) automatically pass through - no payment needed
 app.use(createExpressMiddleware(spl402));
 
-// Standard routes are auto-registered:
-// GET /health          → 200 OK (free)
-// GET /status          → 200 OK (free)
-// GET /.well-known/spl402.json → metadata (free)
+// Standard routes are auto-registered (free):
+// GET /health          → 200 OK
+// GET /status          → 200 OK
+// GET /.well-known/spl402.json → metadata
 
+// Your endpoints (both paid and free)
 app.get('/api/premium', (req, res) => {
-  res.json({ message: 'Protected content!' });
+  res.json({ message: 'Premium content!' });
+});
+
+app.get('/api/public', (req, res) => {
+  res.json({ message: 'Free public data - no payment required!' });
 });
 
 app.listen(3000);
 ```
 
+**TypeScript:**
+```typescript
+import { createServer, createExpressMiddleware } from 'spl402';
+import express from 'express';
+// Same as above, just use import syntax
+```
+
 ### Client Setup (React)
 
-**Recommended for production apps:**
-
 ```tsx
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { useSPL402 } from 'spl402';
+import { Transaction } from '@solana/web3.js';
 
 function PremiumContent() {
-  const { publicKey, signAndSendTransaction } = useWallet();
+  const { publicKey, sendTransaction } = useWallet();
+  const { connection } = useConnection();
 
   const { makeRequest, loading, error } = useSPL402({
     network: 'mainnet-beta',
-    rpcUrl: process.env.REACT_APP_SOLANA_RPC_URL,
+    rpcUrl: process.env.REACT_APP_SOLANA_RPC_URL
   });
 
-  const fetchPremiumData = async () => {
-    const response = await makeRequest('/api/premium', {
+  const handleClick = async () => {
+    if (!publicKey || !sendTransaction) return;
+
+    // Create wallet adapter for SPL-402
+    // sendTransaction handles signing AND sending with ONE user approval
+    const walletAdapter = {
       publicKey,
-      signAndSendTransaction,
-    });
+      signAndSendTransaction: async (transaction: Transaction) => {
+        const signature = await sendTransaction(transaction, connection);
+        return { signature };
+      }
+    };
+
+    // Make paid request
+    const response = await makeRequest(
+      'https://api.example.com/premium',
+      walletAdapter
+    );
+
     const data = await response.json();
     console.log(data);
   };
 
   return (
-    <button onClick={fetchPremiumData} disabled={loading}>
-      {loading ? 'Processing...' : 'Get Premium Data (0.001 SOL)'}
+    <button onClick={handleClick} disabled={loading}>
+      {loading ? 'Processing...' : 'Get Premium Content (0.001 SOL)'}
     </button>
   );
 }
@@ -576,25 +681,29 @@ Makes a payment-protected HTTP request using your connected wallet.
 **Parameters:**
 - `url`: The API endpoint to request
 - `wallet`: Your connected Solana wallet (Phantom, Solflare, etc.)
-- `options`: Optional fetch options
+- `options`: Optional fetch options (method, headers, body, etc.)
 
 **Returns:** Fetch Response object
 
 **Throws:** Error if payment fails, wallet not connected, or payment rejected
 
-**Example:**
+**Examples:**
+
 ```typescript
-// Connect wallet
-const wallet = window.phantom?.solana;
-await wallet.connect();
+// GET request
+await makeRequest('/api/data', wallet);
 
-// Make paid request
-const response = await client.makeRequest(
-  'https://api.example.com/premium',
-  wallet
-);
+// POST request
+await makeRequest('/api/data', wallet, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ name: 'Test' })
+});
 
-const data = await response.json();
+// With custom headers
+await makeRequest('/api/premium', wallet, {
+  headers: { 'Authorization': 'Bearer token' }
+});
 ```
 
 ### Verification API
@@ -809,22 +918,24 @@ For information about registering your API server and creating attestations, vis
 
 ### Multiple Routes with Different Prices
 
-```typescript
+```javascript
 const spl402 = createServer({
   network: 'mainnet-beta',
   recipientAddress: 'YOUR_WALLET',
   rpcUrl: process.env.SOLANA_RPC_URL,
   routes: [
-    { path: '/api/basic', price: 0.0001, method: 'GET' },
-    { path: '/api/premium', price: 0.001, method: 'GET' },
+    { path: '/api/basic', price: 0.0001 },
+    { path: '/api/premium', price: 0.001 },
     { path: '/api/create', price: 0.005, method: 'POST' },
+    { path: '/api/public', price: 0 }  // FREE
   ],
 });
 ```
 
 ### SPL Token Payments (SPL402, USDC, USDT, etc.)
 
-```typescript
+```javascript
+// Server
 const spl402 = createServer({
   network: 'mainnet-beta',
   recipientAddress: 'YOUR_WALLET',
@@ -833,9 +944,11 @@ const spl402 = createServer({
   mint: 'DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump', // SPL402 token mint
   decimals: 6, // SPL402 has 6 decimals
   routes: [
-    { path: '/api/data', price: 10, method: 'GET' }, // 10 SPL402
+    { path: '/api/data', price: 10 }, // 10 SPL402 tokens
   ],
 });
+
+// Client - no changes needed! Automatically uses token payments
 ```
 
 **Common SPL Token Configuration:**
@@ -851,7 +964,7 @@ For other tokens, check decimals on [Solana Explorer](https://explorer.solana.co
 
 ### Using Devnet for Testing
 
-```typescript
+```javascript
 const spl402 = createServer({
   network: 'devnet',
   recipientAddress: 'YOUR_WALLET',
@@ -961,6 +1074,18 @@ Client works in:
 ### "Payment verification failed"
 **Problem**: Transaction might not be confirmed yet, or RPC is slow
 **Solution**: Wait a moment and retry, or use a faster RPC endpoint
+
+### "Payment validation failed"
+**Problem**: RPC URL not set or wallet insufficient balance
+**Solution**: Ensure RPC URL is configured on both server and client, verify wallet has enough SOL
+
+### "Wallet not connected"
+**Problem**: Attempting payment without connected wallet
+**Solution**: Check that wallet is connected before calling makeRequest, verify wallet adapter is properly initialized
+
+### POST/PUT requests not working
+**Problem**: Options parameter incorrectly placed
+**Solution**: Pass options as the THIRD parameter: `makeRequest(url, wallet, { method: 'POST', body: '...' })`
 
 ## Decentralized API Network
 

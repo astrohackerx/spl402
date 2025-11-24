@@ -11,6 +11,7 @@ import { verifyPayment } from './verify';
 export class SPL402Server {
   private config: ServerConfig;
   private routeMap: Map<string, RoutePrice>;
+  private allRoutes: RoutePrice[];
 
   constructor(config: ServerConfig) {
     this.config = config;
@@ -22,15 +23,44 @@ export class SPL402Server {
       { path: '/.well-known/spl402.json', price: 0, method: 'GET' },
     ];
 
-    [...standardRoutes, ...config.routes].forEach(route => {
+    this.allRoutes = [...standardRoutes, ...config.routes];
+
+    this.allRoutes.forEach(route => {
       const key = `${route.method || 'GET'}:${route.path}`;
       this.routeMap.set(key, route);
     });
   }
 
+  private matchRoute(path: string, method: string = 'GET'): RoutePrice | null {
+    // First try exact match (faster)
+    const exactKey = `${method}:${path}`;
+    const exactMatch = this.routeMap.get(exactKey);
+    if (exactMatch) {
+      return exactMatch;
+    }
+
+    // Then try pattern matching for dynamic routes
+    for (const route of this.allRoutes) {
+      const routeMethod = route.method || 'GET';
+      if (routeMethod !== method) continue;
+
+      // Convert route pattern to regex
+      // Example: /v1/games/:code -> /v1/games/([^/]+)
+      const pattern = route.path
+        .replace(/:[^/]+/g, '([^/]+)')  // Replace :param with regex group
+        .replace(/\//g, '\\/');          // Escape forward slashes
+
+      const regex = new RegExp(`^${pattern}$`);
+      if (regex.test(path)) {
+        return route;
+      }
+    }
+
+    return null;
+  }
+
   getPaymentRequirement(path: string, method: string = 'GET'): SPL402PaymentRequirement | null {
-    const key = `${method}:${path}`;
-    const route = this.routeMap.get(key);
+    const route = this.matchRoute(path, method);
 
     if (!route) {
       return null;
@@ -199,14 +229,20 @@ export function createServer(config: ServerConfig): SPL402Server {
 
 export function createExpressMiddleware(server: SPL402Server) {
   return async (req: any, res: any, next: any) => {
-    if (req.path === '/health' || req.path === '/status') {
+    // Use baseUrl + path to handle Express routers correctly
+    // Example: if router mounted at /api and route is /premium
+    // - req.baseUrl = '/api', req.path = '/premium'
+    // - fullPath = '/api/premium' ✓
+    const fullPath = (req.baseUrl || '') + req.path;
+
+    if (fullPath === '/health' || fullPath === '/status') {
       const response = server.createHealthResponse();
       return res.status(response.status)
         .set(response.headers)
         .json(response.body);
     }
 
-    if (req.path === '/.well-known/spl402.json') {
+    if (fullPath === '/.well-known/spl402.json') {
       const response = server.createMetadataResponse();
       return res.status(response.status)
         .set(response.headers)
@@ -214,14 +250,14 @@ export function createExpressMiddleware(server: SPL402Server) {
     }
 
     const result = await server.handleRequest(
-      req.path,
+      fullPath,
       req.method,
       req.headers
     );
 
     if (!result.authorized) {
       if (result.reason === 'Payment required') {
-        const response = server.createPaymentRequiredResponse(req.path, req.method);
+        const response = server.createPaymentRequiredResponse(fullPath, req.method);
         return res.status(response.status)
           .set(response.headers)
           .json(response.body);
