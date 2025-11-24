@@ -4,8 +4,22 @@ The simplest way to add Solana payments to your API.
 
 ## Install
 
+### For Server (Node.js/Express)
+
 ```bash
 npm install spl402
+```
+
+### For Client
+
+```bash
+npm install spl402 @solana/web3.js @solana/spl-token bs58
+```
+
+For React apps, you'll also need the Solana wallet adapter:
+
+```bash
+npm install @solana/wallet-adapter-react @solana/wallet-adapter-react-ui @solana/wallet-adapter-wallets
 ```
 
 ## Server Setup (Express)
