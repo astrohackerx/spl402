@@ -62,6 +62,9 @@ export interface SettlePaymentResponse {
 export interface SPL402Config {
   network: SolanaNetwork;
   rpcUrl?: string;
+  scheme?: 'transfer' | 'token-transfer';
+  mint?: string;
+  decimals?: number;
 }
 
 export interface RoutePrice {

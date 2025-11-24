@@ -21,9 +21,19 @@ export interface UseSPL402Return {
  *
  * @example
  * ```tsx
+ * // SOL transfer (default)
  * const { makeRequest, loading, error } = useSPL402({
  *   network: 'mainnet-beta',
  *   rpcUrl: process.env.REACT_APP_SOLANA_RPC_URL
+ * });
+ *
+ * // Token transfer
+ * const { makeRequest } = useSPL402({
+ *   network: 'mainnet-beta',
+ *   rpcUrl: process.env.REACT_APP_SOLANA_RPC_URL,
+ *   scheme: 'token-transfer',
+ *   mint: 'DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump',
+ *   decimals: 6
  * });
  *
  * const handleRequest = async () => {
@@ -41,8 +51,11 @@ export function useSPL402(options: UseSPL402Options): UseSPL402Return {
     () => new SPL402Client({
       network: options.network,
       rpcUrl: options.rpcUrl,
+      scheme: options.scheme,
+      mint: options.mint,
+      decimals: options.decimals,
     }),
-    [options.network, options.rpcUrl]
+    [options.network, options.rpcUrl, options.scheme, options.mint, options.decimals]
   );
 
   const makeRequest = useCallback(async (

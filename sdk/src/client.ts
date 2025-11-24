@@ -29,9 +29,11 @@ export interface WalletAdapter {
 export class SPL402Client {
   private connection: Connection;
   private network: SolanaNetwork;
+  private config: SPL402Config;
 
   constructor(config: SPL402Config) {
     this.network = config.network;
+    this.config = config;
     this.connection = createConnection(config.network, config.rpcUrl);
   }
 
@@ -185,7 +187,16 @@ export class SPL402Client {
       throw new Error('Payment required but no payment details provided');
     }
 
-    const requirement: SPL402PaymentRequirement = JSON.parse(paymentHeader);
+    let requirement: SPL402PaymentRequirement = JSON.parse(paymentHeader);
+
+    if (this.config.scheme) {
+      requirement = {
+        ...requirement,
+        scheme: this.config.scheme,
+        mint: this.config.mint || requirement.mint,
+        decimals: this.config.decimals !== undefined ? this.config.decimals : requirement.decimals,
+      };
+    }
 
     const payment = await this.createPayment(requirement, wallet);
 

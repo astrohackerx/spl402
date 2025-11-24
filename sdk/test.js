@@ -5,7 +5,7 @@ const {
   createFetchMiddleware,
   verifyPayment,
   SPL402_VERSION
-} = require('spl402');
+} = require('./dist/index.js');
 const { Keypair, PublicKey } = require('@solana/web3.js');
 const bs58 = require('bs58').default || require('bs58');
 

@@ -250,14 +250,13 @@ async function verifyTokenTransfer(
       };
     }
 
-    const expectedRawAmount = decimals !== undefined
-      ? toTokenAmount(expectedAmount, decimals)
-      : expectedAmount;
+    const expectedRawAmount = toTokenAmount(expectedAmount, decimals || 0);
 
     if (transferAmount < expectedRawAmount) {
+      const receivedUIAmount = decimals ? transferAmount / Math.pow(10, decimals) : transferAmount;
       return {
         valid: false,
-        reason: `Insufficient payment amount. Expected ${expectedAmount} tokens (${expectedRawAmount} raw), received ${transferAmount} raw`,
+        reason: `Insufficient payment amount. Expected ${expectedAmount} tokens (${expectedRawAmount} raw), received ${receivedUIAmount} tokens (${transferAmount} raw)`,
       };
     }
 

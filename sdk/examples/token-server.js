@@ -16,7 +16,8 @@ const spl402 = createServer({
   mint: 'DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump', // SPL402 token mint
   decimals: 6, // SPL402 has 6 decimals
   routes: [
-    { path: '/api/token-data', price: 10, method: 'GET' }, // 10 SPL402
+    { path: '/api/token-data', price: 10, method: 'GET' },  // 10 SPL402
+    { path: '/api/token-submit', price: 20, method: 'POST' }, // 20 SPL402
   ],
 });
 
@@ -31,6 +32,15 @@ app.get('/api/token-data', (req, res) => {
   });
 });
 
+app.post('/api/token-submit', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Data submitted successfully',
+    data: req.body,
+    cost: '20 SPL402 tokens'
+  });
+});
+
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Token server running on http://localhost:${PORT}`);
@@ -41,7 +51,8 @@ app.listen(PORT, () => {
   console.log('Token: SPL402 (6 decimals)');
   console.log('Mint: DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump');
   console.log('Protected endpoints:');
-  console.log('  GET /api/token-data - 10 SPL402');
+  console.log('  GET  /api/token-data   - 10 SPL402');
+  console.log('  POST /api/token-submit - 20 SPL402');
   console.log('\nCommon token decimals:');
   console.log('  SPL402: 6, USDC: 6, USDT: 6, SOL: 9 (use "transfer" scheme for native SOL)');
 });
