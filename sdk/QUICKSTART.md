@@ -245,7 +245,7 @@ const spl402 = createServer({
 - Check that wallet is connected before calling makeRequest
 - Verify wallet adapter is properly initialized
 
-**POST/PUT requests not working**
+**POST requests not working**
 - Make sure to pass options as the THIRD parameter
 - Example: `makeRequest(url, wallet, { method: 'POST', body: '...' })`
 
