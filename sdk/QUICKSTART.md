@@ -22,21 +22,27 @@ const spl402 = createServer({
   recipientAddress: 'YOUR_SOLANA_WALLET_ADDRESS',
   rpcUrl: process.env.SOLANA_RPC_URL, // Get free RPC from https://www.helius.dev
   routes: [
-    { path: '/api/premium', price: 0.001 },     // 0.001 SOL
-    { path: '/api/data', price: 0.005 }         // 0.005 SOL
+    { path: '/api/premium', price: 0.001 },     // 0.001 SOL - requires payment
+    { path: '/api/data', price: 0.005 },        // 0.005 SOL - requires payment
+    { path: '/api/public', price: 0 }           // FREE - no payment needed
   ]
 });
 
-// Add payment middleware
+// Add payment middleware ONCE for all routes
+// Free routes (price: 0) automatically pass through - no payment needed
 app.use(createExpressMiddleware(spl402));
 
-// Your protected endpoints
+// Your endpoints (both paid and free)
 app.get('/api/premium', (req, res) => {
   res.json({ message: 'Premium content!' });
 });
 
 app.get('/api/data', (req, res) => {
   res.json({ data: 'Important data!' });
+});
+
+app.get('/api/public', (req, res) => {
+  res.json({ message: 'Free public data - no payment required!' });
 });
 
 app.listen(3000);
@@ -94,6 +100,22 @@ function MyComponent() {
 1. Client makes request → Server responds with `402 Payment Required`
 2. Client creates payment transaction → User approves in wallet
 3. Client retries with payment proof → Server validates and responds with content
+
+## Free Routes (No Payment)
+
+You can mix free and paid routes! Just set `price: 0` for free routes:
+
+```javascript
+routes: [
+  { path: '/api/premium', price: 0.001 },  // Paid
+  { path: '/api/public', price: 0 },       // FREE - no payment needed
+  { path: '/api/free-data', price: 0 }     // FREE - no payment needed
+]
+```
+
+**Important:** You still need to add the route to the `routes` array, even if it's free. The middleware automatically allows `price: 0` routes to pass through without requiring payment.
+
+Routes NOT listed in the `routes` array will return 404.
 
 ## Important Notes
 
