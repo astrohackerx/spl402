@@ -89,11 +89,9 @@ Think of it as "pay-per-request" for your APIs, without payment processors, subs
 4. **Pure Solana**: Zero external dependencies, leverages native Solana RPC primitives
 5. **Efficient protocol**: Minimal overhead - just standard HTTP + Solana transaction verification
 
-## What's New in v2.0.1
-
 ### 🎉 Standard Routes Implementation
 
-**Every SPL-402 server now automatically includes these public endpoints:**
+**Every SPL-402 server automatically includes these public endpoints:**
 
 - **`GET /health`** - Health check endpoint (returns `{ status: "ok", timestamp: ... }`)
 - **`GET /status`** - Alias for `/health`
@@ -124,15 +122,12 @@ const server = createServer({
 });
 ```
 
-### 🔧 New Server Methods
+### 🔧 Server Methods
 
 - `getServerMetadata()` - Returns complete server metadata
 - `createHealthResponse()` - Generates health check response
 - `createMetadataResponse()` - Generates metadata response
 
-### 🔄 100% Backwards Compatible
-
-All v2.0.0 code works without changes! The `serverInfo` field is optional, and standard routes are added automatically.
 
 **[View full release notes →](../tests/RELEASE_NOTES_2.0.1.md)**
 
@@ -982,32 +977,6 @@ Run the test suite:
 ```bash
 npm test
 ```
-
-**v2.0.1 Test Results:**
-```
-============================================================
-Test Summary
-============================================================
-✅ Passed: 65
-❌ Failed: 0
-📊 Total:  65
-============================================================
-```
-
-**Test Coverage:**
-- ✅ Server creation and configuration
-- ✅ Standard routes auto-registration (v2.0.1)
-- ✅ Health check responses (v2.0.1)
-- ✅ Metadata endpoint (v2.0.1)
-- ✅ ServerInfo configuration (v2.0.1)
-- ✅ Client instance creation
-- ✅ Payment payload generation
-- ✅ Cryptographic signature verification
-- ✅ Express middleware functionality
-- ✅ Fetch middleware functionality
-- ✅ Route matching and pricing
-- ✅ Error handling
-- ✅ Backwards compatibility (v2.0.1)
 
 **Development:**
 ```bash
