@@ -1489,8 +1489,8 @@ app.listen(3000);`}</code>
                     </div>
                   </div>
                   <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-start gap-4">
-                    <div className="w-8 h-8 bg-[#9945FF]/20 rounded-lg flex items-center justify-center flex-shrink-0 font-bold text-[#9945FF] text-xs">
-                      NEW
+                    <div className="w-8 h-8 bg-[#14F195]/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Check size={18} className="text-[#14F195]" />
                     </div>
                     <div>
                       <h3 className="font-bold text-sm mb-1">Phase 3: SAS Attestation</h3>
@@ -1499,7 +1499,7 @@ app.listen(3000);`}</code>
                   </div>
                   <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-start gap-4">
                     <div className="w-8 h-8 bg-[#9945FF]/20 rounded-lg flex items-center justify-center flex-shrink-0 font-bold text-[#9945FF] text-xs">
-                      NEW
+                      ...
                     </div>
                     <div>
                       <h3 className="font-bold text-sm mb-1">Phase 4: Decentralized Network</h3>
@@ -1508,7 +1508,7 @@ app.listen(3000);`}</code>
                   </div>
                   <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-start gap-4">
                     <div className="w-8 h-8 bg-[#9945FF]/20 rounded-lg flex items-center justify-center flex-shrink-0 font-bold text-[#9945FF] text-xs">
-                      NEW
+                      ...
                     </div>
                     <div>
                       <h3 className="font-bold text-sm mb-1">Phase 5: DAO Governance</h3>
