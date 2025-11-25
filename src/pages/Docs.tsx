@@ -225,64 +225,105 @@ export default function Docs() {
 
               <div>
                 <h2 className="text-2xl font-bold mb-4">Feature Comparison</h2>
-                <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <table className="w-full min-w-[500px]">
-                      <thead>
-                        <tr className="border-b border-white/10 bg-[#0D0D0D]">
-                          <th className="text-left p-3 sm:p-4 text-gray-400 font-semibold text-sm">Feature</th>
-                          <th className="text-left p-3 sm:p-4 text-[#14F195] font-semibold text-sm">SPL-402</th>
-                          <th className="text-left p-3 sm:p-4 text-gray-400 font-semibold text-sm">x402</th>
-                        </tr>
-                      </thead>
-                      <tbody className="text-xs sm:text-sm">
-                        <tr className="border-b border-white/10 hover:bg-white/5">
-                          <td className="p-3 sm:p-4 text-gray-400">Latency</td>
-                          <td className="p-3 sm:p-4 text-[#14F195] font-bold">~500ms</td>
-                          <td className="p-3 sm:p-4 text-gray-400">~2000ms</td>
-                        </tr>
-                        <tr className="border-b border-white/10 hover:bg-white/5">
-                          <td className="p-3 sm:p-4 text-gray-400">Platform Fees</td>
-                          <td className="p-3 sm:p-4 text-[#14F195] font-bold">0%</td>
-                          <td className="p-3 sm:p-4 text-gray-400">Variable</td>
-                        </tr>
-                        <tr className="border-b border-white/10 hover:bg-white/5">
-                          <td className="p-3 sm:p-4 text-gray-400">Dependencies</td>
-                          <td className="p-3 sm:p-4 text-[#14F195] font-bold">0</td>
-                          <td className="p-3 sm:p-4 text-gray-400">Multiple</td>
-                        </tr>
-                        <tr className="border-b border-white/10 hover:bg-white/5">
-                          <td className="p-3 sm:p-4 text-gray-400">Tx Cost</td>
-                          <td className="p-3 sm:p-4 text-[#14F195] font-bold">~$0.00001</td>
-                          <td className="p-3 sm:p-4 text-gray-400">Higher</td>
-                        </tr>
-                        <tr className="border-b border-white/10 hover:bg-white/5">
-                          <td className="p-3 sm:p-4 text-gray-400">Speed</td>
-                          <td className="p-3 sm:p-4 text-[#14F195] font-bold">3-4x faster</td>
-                          <td className="p-3 sm:p-4 text-gray-400">Baseline</td>
-                        </tr>
-                        <tr className="border-b border-white/10 hover:bg-white/5">
-                          <td className="p-3 sm:p-4 text-gray-400">Middleman</td>
-                          <td className="p-3 sm:p-4 text-[#14F195] font-bold">None</td>
-                          <td className="p-3 sm:p-4 text-gray-400">Yes</td>
-                        </tr>
-                        <tr className="border-b border-white/10 hover:bg-white/5">
-                          <td className="p-3 sm:p-4 text-gray-400">API Keys</td>
-                          <td className="p-3 sm:p-4 text-[#14F195] font-bold">Not required</td>
-                          <td className="p-3 sm:p-4 text-gray-400">Required</td>
-                        </tr>
-                        <tr className="border-b border-white/10 hover:bg-white/5">
-                          <td className="p-3 sm:p-4 text-gray-400">Setup Time</td>
-                          <td className="p-3 sm:p-4 text-[#14F195] font-bold">&lt; 5 min</td>
-                          <td className="p-3 sm:p-4 text-gray-400">Longer</td>
-                        </tr>
-                        <tr className="hover:bg-white/5">
-                          <td className="p-3 sm:p-4 text-gray-400">Bundle Size</td>
-                          <td className="p-3 sm:p-4 text-[#14F195] font-bold">Minimal</td>
-                          <td className="p-3 sm:p-4 text-gray-400">Larger</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                <div className="grid md:grid-cols-3 gap-3">
+                  <div className="bg-gradient-to-br from-[#0A0A0A] to-[#0D0D0D] border border-white/10 rounded-xl p-3 text-center">
+                    <div className="text-xs uppercase tracking-wider text-gray-500 font-semibold">Feature</div>
+                  </div>
+                  <div className="bg-gradient-to-br from-[#9945FF]/10 to-[#14F195]/10 border border-[#14F195]/30 rounded-xl p-3 text-center">
+                    <div className="text-xs uppercase tracking-wider text-[#14F195] font-bold">SPL-402</div>
+                  </div>
+                  <div className="bg-gradient-to-br from-[#0A0A0A] to-[#0D0D0D] border border-white/10 rounded-xl p-3 text-center">
+                    <div className="text-xs uppercase tracking-wider text-gray-500 font-semibold">x402</div>
+                  </div>
+
+                  <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-3 flex items-center">
+                    <span className="text-sm text-gray-400">Latency</span>
+                  </div>
+                  <div className="bg-[#14F195]/5 border border-[#14F195]/20 rounded-xl p-3 flex items-center justify-center">
+                    <span className="text-base font-bold text-[#14F195]">1s</span>
+                  </div>
+                  <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-3 flex items-center justify-center">
+                    <span className="text-sm text-gray-400">2.5s+</span>
+                  </div>
+
+                  <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-3 flex items-center">
+                    <span className="text-sm text-gray-400">Platform Fees</span>
+                  </div>
+                  <div className="bg-[#14F195]/5 border border-[#14F195]/20 rounded-xl p-3 flex items-center justify-center">
+                    <span className="text-base font-bold text-[#14F195]">0%</span>
+                  </div>
+                  <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-3 flex items-center justify-center">
+                    <span className="text-sm text-gray-400">Variable</span>
+                  </div>
+
+                  <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-3 flex items-center">
+                    <span className="text-sm text-gray-400">Transaction Cost</span>
+                  </div>
+                  <div className="bg-[#14F195]/5 border border-[#14F195]/20 rounded-xl p-3 flex items-center justify-center">
+                    <span className="text-base font-bold text-[#14F195]">~$0.00001</span>
+                  </div>
+                  <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-3 flex items-center justify-center">
+                    <span className="text-sm text-gray-400">Higher</span>
+                  </div>
+
+                  <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-3 flex items-center">
+                    <span className="text-sm text-gray-400">Dynamic Routes</span>
+                  </div>
+                  <div className="bg-[#14F195]/5 border border-[#14F195]/20 rounded-xl p-3 flex items-center justify-center">
+                    <span className="text-base font-bold text-[#14F195]">Yes</span>
+                  </div>
+                  <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-3 flex items-center justify-center">
+                    <span className="text-sm text-gray-400">No</span>
+                  </div>
+
+                  <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-3 flex items-center">
+                    <span className="text-sm text-gray-400">Smart Client</span>
+                  </div>
+                  <div className="bg-[#14F195]/5 border border-[#14F195]/20 rounded-xl p-3 flex items-center justify-center">
+                    <span className="text-base font-bold text-[#14F195]">Yes</span>
+                  </div>
+                  <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-3 flex items-center justify-center">
+                    <span className="text-sm text-gray-400">No</span>
+                  </div>
+
+                  <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-3 flex items-center">
+                    <span className="text-sm text-gray-400">System</span>
+                  </div>
+                  <div className="bg-[#14F195]/5 border border-[#14F195]/20 rounded-xl p-3 flex items-center justify-center">
+                    <span className="text-sm font-bold text-[#14F195]">Decentralized</span>
+                  </div>
+                  <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-3 flex items-center justify-center">
+                    <span className="text-sm text-gray-400">Centralized</span>
+                  </div>
+
+                  <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-3 flex items-center">
+                    <span className="text-sm text-gray-400">Middleman</span>
+                  </div>
+                  <div className="bg-[#14F195]/5 border border-[#14F195]/20 rounded-xl p-3 flex items-center justify-center">
+                    <span className="text-base font-bold text-[#14F195]">None</span>
+                  </div>
+                  <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-3 flex items-center justify-center">
+                    <span className="text-sm text-gray-400">Yes</span>
+                  </div>
+
+                  <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-3 flex items-center">
+                    <span className="text-sm text-gray-400">API Keys</span>
+                  </div>
+                  <div className="bg-[#14F195]/5 border border-[#14F195]/20 rounded-xl p-3 flex items-center justify-center">
+                    <span className="text-sm font-bold text-[#14F195]">Not required</span>
+                  </div>
+                  <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-3 flex items-center justify-center">
+                    <span className="text-sm text-gray-400">Required</span>
+                  </div>
+
+                  <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-3 flex items-center">
+                    <span className="text-sm text-gray-400">Setup Time</span>
+                  </div>
+                  <div className="bg-[#14F195]/5 border border-[#14F195]/20 rounded-xl p-3 flex items-center justify-center">
+                    <span className="text-base font-bold text-[#14F195]">&lt; 5 min</span>
+                  </div>
+                  <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-3 flex items-center justify-center">
+                    <span className="text-sm text-gray-400">Longer</span>
                   </div>
                 </div>
               </div>
@@ -317,6 +358,13 @@ export default function Docs() {
                       <div>
                         <strong className="text-white">Local-first:</strong>
                         <p className="text-gray-400">Can verify payments without multiple external RPC calls. Efficient caching and signature verification reduces network overhead.</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3 text-sm">
+                      <Check size={16} className="text-[#14F195] flex-shrink-0 mt-0.5" />
+                      <div>
+                        <strong className="text-white">Dynamic routing:</strong>
+                        <p className="text-gray-400">Full support for Express dynamic route parameters and routers. x402 does not support dynamic routing at all.</p>
                       </div>
                     </li>
                   </ul>
@@ -385,12 +433,15 @@ export default function Docs() {
               </div>
 
               <div>
-                <h2 className="text-2xl font-bold mb-4">Basic Installation</h2>
+                <h2 className="text-2xl font-bold mb-4">Server Installation</h2>
+                <p className="text-gray-300 mb-4 text-sm">
+                  For Node.js/Express servers:
+                </p>
                 <div className="bg-[#0A0A0A] border border-white/10 rounded-xl overflow-hidden">
                   <div className="bg-[#0D0D0D] px-6 py-3 border-b border-white/10 flex items-center justify-between">
                     <span className="text-xs text-gray-400 font-mono">Terminal</span>
                     <button
-                      onClick={() => handleCopy('npm install spl402 @solana/web3.js @solana/spl-token bs58', 'npm')}
+                      onClick={() => handleCopy('npm install spl402', 'npm')}
                       className="flex items-center gap-2 text-xs text-[#14F195] hover:text-[#14F195]/80"
                     >
                       {copiedCode === 'npm' ? <Check size={14} /> : <Copy size={14} />}
@@ -398,21 +449,21 @@ export default function Docs() {
                     </button>
                   </div>
                   <pre className="p-6 text-sm overflow-x-auto">
-                    <code className="font-mono text-[#14F195]">npm install spl402 @solana/web3.js @solana/spl-token bs58</code>
+                    <code className="font-mono text-[#14F195]">npm install spl402</code>
                   </pre>
                 </div>
               </div>
 
               <div>
-                <h2 className="text-2xl font-bold mb-4">For React/Next.js Apps</h2>
+                <h2 className="text-2xl font-bold mb-4">Client Installation (React/Next.js)</h2>
                 <p className="text-gray-300 mb-4 text-sm">
-                  If you're building a React or Next.js application, you'll also need wallet adapter packages:
+                  For React or Next.js applications, install SPL-402 along with Solana wallet adapter packages:
                 </p>
                 <div className="bg-[#0A0A0A] border border-white/10 rounded-xl overflow-hidden">
                   <div className="bg-[#0D0D0D] px-6 py-3 border-b border-white/10 flex items-center justify-between">
                     <span className="text-xs text-gray-400 font-mono">Terminal</span>
                     <button
-                      onClick={() => handleCopy('npm install spl402 @solana/web3.js @solana/spl-token bs58 @solana/wallet-adapter-react @solana/wallet-adapter-react-ui @solana/wallet-adapter-wallets', 'yarn')}
+                      onClick={() => handleCopy('npm install spl402 @solana/web3.js @solana/spl-token bs58\nnpm install @solana/wallet-adapter-react @solana/wallet-adapter-react-ui @solana/wallet-adapter-wallets', 'yarn')}
                       className="flex items-center gap-2 text-xs text-[#14F195] hover:text-[#14F195]/80"
                     >
                       {copiedCode === 'yarn' ? <Check size={14} /> : <Copy size={14} />}
@@ -420,7 +471,7 @@ export default function Docs() {
                     </button>
                   </div>
                   <pre className="p-6 text-sm overflow-x-auto">
-                    <code className="font-mono text-[#14F195]">npm install spl402 @solana/web3.js @solana/spl-token bs58 @solana/wallet-adapter-react @solana/wallet-adapter-react-ui @solana/wallet-adapter-wallets</code>
+                    <code className="font-mono text-[#14F195]">npm install spl402 @solana/web3.js @solana/spl-token bs58{'\n'}npm install @solana/wallet-adapter-react @solana/wallet-adapter-react-ui @solana/wallet-adapter-wallets</code>
                   </pre>
                 </div>
               </div>
@@ -459,6 +510,28 @@ export default function Docs() {
                 <p className="text-xl text-gray-400">
                   Configure SPL-402 middleware on your server
                 </p>
+              </div>
+
+              <div className="bg-gradient-to-br from-[#14F195]/10 to-[#9945FF]/10 border border-[#9945FF]/20 rounded-2xl p-6 mb-8">
+                <h3 className="text-lg font-bold mb-3 text-[#14F195]">Key Features</h3>
+                <ul className="space-y-2 text-sm text-gray-300">
+                  <li className="flex items-start gap-2">
+                    <ChevronRight size={16} className="text-[#14F195] flex-shrink-0 mt-0.5" />
+                    <span><strong className="text-white">Express Router Support:</strong> Works seamlessly with Express Router for modular route organization</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ChevronRight size={16} className="text-[#14F195] flex-shrink-0 mt-0.5" />
+                    <span><strong className="text-white">Route Parameters:</strong> Full support for dynamic route parameters (e.g., /api/user/:id)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ChevronRight size={16} className="text-[#14F195] flex-shrink-0 mt-0.5" />
+                    <span><strong className="text-white">Mixed Routes:</strong> Combine free and paid routes in the same application</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ChevronRight size={16} className="text-[#14F195] flex-shrink-0 mt-0.5" />
+                    <span><strong className="text-white">Simplified Verification:</strong> Automatic payment verification with built-in replay attack prevention</span>
+                  </li>
+                </ul>
               </div>
 
               <div>
@@ -604,6 +677,31 @@ app.listen(3000);`}</code>
                 <p className="text-xl text-gray-400">
                   Use SPL-402 in your React application
                 </p>
+              </div>
+
+              <div className="bg-gradient-to-br from-[#14F195]/10 to-[#9945FF]/10 border border-[#9945FF]/20 rounded-2xl p-6 mb-8">
+                <h3 className="text-lg font-bold mb-3 text-[#14F195]">Smart Client Detection</h3>
+                <p className="text-gray-300 mb-3">
+                  The <code className="px-2 py-1 bg-black/50 rounded text-[#14F195]">useSPL402</code> hook is a smart client that automatically detects and uses whatever payment scheme the server requires.
+                </p>
+                <ul className="space-y-2 text-sm text-gray-300">
+                  <li className="flex items-start gap-2">
+                    <ChevronRight size={16} className="text-[#14F195] flex-shrink-0 mt-0.5" />
+                    <span>Automatically detects if server requires SOL or SPL tokens</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ChevronRight size={16} className="text-[#14F195] flex-shrink-0 mt-0.5" />
+                    <span>Reads scheme, mint, and decimals from 402 response</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ChevronRight size={16} className="text-[#14F195] flex-shrink-0 mt-0.5" />
+                    <span>No manual configuration needed on client side</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ChevronRight size={16} className="text-[#14F195] flex-shrink-0 mt-0.5" />
+                    <span>Single client works with any SPL-402 server configuration</span>
+                  </li>
+                </ul>
               </div>
 
               <div>
@@ -795,6 +893,10 @@ function App() {
                 <p className="text-gray-300 mb-4">
                   SPL-402 supports both native SOL transfers and SPL token transfers. This allows you to accept
                   stablecoins like USDC or USDT, or even your own custom tokens.
+                </p>
+                <p className="text-gray-300">
+                  <strong className="text-[#14F195]">Smart Client Detection:</strong> The useSPL402 hook automatically detects
+                  and uses whatever payment scheme your server requires. No need to manually configure scheme, mint, or decimals on the client.
                 </p>
               </div>
 

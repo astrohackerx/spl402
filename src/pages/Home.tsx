@@ -1,4 +1,4 @@
-import { Code, Zap, Lock, Globe, ArrowRight, Github, Check, ExternalLink, Download, Sparkles, Rocket, BookOpen } from 'lucide-react';
+import { Code, Zap, Lock, Globe, ArrowRight, Github, Check, ExternalLink, Download, Sparkles, Rocket, BookOpen, Play } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
@@ -21,7 +21,7 @@ export default function Home() {
   }, []);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText('npm install spl402 @solana/web3.js');
+    navigator.clipboard.writeText('npm install spl402');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -35,7 +35,7 @@ export default function Home() {
           <div className="text-center max-w-4xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#14F195]/10 border border-[#14F195]/20 rounded-full mb-8 flex-wrap justify-center">
               <Zap size={14} className="text-[#14F195]" />
-              <span className="text-xs sm:text-sm text-[#14F195] font-medium text-center">4x faster than x402 &nbsp;|&nbsp; Built from scratch</span>
+              <span className="text-xs sm:text-sm text-[#14F195] font-medium text-center">Solana Native &nbsp;|&nbsp; Built from scratch</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-6">
@@ -46,8 +46,7 @@ export default function Home() {
             </h1>
 
             <p className="text-base sm:text-lg md:text-xl text-gray-400 mb-8 leading-relaxed max-w-2xl mx-auto">
-              Native Solana payments for API's, Data, MCP, AI Agents. Direct wallet-to-wallet transfers.
-              Zero platform fees. Only Solana network costs ~$0.00001
+              Decentralized Solana Payment Layer for APIs & Autonomous agents. Instant micropayments. 3x faster than x402. SAS-backed verification.
             </p>
 
             {npmDownloads && (
@@ -55,63 +54,149 @@ export default function Home() {
                 <div className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full">
                   <Download size={16} className="text-[#14F195]" />
                   <span className="text-sm text-gray-300">
-                    <span className="font-bold text-white">{npmDownloads.toLocaleString()}</span> SDK downloads last month
+                    <span className="font-bold text-white">{npmDownloads.toLocaleString()}</span> <a href="https://www.npmjs.com/package/spl402" className="text-[#14F195]" target="_blank">SDK downloads</a> last month
                   </span>
                 </div>
               </div>
             )}
 
-            <div className="flex flex-col items-center gap-4 mb-6">
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full max-w-3xl">
-                <a
-                  href="https://live.spl402.org"
-                  target='_blank'
-                  className="group px-8 py-4 bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:opacity-90 rounded-xl font-semibold transition-opacity flex items-center justify-center gap-2"
-                >
-                  <Rocket size={18} />
-                  Starter Kit
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </a>
-                   <a
-                  href="https://gpt.spl402.org"
-                  target='_blank'
-                  className="group px-8 py-4 bg-[#9945FF] hover:bg-[#9945FF]/80 rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
-                >
-                  <Sparkles size={18} />
-                  GPT-402
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </a>
-                <a
-                  href="https://ai.spl402.org"
-                  target='_blank'
-                  className="group px-8 py-4 bg-[#9945FF] hover:bg-[#9945FF]/80 rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
-                >
-                  <Sparkles size={18} />
-                  AI Agent Marketplace
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </a>
+            <div className="flex flex-col items-center gap-6 mb-6 w-full">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-6xl">
+                <div className="group bg-gradient-to-br from-[#0D0D0D] to-[#1a1a1a] border border-white/10 hover:border-[#9945FF]/30 rounded-xl p-5 transition-all">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-[#9945FF] to-[#14F195] rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Rocket size={20} className="text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-base mb-1">Starter Kit</h3>
+                      <p className="text-xs text-gray-400">Full-stack template ready to deploy</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <a href="https://live.spl402.org" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
+                      <Play size={12} />
+                      Live Demo
+                    </a>
+                    <a href="https://github.com/astrohackerx/templates/tree/main-spl402/community/spl402-starter-kit" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
+                      <Github size={12} />
+                      Code
+                    </a>
+                  </div>
+                </div>
+
+                <div className="group bg-gradient-to-br from-[#0D0D0D] to-[#1a1a1a] border border-white/10 hover:border-[#9945FF]/30 rounded-xl p-5 transition-all">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="w-10 h-10 bg-[#9945FF] rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Sparkles size={20} className="text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-base mb-1">GPT-402</h3>
+                      <p className="text-xs text-gray-400">Pay-per-use AI chat interface</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <a href="https://gpt.spl402.org" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
+                      <Play size={12} />
+                      Live Demo
+                    </a>
+                    <a href="https://github.com/astrohackerx/gpt-402" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
+                      <Github size={12} />
+                      Code
+                    </a>
+                  </div>
+                </div>
+
+                <div className="group bg-gradient-to-br from-[#0D0D0D] to-[#1a1a1a] border border-white/10 hover:border-[#14F195]/30 rounded-xl p-5 transition-all">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="w-10 h-10 bg-[#14F195] rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Sparkles size={20} className="text-black" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-base mb-1">Chess402</h3>
+                      <p className="text-xs text-gray-400">Blockchain-powered chess platform</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <a href="https://chess402.online" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
+                      <Play size={12} />
+                      Live Demo
+                    </a>
+                    <a href="https://github.com/astrohackerx/chess402" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
+                      <Github size={12} />
+                      Code
+                    </a>
+                  </div>
+                </div>
+
+                <div className="group bg-gradient-to-br from-[#0D0D0D] to-[#1a1a1a] border border-white/10 hover:border-[#9945FF]/30 rounded-xl p-5 transition-all">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="w-10 h-10 bg-[#9945FF] rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Globe size={20} className="text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-base mb-1">AI Agent Marketplace</h3>
+                      <p className="text-xs text-gray-400">Decentralized AI service platform</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <a href="https://ai.spl402.org" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
+                      <Play size={12} />
+                      Live Demo
+                    </a>
+                    <a href="https://github.com/astrohackerx/AiMarketplace" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
+                      <Github size={12} />
+                      Code
+                    </a>
+                  </div>
+                </div>
+
+                <div className="group bg-gradient-to-br from-[#0D0D0D] to-[#1a1a1a] border border-white/10 hover:border-[#9945FF]/30 rounded-xl p-5 transition-all">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="w-10 h-10 bg-[#9945FF] rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Zap size={20} className="text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-base mb-1">Decider Agent</h3>
+                      <p className="text-xs text-gray-400">Autonomous AI decision making</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <a href="https://aiagent.spl402.org" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
+                      <Play size={12} />
+                      Live Demo
+                    </a>
+                    <a href="https://github.com/astrohackerx/spl402/tree/main/aiagent" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
+                      <Github size={12} />
+                      Code
+                    </a>
+                  </div>
+                </div>
+
+                <div className="group bg-gradient-to-br from-[#0D0D0D] to-[#1a1a1a] border border-white/10 hover:border-[#9945FF]/30 rounded-xl p-5 transition-all">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="w-10 h-10 bg-[#9945FF] rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Code size={20} className="text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-base mb-1">OpenRouter</h3>
+                      <p className="text-xs text-gray-400">Unified AI model routing</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <a href="https://openrouter.spl402.org" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
+                      <Play size={12} />
+                      Live Demo
+                    </a>
+                    <a href="https://github.com/astrohackerx/spl402-OpenRouter" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
+                      <Github size={12} />
+                      Code
+                    </a>
+                  </div>
+                </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full max-w-2xl">
-                  <a
-                  href="https://aiagent.spl402.org"
-                  target='_blank'
-                className="group px-8 py-4 bg-[#9945FF] hover:bg-[#9945FF]/80 rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
->
-                  <Sparkles size={18} />
-                  Decider Agent
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </a>
-                      <a
-                  href="https://openrouter.spl402.org"
-                  target='_blank'
-                className="group px-8 py-4 bg-[#9945FF] hover:bg-[#9945FF]/80 rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
->
-                  <Sparkles size={18} />
-                  OpenRouter
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </a>
-                    <a
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full max-w-2xl mt-4">
+                <a
                   href="https://pump.fun/coin/DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump"
                   target='_blank'
                   className="group px-8 py-4 bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:opacity-90 rounded-xl font-semibold transition-opacity flex items-center justify-center gap-2"
@@ -120,21 +205,14 @@ export default function Home() {
                   Trade SPL402
                   <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </a>
-                {/* <a
+                <a
                   href="/docs"
-                  className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#14F195]/30 rounded-xl font-semibold transition-all text-center flex items-center justify-center gap-2"
+                  className="group px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#14F195]/30 rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
                 >
                   <BookOpen size={18} />
                   Documentation
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </a>
-                <a
-                  href="https://pump.fun/coin/DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump"
-                  target='_blank'
-                  className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#14F195]/30 rounded-xl font-semibold transition-all text-center flex items-center justify-center gap-2"
-                >
-                  <Zap size={18} />
-                  Trade SPL402
-                </a> */}
               </div>
             </div>
 
@@ -183,7 +261,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="mt-12 max-w-xl mx-auto">
+            <div className="mt-12 max-w-2xl mx-auto">
               <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-6">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm text-gray-400">Quick Install</span>
@@ -287,59 +365,105 @@ export default function Home() {
             <p className="text-gray-400 text-lg">Why we're 2-3x faster with zero platform fees</p>
           </div>
 
-          <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[600px]">
-                <thead>
-                  <tr className="border-b border-white/10">
-                    <th className="text-left p-3 sm:p-6 text-gray-400 font-semibold text-sm">Feature</th>
-                    <th className="text-left p-3 sm:p-6 text-[#14F195] font-semibold text-sm">SPL-402</th>
-                    <th className="text-left p-3 sm:p-6 text-gray-400 font-semibold text-sm">x402</th>
-                  </tr>
-                </thead>
-                <tbody className="font-mono text-xs sm:text-sm">
-                  <tr className="border-b border-white/10 hover:bg-white/5">
-                    <td className="p-3 sm:p-6 text-gray-400">Latency</td>
-                    <td className="p-3 sm:p-6 text-[#14F195] font-bold">~500ms</td>
-                    <td className="p-3 sm:p-6 text-gray-400">~2000ms</td>
-                  </tr>
-                  <tr className="border-b border-white/10 hover:bg-white/5">
-                    <td className="p-3 sm:p-6 text-gray-400">Platform Fees</td>
-                    <td className="p-3 sm:p-6 text-[#14F195] font-bold">0%</td>
-                    <td className="p-3 sm:p-6 text-gray-400">Variable</td>
-                  </tr>
-                  <tr className="border-b border-white/10 hover:bg-white/5">
-                    <td className="p-3 sm:p-6 text-gray-400">Dependencies</td>
-                    <td className="p-3 sm:p-6 text-[#14F195] font-bold">0</td>
-                    <td className="p-3 sm:p-6 text-gray-400">Multiple</td>
-                  </tr>
-                  <tr className="border-b border-white/10 hover:bg-white/5">
-                    <td className="p-3 sm:p-6 text-gray-400">Transaction Cost</td>
-                    <td className="p-3 sm:p-6 text-[#14F195] font-bold">~$0.00001</td>
-                    <td className="p-3 sm:p-6 text-gray-400">Higher</td>
-                  </tr>
-                  <tr className="border-b border-white/10 hover:bg-white/5">
-                    <td className="p-3 sm:p-6 text-gray-400">Speed</td>
-                    <td className="p-3 sm:p-6 text-[#14F195] font-bold">2-3x faster</td>
-                    <td className="p-3 sm:p-6 text-gray-400">Baseline</td>
-                  </tr>
-                  <tr className="border-b border-white/10 hover:bg-white/5">
-                    <td className="p-3 sm:p-6 text-gray-400">Middleman</td>
-                    <td className="p-3 sm:p-6 text-[#14F195] font-bold">None</td>
-                    <td className="p-3 sm:p-6 text-gray-400">Yes</td>
-                  </tr>
-                  <tr className="border-b border-white/10 hover:bg-white/5">
-                    <td className="p-3 sm:p-6 text-gray-400">API Keys</td>
-                    <td className="p-3 sm:p-6 text-[#14F195] font-bold">Not required</td>
-                    <td className="p-3 sm:p-6 text-gray-400">Required</td>
-                  </tr>
-                  <tr className="hover:bg-white/5">
-                    <td className="p-3 sm:p-6 text-gray-400">Setup Time</td>
-                    <td className="p-3 sm:p-6 text-[#14F195] font-bold">&lt; 5 min</td>
-                    <td className="p-3 sm:p-6 text-gray-400">Longer</td>
-                  </tr>
-                </tbody>
-              </table>
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="bg-gradient-to-br from-[#0A0A0A] to-[#0D0D0D] border border-white/10 rounded-xl p-4 text-center">
+              <div className="text-xs uppercase tracking-wider text-gray-500 mb-2 font-semibold">Feature</div>
+            </div>
+            <div className="bg-gradient-to-br from-[#9945FF]/10 to-[#14F195]/10 border border-[#14F195]/30 rounded-xl p-4 text-center">
+              <div className="text-xs uppercase tracking-wider text-[#14F195] mb-2 font-bold">SPL-402</div>
+            </div>
+            <div className="bg-gradient-to-br from-[#0A0A0A] to-[#0D0D0D] border border-white/10 rounded-xl p-4 text-center">
+              <div className="text-xs uppercase tracking-wider text-gray-500 mb-2 font-semibold">x402</div>
+            </div>
+
+            <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-center">
+              <span className="text-sm text-gray-400">Latency</span>
+            </div>
+            <div className="bg-[#14F195]/5 border border-[#14F195]/20 rounded-xl p-4 flex items-center justify-center">
+              <span className="text-lg font-bold text-[#14F195]">1s</span>
+            </div>
+            <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-center justify-center">
+              <span className="text-sm text-gray-400">2.5s+</span>
+            </div>
+
+            <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-center">
+              <span className="text-sm text-gray-400">Platform Fees</span>
+            </div>
+            <div className="bg-[#14F195]/5 border border-[#14F195]/20 rounded-xl p-4 flex items-center justify-center">
+              <span className="text-lg font-bold text-[#14F195]">0%</span>
+            </div>
+            <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-center justify-center">
+              <span className="text-sm text-gray-400">Variable</span>
+            </div>
+
+            <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-center">
+              <span className="text-sm text-gray-400">Transaction Cost</span>
+            </div>
+            <div className="bg-[#14F195]/5 border border-[#14F195]/20 rounded-xl p-4 flex items-center justify-center">
+              <span className="text-lg font-bold text-[#14F195]">~$0.00001</span>
+            </div>
+            <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-center justify-center">
+              <span className="text-sm text-gray-400">Higher</span>
+            </div>
+
+            <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-center">
+              <span className="text-sm text-gray-400">Dynamic Routes</span>
+            </div>
+            <div className="bg-[#14F195]/5 border border-[#14F195]/20 rounded-xl p-4 flex items-center justify-center">
+              <span className="text-lg font-bold text-[#14F195]">Yes</span>
+            </div>
+            <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-center justify-center">
+              <span className="text-sm text-gray-400">No</span>
+            </div>
+
+            <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-center">
+              <span className="text-sm text-gray-400">Smart Client</span>
+            </div>
+            <div className="bg-[#14F195]/5 border border-[#14F195]/20 rounded-xl p-4 flex items-center justify-center">
+              <span className="text-lg font-bold text-[#14F195]">Yes</span>
+            </div>
+            <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-center justify-center">
+              <span className="text-sm text-gray-400">No</span>
+            </div>
+
+            <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-center">
+              <span className="text-sm text-gray-400">System</span>
+            </div>
+            <div className="bg-[#14F195]/5 border border-[#14F195]/20 rounded-xl p-4 flex items-center justify-center">
+              <span className="text-lg font-bold text-[#14F195]">Decentralized</span>
+            </div>
+            <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-center justify-center">
+              <span className="text-sm text-gray-400">Centralized</span>
+            </div>
+
+            <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-center">
+              <span className="text-sm text-gray-400">Middleman</span>
+            </div>
+            <div className="bg-[#14F195]/5 border border-[#14F195]/20 rounded-xl p-4 flex items-center justify-center">
+              <span className="text-lg font-bold text-[#14F195]">None</span>
+            </div>
+            <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-center justify-center">
+              <span className="text-sm text-gray-400">Yes</span>
+            </div>
+
+            <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-center">
+              <span className="text-sm text-gray-400">API Keys</span>
+            </div>
+            <div className="bg-[#14F195]/5 border border-[#14F195]/20 rounded-xl p-4 flex items-center justify-center">
+              <span className="text-lg font-bold text-[#14F195]">Not required</span>
+            </div>
+            <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-center justify-center">
+              <span className="text-sm text-gray-400">Required</span>
+            </div>
+
+            <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-center">
+              <span className="text-sm text-gray-400">Setup Time</span>
+            </div>
+            <div className="bg-[#14F195]/5 border border-[#14F195]/20 rounded-xl p-4 flex items-center justify-center">
+              <span className="text-lg font-bold text-[#14F195]">&lt; 5 min</span>
+            </div>
+            <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-4 flex items-center justify-center">
+              <span className="text-sm text-gray-400">Longer</span>
             </div>
           </div>
 
