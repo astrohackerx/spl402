@@ -16,7 +16,6 @@ updates:
       include: "scope"
     labels:
       - "dependencies"
-      - "automated"
     versioning-strategy: increase
     allow:
       - dependency-type: "all"
@@ -32,6 +31,3 @@ updates:
       interval: "monthly"
     commit-message:
       prefix: "ci"
-    labels:
-      - "ci"
-      - "automated"
