@@ -1,0 +1,161 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: 'sdk/package-lock.json'
+
+    - name: Install dependencies
+      working-directory: sdk
+      run: npm ci
+
+    - name: Run build
+      working-directory: sdk
+      run: npm run build
+
+    - name: Run tests
+      working-directory: sdk
+      run: npm test
+
+    - name: Upload coverage
+      if: matrix.node-version == '20.x'
+      uses: codecov/codecov-action@v4
+      with:
+        files: ./sdk/coverage/coverage-final.json
+        flags: unittests
+        fail_ci_if_error: false
+
+  security:
+    name: Security Audit
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        cache-dependency-path: 'sdk/package-lock.json'
+
+    - name: Install dependencies
+      working-directory: sdk
+      run: npm ci
+
+    - name: Run npm audit
+      working-directory: sdk
+      run: npm audit --omit=dev --audit-level=high
+      continue-on-error: true
+
+  codeql:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        cache-dependency-path: 'sdk/package-lock.json'
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: javascript-typescript
+        source-root: sdk
+
+    - name: Install dependencies
+      working-directory: sdk
+      run: npm ci
+
+    - name: Build for CodeQL
+      working-directory: sdk
+      run: npm run build
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        cache-dependency-path: 'sdk/package-lock.json'
+
+    - name: Install dependencies
+      working-directory: sdk
+      run: npm ci
+
+    - name: Check TypeScript types
+      working-directory: sdk
+      run: npx tsc --noEmit
+
+  build:
+    name: Build Verification
+    runs-on: ubuntu-latest
+    needs: [lint]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        cache-dependency-path: 'sdk/package-lock.json'
+
+    - name: Install dependencies
+      working-directory: sdk
+      run: npm ci
+
+    - name: Build package
+      working-directory: sdk
+      run: npm run build
+
+    - name: Check build output
+      working-directory: sdk
+      run: |
+        test -f dist/index.js
+        test -f dist/index.mjs
+        test -f dist/index.d.ts

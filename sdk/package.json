@@ -1,13 +1,20 @@
 {
   "name": "spl402",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "SPL-402: Solana Payment Layer 402 - HTTP-native payments for Solana with SAS verification",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",
-    "test": "npm run build && node test.js",
+    "test": "npm run test:unit && npm run test:security",
+    "test:ci": "npm run test:unit && npm run test:security",
+    "test:all": "npm run test:unit && npm run test:integration && npm run test:security",
+    "test:unit": "jest --testMatch='**/tests/unit/**/*.test.ts' --coverage",
+    "test:integration": "jest --testMatch='**/tests/integration/**/*.test.ts'",
+    "test:security": "jest --testMatch='**/tests/security/**/*.test.ts'",
+    "test:legacy": "npm run build && node test.js",
+    "lint": "tsc --noEmit",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
@@ -37,12 +44,16 @@
     }
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@solana/web3.js": "^1.95.8",
+    "@types/jest": "^29.5.12",
     "@types/node": "^20.0.0",
     "@types/react": "^18.3.0 || ^19.0.0",
     "bs58": "^6.0.0",
+    "jest": "^29.7.0",
     "react": "^18.3.1",
     "sas-lib": "latest",
+    "ts-jest": "^29.1.2",
     "tsup": "^8.0.0",
     "typescript": "^5.5.0"
   },
