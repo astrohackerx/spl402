@@ -760,7 +760,7 @@ function PremiumContent() {
 
   const { makeRequest, loading } = useSPL402({
     network: 'mainnet-beta',
-    rpcUrl: process.env.REACT_APP_SOLANA_RPC_URL,
+    rpcUrl: import.meta.env.VITE_SOLANA_RPC_URL,
   });
 
   const fetchData = async () => {

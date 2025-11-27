@@ -512,6 +512,28 @@ export default function Docs() {
                 </p>
               </div>
 
+              <div className="bg-gradient-to-br from-red-500/10 to-orange-500/10 border border-red-500/30 rounded-2xl p-6 mb-8">
+                <h3 className="text-lg font-bold mb-3 text-red-400">⚠️ Important: Custom RPC Required</h3>
+                <p className="text-gray-300 mb-3">
+                  The default Solana public RPC has strict rate limits and will not work reliably in production.
+                  You <strong className="text-white">must</strong> use a custom RPC endpoint from providers like Helius, QuickNode, or Alchemy.
+                </p>
+                <ul className="space-y-2 text-sm text-gray-300">
+                  <li className="flex items-start gap-2">
+                    <ChevronRight size={16} className="text-red-400 flex-shrink-0 mt-0.5" />
+                    <span><strong className="text-white">Helius</strong> (recommended): https://www.helius.dev - 100 req/sec free tier</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ChevronRight size={16} className="text-red-400 flex-shrink-0 mt-0.5" />
+                    <span><strong className="text-white">QuickNode:</strong> https://www.quicknode.com - 30M credits/month free</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ChevronRight size={16} className="text-red-400 flex-shrink-0 mt-0.5" />
+                    <span><strong className="text-white">Alchemy:</strong> https://www.alchemy.com - 300M compute units/month free</span>
+                  </li>
+                </ul>
+              </div>
+
               <div className="bg-gradient-to-br from-[#14F195]/10 to-[#9945FF]/10 border border-[#9945FF]/20 rounded-2xl p-6 mb-8">
                 <h3 className="text-lg font-bold mb-3 text-[#14F195]">Key Features</h3>
                 <ul className="space-y-2 text-sm text-gray-300">
@@ -663,7 +685,7 @@ app.listen(3000);`}</code>
                 <div className="bg-black/50 rounded-lg p-4 font-mono text-sm space-y-1">
                   <div className="text-gray-400">PORT=3001</div>
                   <div className="text-gray-400">RECIPIENT_WALLET=your_solana_wallet_address_here</div>
-                  <div className="text-gray-400">SOLANA_RPC_URL=https://api.mainnet-beta.solana.com</div>
+                  <div className="text-gray-400">SOLANA_RPC_URL=https://your-rpc-endpoint.com  # Get from helius.dev or quicknode.com</div>
                   <div className="text-gray-400">FRONTEND_URL=https://your-frontend.vercel.app</div>
                 </div>
               </div>
@@ -718,7 +740,7 @@ function PremiumContent() {
 
   const { makeRequest, loading, error } = useSPL402({
     network: 'mainnet-beta',
-    rpcUrl: process.env.REACT_APP_SOLANA_RPC_URL,
+    rpcUrl: import.meta.env.VITE_SOLANA_RPC_URL,
   });
 
   const fetchPremiumData = async () => {
@@ -761,7 +783,7 @@ function PremiumContent() {
 
   const { makeRequest, loading, error } = useSPL402({
     network: 'mainnet-beta',
-    rpcUrl: process.env.REACT_APP_SOLANA_RPC_URL,
+    rpcUrl: import.meta.env.VITE_SOLANA_RPC_URL,
   });
 
   const fetchPremiumData = async () => {
@@ -809,7 +831,7 @@ import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import '@solana/wallet-adapter-react-ui/styles.css';
 
 const wallets = [new PhantomWalletAdapter()];
-const endpoint = 'https://api.mainnet-beta.solana.com';
+const endpoint = import.meta.env.VITE_SOLANA_RPC_URL || 'https://api.mainnet-beta.solana.com';
 
 function App() {
   return (
@@ -836,7 +858,7 @@ import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import '@solana/wallet-adapter-react-ui/styles.css';
 
 const wallets = [new PhantomWalletAdapter()];
-const endpoint = 'https://api.mainnet-beta.solana.com';
+const endpoint = import.meta.env.VITE_SOLANA_RPC_URL || 'https://api.mainnet-beta.solana.com';
 
 function App() {
   return (
@@ -870,7 +892,7 @@ function App() {
                 </p>
                 <div className="bg-black/50 rounded-lg p-4 font-mono text-sm space-y-1">
                   <div className="text-gray-400">VITE_API_URL=http://localhost:3001</div>
-                  <div className="text-gray-400">VITE_SOLANA_RPC_URL=https://api.mainnet-beta.solana.com</div>
+                  <div className="text-gray-400">VITE_SOLANA_RPC_URL=https://your-rpc-endpoint.com  # Get from helius.dev</div>
                 </div>
                 <p className="text-gray-300 text-sm mt-3">
                   <strong className="text-white">Note:</strong> For Vite projects, environment variables must be prefixed with <code className="px-2 py-1 bg-black/50 rounded text-[#14F195]">VITE_</code>
@@ -1197,20 +1219,20 @@ app.listen(3000);`}</code>
               <div className="bg-black/50 border border-white/10 rounded-xl p-6">
                 <h3 className="text-lg font-bold mb-3">Verification Performance</h3>
                 <p className="text-gray-300 text-sm mb-4">
-                  SPL-402 uses a balanced verification approach for optimal performance:
+                  SPL-402 verification is optimized for both speed and security:
                 </p>
                 <div className="space-y-3 text-sm">
                   <div className="bg-[#0D0D0D] rounded-lg p-4">
-                    <strong className="text-white">Step 1: Fast signature check (~150ms)</strong>
-                    <p className="text-gray-400 mt-1">Uses getSignatureStatuses for quick verification</p>
+                    <strong className="text-white">Step 1: Signature existence check</strong>
+                    <p className="text-gray-400 mt-1">Verifies transaction exists and is confirmed on-chain</p>
                   </div>
                   <div className="bg-[#0D0D0D] rounded-lg p-4">
-                    <strong className="text-white">Step 2: Amount validation (if needed)</strong>
-                    <p className="text-gray-400 mt-1">Fetches full transaction only when required</p>
+                    <strong className="text-white">Step 2: Amount and recipient validation</strong>
+                    <p className="text-gray-400 mt-1">Validates exact payment amount and recipient address</p>
                   </div>
                   <div className="bg-[#0D0D0D] rounded-lg p-4">
-                    <strong className="text-white">Total time: ~500ms average</strong>
-                    <p className="text-gray-400 mt-1">2-3x faster than alternatives</p>
+                    <strong className="text-white">Typical verification time: ~500-1000ms</strong>
+                    <p className="text-gray-400 mt-1">Fast on-chain verification with in-memory replay attack prevention</p>
                   </div>
                 </div>
               </div>
@@ -1585,7 +1607,7 @@ app.listen(3000);`}</code>
                         {`const spl402 = createServer({
   network: 'mainnet-beta',
   recipientAddress: 'your_wallet',
-  rpcUrl: 'https://api.mainnet-beta.solana.com',
+  rpcUrl: import.meta.env.VITE_SOLANA_RPC_URL,
   routes: [
     { path: '/api/premium', price: 0.001 }
   ]
@@ -1630,7 +1652,7 @@ app.use(middleware);`}
                       <code className="font-mono text-sm text-gray-300">
                         {`const { makeRequest, loading, error } = useSPL402({
   network: 'mainnet-beta',
-  rpcUrl: process.env.REACT_APP_SOLANA_RPC_URL,
+  rpcUrl: import.meta.env.VITE_SOLANA_RPC_URL,
 });`}
                       </code>
                     </div>
