@@ -2,9 +2,9 @@
 
 **SPL-402: Solana Payment Layer 402** - HTTP-native payments for Solana blockchain
 
-A lightweight, zero-dependency implementation of HTTP 402 Payment Required for Solana. Accept direct wallet-to-wallet payments on your API endpoints with no middlemen, platforms, or facilitators.
+A lightweight implementation of HTTP 402 Payment Required for Solana. Accept direct wallet-to-wallet payments on your API endpoints with no middlemen, platforms, or facilitators.
 
-Now with **Solana Attestation Service (SAS)** integration for on-chain server identity verification and decentralized API discovery.
+Includes **Solana Attestation Service (SAS)** integration for on-chain server identity verification and decentralized API discovery.
 
 ## Installation
 
@@ -24,24 +24,21 @@ npm install @solana/wallet-adapter-react @solana/wallet-adapter-react-ui @solana
 
 ## Quick Start
 
-**New to SPL-402? Start here:** [QUICKSTART.md](QUICKSTART.md) for the simplest setup guide.
+**New to SPL-402?** Start here: [QUICKSTART.md](QUICKSTART.md) for the simplest setup guide.
 
 ## Table of Contents
 
 - [What is SPL-402?](#what-is-spl-402)
-- [Why SPL-402 vs x402?](#why-spl-402-vs-x402)
-- [What's New in v2.0.1](#whats-new-in-v201)
+- [Why SPL-402?](#why-spl-402)
 - [How It Works](#how-it-works)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Standard Routes (v2.0.1)](#standard-routes-v201)
-- [Important: RPC Configuration](#important-rpc-configuration)
-- [Solana Attestation Service (SAS) Integration](#solana-attestation-service-sas-integration)
+- [Server Setup](#server-setup)
+- [Client Setup](#client-setup)
+- [Standard Routes](#standard-routes)
+- [RPC Configuration](#rpc-configuration)
+- [Solana Attestation Service (SAS)](#solana-attestation-service-sas)
 - [API Reference](#api-reference)
-- [Configuration Examples](#configuration-examples)
 - [Examples](#examples)
 - [Features](#features)
-- [Testing](#testing)
 - [Security](#security-considerations)
 - [Troubleshooting](#troubleshooting)
 - [License](#license)
@@ -55,7 +52,6 @@ SPL-402 is a protocol that brings the HTTP 402 Payment Required status code to l
 - **HTTP-native**: Works seamlessly with standard HTTP/fetch APIs
 - **Simple integration**: Add one middleware to your server, one function call on client
 - **Token flexibility**: Accept native SOL or any SPL token (SPL402, USDC, USDT, etc.)
-- **Lightning fast**: 2-3x faster than alternative solutions (500-1000ms vs ~2000-2500ms)
 - **On-chain verification**: SAS attestations prove server identity and ownership
 - **Decentralized registry**: Join the growing network of verified API servers
 
@@ -67,69 +63,34 @@ Think of it as "pay-per-request" for your APIs, without payment processors, subs
 >
 > [View on Solana Explorer](https://solscan.io/token/DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump)
 
-## Why SPL-402 vs x402?
+## Why SPL-402?
 
-| Feature | SPL-402 | x402 |
-|---------|---------|------|
-| **Latency** | ~500-1000ms | ~2000-2500ms |
-| **Platform Fees** | 0% (only network fees) | Variable fees |
-| **Dependencies** | 0 (peer deps only) | Multiple libraries |
-| **Transaction Cost** | ~$0.00001 | Higher |
-| **Speed** | 2-3x faster | Baseline |
-| **Middleman** | None (direct P2P) | Yes (facilitator) |
-| **API Keys** | Not required | Required |
-| **Setup Time** | < 5 minutes | Longer |
-| **Open Source** | ✅ MIT License | ⚠️ Varies |
+**Pure P2P Architecture**
+- No facilitators, intermediaries, or third parties
+- Direct wallet-to-wallet transfers only
+- Zero platform fees (only Solana network fees: ~$0.00001)
+- No API keys or registration required
 
-**Why is SPL-402 faster?**
+**Performance**
+- Fast verification (~500ms)
+- Optimized on-chain transaction checking
+- In-memory replay attack prevention
+- Pure Solana RPC implementation
 
-1. **No facilitator**: Payments go directly from payer to recipient - no third-party processing
-2. **Optimized verification**: Balanced mode checks signature status first (~150ms), then validates amount
-3. **Smart caching**: In-memory replay attack prevention - no database queries needed
-4. **Pure Solana**: Zero external dependencies, leverages native Solana RPC primitives
-5. **Efficient protocol**: Minimal overhead - just standard HTTP + Solana transaction verification
+**Developer Experience**
+- Zero dependencies (only peer deps)
+- Full TypeScript support
+- Works with all major Solana wallets
+- Express and Fetch middleware included
+- React hooks available
+- Comprehensive tests
 
-### 🎉 Standard Routes Implementation
-
-**Every SPL-402 server automatically includes these public endpoints:**
-
-- **`GET /health`** - Health check endpoint (returns `{ status: "ok", timestamp: ... }`)
-- **`GET /status`** - Alias for `/health`
-- **`GET /.well-known/spl402.json`** - Server metadata following RFC 8615 standard
-
-These routes are:
-- ✅ **Auto-registered** - No configuration needed
-- ✅ **Free to access** - No payment required
-- ✅ **Production ready** - Used by SPL-402 Explorer for status checks
-
-### 📊 Server Metadata Configuration
-
-Add optional metadata to your server:
-
-```typescript
-const server = createServer({
-  network: 'mainnet-beta',
-  recipientAddress: 'YOUR_WALLET',
-  serverInfo: {                    // NEW in v2.0.1!
-    name: 'My API Server',
-    description: 'Premium data API with SPL-402 payments',
-    contact: 'https://myapi.com',
-    capabilities: ['data-api', 'ai-inference']
-  },
-  routes: [
-    { path: '/api/premium', price: 0.001 }
-  ]
-});
-```
-
-### 🔧 Server Methods
-
-- `getServerMetadata()` - Returns complete server metadata
-- `createHealthResponse()` - Generates health check response
-- `createMetadataResponse()` - Generates metadata response
-
-
-**[View full release notes →](../tests/RELEASE_NOTES_2.0.1.md)**
+**Security**
+- Cryptographic signature verification
+- Exact amount validation on-chain
+- Built-in replay attack protection
+- Transaction confirmation checking
+- Recipient wallet verification
 
 ## How It Works
 
@@ -171,90 +132,9 @@ const server = createServer({
 5. **Server verifies payment** → Checks signature on-chain
 6. **Server returns content** → Client receives requested data
 
-## Key Features
+## Server Setup
 
-### Free Routes (No Payment)
-
-Mix free and paid routes! Set `price: 0` for free routes:
-
-```javascript
-routes: [
-  { path: '/api/premium', price: 0.001 },  // Paid
-  { path: '/api/public', price: 0 },       // FREE - no payment needed
-  { path: '/api/free-data', price: 0 }     // FREE - no payment needed
-]
-```
-
-Routes with `price: 0` automatically pass through without requiring payment.
-
-### Dynamic Route Parameters
-
-SPL-402 supports Express-style dynamic parameters:
-
-```javascript
-const spl402 = createServer({
-  network: 'mainnet-beta',
-  recipientAddress: 'YOUR_WALLET',
-  rpcUrl: process.env.SOLANA_RPC_URL,
-  routes: [
-    { path: '/api/games/:code', price: 0.001 },        // Matches /api/games/abc123
-    { path: '/api/users/:id/profile', price: 0.002 },  // Matches /api/users/42/profile
-    { path: '/api/files/:filename', price: 0.005 }     // Matches /api/files/document.pdf
-  ]
-});
-
-app.get('/api/games/:code', (req, res) => {
-  const { code } = req.params;
-  res.json({ game: code });
-});
-```
-
-**How it works:**
-- `:code`, `:id`, `:filename` are dynamic parameters
-- Routes match any value in those positions
-- All matching requests require the same payment
-
-### Express Router Support
-
-The middleware works with Express routers! Just use full paths in your route config:
-
-```javascript
-const express = require('express');
-const { createServer, createExpressMiddleware } = require('spl402');
-
-const app = express();
-const apiRouter = express.Router();
-
-// Configure with FULL paths (including router mount point)
-const spl402 = createServer({
-  network: 'mainnet-beta',
-  recipientAddress: 'YOUR_WALLET',
-  rpcUrl: process.env.SOLANA_RPC_URL,
-  routes: [
-    { path: '/api/premium', price: 0.001 },  // Full path: /api/premium
-    { path: '/api/public', price: 0 }        // Full path: /api/public
-  ]
-});
-
-// Apply middleware to the router OR to app - both work!
-apiRouter.use(createExpressMiddleware(spl402));
-
-// Define routes in router (relative paths)
-apiRouter.get('/premium', (req, res) => {
-  res.json({ message: 'Premium!' });
-});
-
-// Mount router at /api
-app.use('/api', apiRouter);
-
-app.listen(3000);
-```
-
-**Key Point:** Always use the **full URL path** in your routes config, including any router mount points.
-
-## Quick Start
-
-### Server Setup (Express)
+### Express.js
 
 ```javascript
 const express = require('express');
@@ -266,22 +146,21 @@ const app = express();
 const spl402 = createServer({
   network: 'mainnet-beta',
   recipientAddress: 'YOUR_WALLET_ADDRESS',  // Your Solana wallet
-  rpcUrl: process.env.SOLANA_RPC_URL,       // Get free RPC from https://www.helius.dev
-  serverInfo: {                              // Optional (v2.0.1+)
+  rpcUrl: process.env.SOLANA_RPC_URL,       // Custom RPC endpoint
+  serverInfo: {                              // Optional metadata
     name: 'My API Server',
     description: 'Premium data API',
     contact: 'https://myapi.com',
     capabilities: ['data-api']
   },
   routes: [
-    { path: '/api/premium', price: 0.001 },     // 0.001 SOL - requires payment
-    { path: '/api/data', price: 0.005 },        // 0.005 SOL - requires payment
-    { path: '/api/public', price: 0 }           // FREE - no payment needed
+    { path: '/api/premium', price: 0.001 },     // 0.001 SOL
+    { path: '/api/data', price: 0.005 },        // 0.005 SOL
+    { path: '/api/public', price: 0 }           // FREE
   ]
 });
 
-// Add payment middleware ONCE for all routes
-// Free routes (price: 0) automatically pass through - no payment needed
+// Add payment middleware
 app.use(createExpressMiddleware(spl402));
 
 // Standard routes are auto-registered (free):
@@ -289,13 +168,13 @@ app.use(createExpressMiddleware(spl402));
 // GET /status          → 200 OK
 // GET /.well-known/spl402.json → metadata
 
-// Your endpoints (both paid and free)
+// Your endpoints
 app.get('/api/premium', (req, res) => {
   res.json({ message: 'Premium content!' });
 });
 
 app.get('/api/public', (req, res) => {
-  res.json({ message: 'Free public data - no payment required!' });
+  res.json({ message: 'Free public data!' });
 });
 
 app.listen(3000);
@@ -305,10 +184,81 @@ app.listen(3000);
 ```typescript
 import { createServer, createExpressMiddleware } from 'spl402';
 import express from 'express';
-// Same as above, just use import syntax
+// Same as above
 ```
 
-### Client Setup (React)
+### Edge Runtimes (Cloudflare Workers, Deno, Vercel)
+
+```typescript
+import { createServer, createFetchMiddleware } from 'spl402';
+
+const spl402 = createServer({
+  network: 'mainnet-beta',
+  recipientAddress: 'YOUR_WALLET_ADDRESS',
+  rpcUrl: process.env.SOLANA_RPC_URL,
+  routes: [{ path: '/api/data', price: 0.001 }],
+});
+
+const middleware = createFetchMiddleware(spl402);
+
+export default {
+  async fetch(request: Request) {
+    const middlewareResponse = await middleware(request);
+    if (middlewareResponse) return middlewareResponse;
+
+    return new Response(JSON.stringify({ data: 'Protected!' }), {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+};
+```
+
+### Route Features
+
+**Free Routes**
+
+Mix free and paid routes by setting `price: 0`:
+
+```javascript
+routes: [
+  { path: '/api/premium', price: 0.001 },  // Paid
+  { path: '/api/public', price: 0 },       // FREE
+]
+```
+
+**Dynamic Parameters**
+
+Use Express-style dynamic parameters:
+
+```javascript
+routes: [
+  { path: '/api/games/:code', price: 0.001 },        // Matches /api/games/abc123
+  { path: '/api/users/:id/profile', price: 0.002 },  // Matches /api/users/42/profile
+]
+```
+
+**Express Router Support**
+
+Works with Express routers - use full paths in route config:
+
+```javascript
+const apiRouter = express.Router();
+
+const spl402 = createServer({
+  network: 'mainnet-beta',
+  recipientAddress: 'YOUR_WALLET',
+  routes: [
+    { path: '/api/premium', price: 0.001 },  // Full path
+  ]
+});
+
+apiRouter.use(createExpressMiddleware(spl402));
+app.use('/api', apiRouter);
+```
+
+## Client Setup
+
+### React
 
 ```tsx
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
@@ -327,8 +277,6 @@ function PremiumContent() {
   const handleClick = async () => {
     if (!publicKey || !sendTransaction) return;
 
-    // Create wallet adapter for SPL-402
-    // sendTransaction handles signing AND sending with ONE user approval
     const walletAdapter = {
       publicKey,
       signAndSendTransaction: async (transaction: Transaction) => {
@@ -337,7 +285,6 @@ function PremiumContent() {
       }
     };
 
-    // Make paid request
     const response = await makeRequest(
       'https://api.example.com/premium',
       walletAdapter
@@ -355,9 +302,7 @@ function PremiumContent() {
 }
 ```
 
-### Client Setup (Vanilla TypeScript)
-
-**For non-React projects:**
+### Vanilla JavaScript/TypeScript
 
 ```typescript
 import { createClient } from 'spl402';
@@ -367,7 +312,7 @@ const client = createClient({
   rpcUrl: process.env.SOLANA_RPC_URL,
 });
 
-// Get wallet (Phantom, Solflare, etc.)
+// Connect wallet (Phantom, Solflare, etc.)
 const wallet = window.phantom?.solana;
 await wallet.connect();
 
@@ -377,110 +322,19 @@ const data = await response.json();
 ```
 
 **Supported Wallets:**
-- ✅ Phantom
-- ✅ Solflare
-- ✅ Backpack
-- ✅ Glow
-- ✅ Any Solana Wallet Adapter compatible wallet
+- Phantom
+- Solflare
+- Backpack
+- Glow
+- Any Solana Wallet Adapter compatible wallet
 
-### Server Setup (Fetch-based runtimes)
+## Standard Routes
 
-For Cloudflare Workers, Deno Deploy, Vercel Edge:
+Every SPL-402 server automatically exposes these free endpoints:
 
-```typescript
-import { createServer, createFetchMiddleware } from 'spl402';
+### `GET /health`
 
-const spl402 = createServer({
-  network: 'mainnet-beta',
-  recipientAddress: 'YOUR_WALLET_ADDRESS',
-  rpcUrl: process.env.SOLANA_RPC_URL, // IMPORTANT: Use custom RPC!
-  serverInfo: {                        // Optional (v2.0.1+)
-    name: 'Edge API Server',
-    description: 'Serverless API with SPL-402',
-    contact: 'https://myapi.com'
-  },
-  routes: [{ path: '/api/data', price: 0.001 }],
-});
-
-const middleware = createFetchMiddleware(spl402);
-
-// Standard routes are handled automatically by middleware:
-// GET /health          → 200 OK (free)
-// GET /status          → 200 OK (free)
-// GET /.well-known/spl402.json → metadata (free)
-
-export default {
-  async fetch(request: Request) {
-    const middlewareResponse = await middleware(request);
-    if (middlewareResponse) return middlewareResponse;
-
-    return new Response(JSON.stringify({ data: 'Protected!' }), {
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-};
-```
-
-## Important: RPC Configuration
-
-⚠️ **The default Solana public RPC endpoint has rate limits and may not work properly in production.**
-
-### Get a Custom RPC Endpoint
-
-Choose one of these providers (all offer free tiers):
-
-1. **Helius** (strongly recommended): https://www.helius.dev
-   - Free tier: 100 requests/second
-   - Best performance for production
-   - Excellent Solana optimization
-   - Generous limits
-
-2. **QuickNode**: https://www.quicknode.com
-   - Free tier: 30M credits/month
-   - High reliability
-   - Global infrastructure
-
-3. **Alchemy**: https://www.alchemy.com
-   - Free tier: 300M compute units/month
-   - Multi-chain support
-   - Good developer tools
-
-4. **Triton (RPC Pool)**: https://rpcpool.com
-   - Free tier available
-   - Solana-native provider
-
-### Configure Your RPC
-
-```typescript
-// Server
-const spl402 = createServer({
-  network: 'mainnet-beta',
-  recipientAddress: 'YOUR_WALLET',
-  rpcUrl: 'https://your-rpc-endpoint.com', // Set your custom RPC here
-  routes: [{ path: '/api/data', price: 0.001 }],
-});
-
-// Client
-const client = createClient({
-  network: 'mainnet-beta',
-  rpcUrl: 'https://your-rpc-endpoint.com' // Set your custom RPC here
-});
-```
-
-Or use environment variables:
-
-```bash
-export SOLANA_RPC_URL="https://your-rpc-endpoint.com"
-```
-
-## Standard Routes (v2.0.1)
-
-### Overview
-
-Every SPL-402 server automatically exposes these standard endpoints:
-
-#### `GET /health`
-Health check endpoint for monitoring and uptime verification.
+Health check endpoint for monitoring.
 
 **Response:**
 ```json
@@ -490,17 +344,13 @@ Health check endpoint for monitoring and uptime verification.
 }
 ```
 
-**Use Cases:**
-- Load balancer health checks
-- Monitoring tools (Uptime Robot, Pingdom, etc.)
-- Status dashboards
-- Automated alerting systems
+### `GET /status`
 
-#### `GET /status`
-Alias for `/health` endpoint. Returns identical response.
+Alias for `/health` endpoint.
 
-#### `GET /.well-known/spl402.json`
-Server metadata endpoint following RFC 8615 (Well-Known URIs).
+### `GET /.well-known/spl402.json`
+
+Server metadata endpoint following RFC 8615.
 
 **Response:**
 ```json
@@ -519,97 +369,115 @@ Server metadata endpoint following RFC 8615 (Well-Known URIs).
       "path": "/api/premium",
       "method": "GET",
       "price": 0.001
-    },
-    {
-      "path": "/api/data",
-      "method": "GET",
-      "price": 0.0005
     }
   ],
-  "capabilities": ["data-api", "premium-content"]
+  "capabilities": ["data-api"]
 }
 ```
 
-**Use Cases:**
-- API discovery and documentation
-- Automatic pricing display in explorers
-- Client capability negotiation
-- P2P network node discovery (Phase 4)
+## RPC Configuration
 
-### Standard Routes Configuration
+⚠️ **The default Solana public RPC endpoint has rate limits and may not work in production.**
 
-Standard routes are **automatically registered** and require **no payment**. They don't interfere with your custom routes.
+### Recommended RPC Providers
+
+All offer free tiers:
+
+1. **Helius** (recommended): https://www.helius.dev
+   - Free tier: 100 requests/second
+   - Best for production
+
+2. **QuickNode**: https://www.quicknode.com
+   - Free tier: 30M credits/month
+
+3. **Alchemy**: https://www.alchemy.com
+   - Free tier: 300M compute units/month
+
+4. **Triton (RPC Pool)**: https://rpcpool.com
+   - Solana-native provider
+
+### Configure Your RPC
 
 ```typescript
-const server = createServer({
+// Server
+const spl402 = createServer({
   network: 'mainnet-beta',
   recipientAddress: 'YOUR_WALLET',
-  serverInfo: {                // Optional metadata
-    name: 'My API Server',
-    description: 'API description',
-    contact: 'https://myapi.com',
-    capabilities: ['data-api', 'ai-inference']
-  },
-  routes: [
-    { path: '/api/data', price: 0.001 }
-  ]
+  rpcUrl: 'https://your-rpc-endpoint.com',
+  routes: [{ path: '/api/data', price: 0.001 }],
 });
 
-// These routes are automatically available:
-// GET /health
-// GET /status
-// GET /.well-known/spl402.json
+// Client
+const client = createClient({
+  network: 'mainnet-beta',
+  rpcUrl: 'https://your-rpc-endpoint.com'
+});
 ```
 
-### Accessing Standard Routes
+## Solana Attestation Service (SAS)
 
-**In Express:**
-```typescript
-const app = express();
-app.use(createExpressMiddleware(spl402));
-// /health, /status, /.well-known/spl402.json are automatically handled
-```
+SPL402 supports on-chain server attestations that prove server ownership.
 
-**In Fetch/Edge:**
-```typescript
-const middleware = createFetchMiddleware(spl402);
-// Middleware automatically handles standard routes
-```
+### What is SAS?
 
-**Testing:**
-```bash
-# Health check
-curl http://localhost:3000/health
+Solana Attestation Service provides cryptographic proof of server identity stored on-chain:
 
-# Server metadata
-curl http://localhost:3000/.well-known/spl402.json
-```
+- **Server wallet address** - Proves operator controls the payment recipient
+- **API endpoint URL** - Links on-chain identity to API server
+- **Immutable timestamp** - Permanent record on Solana blockchain
+- **Public verification** - Anyone can verify attestations on-chain
 
-### New Server Methods (v2.0.1)
+### Client-Side Verification
 
-#### `getServerMetadata()`
-Returns the complete server metadata object.
+**Query All Verified Servers**
 
 ```typescript
-const metadata = server.getServerMetadata();
-console.log(metadata);
+import { queryVerifiedServers } from 'spl402';
+
+const servers = await queryVerifiedServers('mainnet-beta');
+
+servers.forEach(server => {
+  console.log('Wallet:', server.wallet);
+  console.log('Endpoint:', server.endpoint);
+  console.log('Description:', server.description);
+});
 ```
 
-#### `createHealthResponse()`
-Generates a standardized health check response.
+**Check Server by Wallet Address**
 
 ```typescript
-const healthResponse = server.createHealthResponse();
-// Returns: { status: 200, headers: {...}, body: {...} }
+import { checkAttestationByWallet } from 'spl402';
+
+const result = await checkAttestationByWallet(
+  'SERVER_WALLET_ADDRESS',
+  'mainnet-beta'
+);
+
+if (result.isVerified) {
+  console.log('✅ Server verified!');
+  console.log('API Endpoint:', result.data?.endpoint);
+}
 ```
 
-#### `createMetadataResponse()`
-Generates a standardized metadata response.
+**Check Server by API Endpoint**
 
 ```typescript
-const metadataResponse = server.createMetadataResponse();
-// Returns: { status: 200, headers: {...}, body: {...} }
+import { checkAttestationByEndpoint } from 'spl402';
+
+const result = await checkAttestationByEndpoint(
+  'https://api.example.com',
+  'mainnet-beta'
+);
+
+if (result.isVerified) {
+  console.log('✅ API server verified!');
+  console.log('Wallet:', result.data?.wallet);
+}
 ```
+
+### Server Registration
+
+For information about registering your API server, visit [spl402.org](https://spl402.org)
 
 ## API Reference
 
@@ -623,27 +491,18 @@ Creates an SPL-402 server instance.
 ```typescript
 {
   network: 'mainnet-beta' | 'devnet' | 'testnet',
-  recipientAddress: string,        // Your Solana wallet address
+  recipientAddress: string,        // Your Solana wallet
   routes: RoutePrice[],            // Protected endpoints
-  scheme?: 'transfer' | 'token-transfer',  // Default: 'transfer'
-  mint?: string,                   // Required if scheme is 'token-transfer'
-  decimals?: number,               // Required if scheme is 'token-transfer'
-  rpcUrl?: string,                 // Custom RPC endpoint (HIGHLY RECOMMENDED)
-  serverInfo?: {                   // Optional (v2.0.1+)
-    name?: string,                 // Display name for your server
-    description?: string,          // Server description
-    contact?: string,              // Contact URL or email
-    capabilities?: string[]        // Server capabilities/features
+  scheme?: 'transfer' | 'token-transfer',
+  mint?: string,                   // Required for token-transfer
+  decimals?: number,               // Required for token-transfer
+  rpcUrl?: string,                 // Custom RPC endpoint
+  serverInfo?: {
+    name?: string,
+    description?: string,
+    contact?: string,
+    capabilities?: string[]
   }
-}
-```
-
-**RoutePrice:**
-```typescript
-{
-  path: string,      // '/api/data'
-  price: number,     // 0.001 (in SOL or tokens)
-  method?: string    // 'GET' | 'POST' | etc.
 }
 ```
 
@@ -665,269 +524,81 @@ Creates an SPL-402 client instance.
 ```typescript
 {
   network: 'mainnet-beta' | 'devnet' | 'testnet',
-  rpcUrl?: string  // Custom RPC endpoint (HIGHLY RECOMMENDED)
+  rpcUrl?: string
 }
 ```
 
 #### `client.makeRequest(url: string, wallet: WalletAdapter, options?: RequestInit)`
 
-Makes a payment-protected HTTP request using your connected wallet.
+Makes a payment-protected HTTP request.
 
 **Parameters:**
-- `url`: The API endpoint to request
-- `wallet`: Your connected Solana wallet (Phantom, Solflare, etc.)
-- `options`: Optional fetch options (method, headers, body, etc.)
+- `url`: API endpoint
+- `wallet`: Connected Solana wallet
+- `options`: Optional fetch options
 
 **Returns:** Fetch Response object
 
-**Throws:** Error if payment fails, wallet not connected, or payment rejected
+### Payment Verification
 
-**Examples:**
-
-```typescript
-// GET request
-await makeRequest('/api/data', wallet);
-
-// POST request
-await makeRequest('/api/data', wallet, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ name: 'Test' })
-});
-
-// With custom headers
-await makeRequest('/api/premium', wallet, {
-  headers: { 'Authorization': 'Bearer token' }
-});
-```
-
-### Verification API
-
-#### Payment Verification
-
-SPL-402 uses an optimized verification approach (~150-200ms):
-- Fast signature existence check using `getSignatureStatuses`
-- Verifies transaction didn't fail or get dropped
-- Validates exact amount transferred matches expected price
-- Confirms recipient wallet received payment
-- Built-in replay attack prevention
-
-#### `verifyPayment(request: VerifyPaymentRequest)`
-
-Verifies payment against Solana blockchain (uses RPC).
-
-#### `verifyPaymentLocal(payment: SPL402PaymentPayload, signature: string)`
-
-Verifies payment signature locally (no RPC call).
+SPL-402 automatically handles:
+- Signature existence verification
+- Transaction confirmation checking
+- Exact amount validation on-chain
+- Recipient wallet verification
+- Replay attack prevention (built-in signature caching)
 
 ## Examples
 
 Check the [`examples/`](./examples) directory for production-ready code:
 
 **Client Examples:**
-- **[react-example.tsx](./examples/react-example.tsx)** - React component with `useSPL402` hook
-- **[nextjs-app.tsx](./examples/nextjs-app.tsx)** - Next.js App Router integration
-- **[vanilla-ts.ts](./examples/vanilla-ts.ts)** - Vanilla TypeScript with Phantom wallet
+- **[react-example.tsx](./examples/react-example.tsx)** - React with `useSPL402` hook
+- **[nextjs-app.tsx](./examples/nextjs-app.tsx)** - Next.js App Router
+- **[vanilla-ts.ts](./examples/vanilla-ts.ts)** - Vanilla TypeScript
 
 **Server Examples:**
-- **[basic-server.js](./examples/basic-server.js)** - Express server with SOL payments
-- **[token-server.js](./examples/token-server.js)** - Accept SPL tokens (SPL402, USDC, etc.)
-- **[fetch-handler.js](./examples/fetch-handler.js)** - Edge runtime compatible handler
+- **[basic-server.js](./examples/basic-server.js)** - Express with SOL payments
+- **[token-server.js](./examples/token-server.js)** - Accept SPL tokens
+- **[fetch-handler.js](./examples/fetch-handler.js)** - Edge runtime compatible
 
-**Complete Setup Guide:**
-See [examples/README.md](./examples/README.md) for detailed setup instructions, environment configuration, and implementation patterns.
-
-## Solana Attestation Service (SAS) Integration
-
-SPL402 2.0 introduces support for on-chain server attestations. Server operators can create verifiable attestations on Solana blockchain that prove they control the wallet receiving payments.
-
-### What is SAS?
-
-Solana Attestation Service provides cryptographic proof of server identity and ownership stored on-chain:
-
-- **Server wallet address** - Proves operator controls the payment recipient
-- **API endpoint URL** - Links the on-chain identity to the API server
-- **Immutable timestamp** - Permanent record on Solana blockchain
-- **Public verification** - Anyone can verify attestations on-chain
-
-### Why Use Attestations?
-
-**Benefits:**
-- **Trust**: Clients verify the API server owns the payment wallet
-- **Transparency**: All attestations are publicly auditable on Solana
-- **Decentralization**: Enables discovery of verified API servers
-- **Censorship Resistance**: No central authority controls registration
-
-### Client-Side Verification
-
-The SDK provides functions to verify server attestations on-chain:
-
-**1. Query All Verified Servers**
-
-```typescript
-import { queryVerifiedServers } from 'spl402';
-
-// Get all verified SPL402 servers
-const servers = await queryVerifiedServers('mainnet-beta');
-
-servers.forEach(server => {
-  console.log('Wallet:', server.wallet);
-  console.log('Endpoint:', server.endpoint);
-  console.log('Description:', server.description);
-  console.log('Attestation PDA:', server.attestationPda);
-});
-```
-
-**2. Check Server by Wallet Address**
-
-```typescript
-import { checkAttestationByWallet } from 'spl402';
-
-const result = await checkAttestationByWallet(
-  'SERVER_WALLET_ADDRESS',
-  'mainnet-beta'
-);
-
-if (result.isVerified) {
-  console.log('✅ Server verified!');
-  console.log('API Endpoint:', result.data?.endpoint);
-  console.log('Attestation:', result.attestationPda);
-} else {
-  console.log('❌ Not verified:', result.error);
-}
-```
-
-**3. Check Server by API Endpoint**
-
-```typescript
-import { checkAttestationByEndpoint } from 'spl402';
-
-const result = await checkAttestationByEndpoint(
-  'https://api.example.com',
-  'mainnet-beta'
-);
-
-if (result.isVerified) {
-  console.log('✅ API server verified!');
-  console.log('Wallet:', result.data?.wallet);
-} else {
-  console.log('❌ Not verified:', result.error);
-}
-```
-
-**4. Get Attestation by PDA**
-
-```typescript
-import { getAttestationByPda } from 'spl402';
-
-const result = await getAttestationByPda(
-  'ATTESTATION_PDA_ADDRESS',
-  'mainnet-beta'
-);
-
-if (result.isVerified) {
-  console.log('Server Data:', result.data);
-}
-```
-
-### Types
-
-```typescript
-interface VerifiedServer {
-  wallet: string;
-  endpoint: string;
-  description: string;
-  contact: string;
-  attestationPda: string;
-}
-
-interface AttestationCheckResult {
-  isVerified: boolean;
-  attestationPda?: string;
-  data?: VerifiedServer;
-  error?: string;
-}
-```
-
-### Server Registration
-
-For information about registering your API server and creating attestations, visit [spl402.org](https://spl402.org)
+See [examples/README.md](./examples/README.md) for setup instructions.
 
 ## Features
 
-### ✅ Current Features
+### Core Functionality
+- Direct SOL transfers (native Solana payments)
+- SPL token transfers (SPL402, USDC, USDT, custom tokens)
+- Payment verification with replay attack prevention
+- Cryptographic signature validation
+- Multiple routes with individual pricing
+- On-chain attestation verification support
+- Client-side server identity verification
 
-**Core Functionality:**
-- ✅ Direct SOL transfers (native Solana payments)
-- ✅ SPL token transfers (SPL402, USDC, USDT, custom tokens)
-- ✅ Payment verification with replay attack prevention
-- ✅ Cryptographic signature validation
-- ✅ Multiple routes with individual pricing
-- ✅ Two verification modes (strict & balanced)
-- ✅ **On-chain attestation verification support**
-- ✅ **Client-side server identity verification**
+### Standard Routes
+- Automatic `/health` endpoint
+- Automatic `/status` endpoint
+- Automatic `/.well-known/spl402.json` metadata endpoint
+- Server metadata configuration
+- RFC 8615 compliance
 
-**Standard Routes (v2.0.1):**
-- ✅ Automatic `/health` endpoint
-- ✅ Automatic `/status` endpoint
-- ✅ Automatic `/.well-known/spl402.json` metadata endpoint
-- ✅ Server metadata configuration
-- ✅ RFC 8615 compliance
+### Integration
+- React hooks (`useSPL402`)
+- Express.js middleware
+- Fetch-compatible middleware (Cloudflare Workers, Deno, Vercel Edge)
+- Solana Wallet Adapter integration
+- Custom RPC endpoint support
 
-**Integration:**
-- ✅ React hooks (`useSPL402`)
-- ✅ Express.js middleware
-- ✅ Fetch-compatible middleware (Cloudflare Workers, Deno, Vercel Edge)
-- ✅ Solana Wallet Adapter integration
-- ✅ Custom RPC endpoint support
+### Developer Experience
+- Full TypeScript support
+- Zero dependencies (only peer dependencies)
+- Comprehensive examples and documentation
+- Works with all major Solana wallets
+- 245+ comprehensive tests
 
-**Developer Experience:**
-- ✅ Full TypeScript support with complete type definitions
-- ✅ Zero dependencies (only peer dependencies)
-- ✅ Comprehensive examples and documentation
-- ✅ Works with all major Solana wallets
-- ✅ 65 comprehensive tests (100% pass rate)
+## SPL Token Payments
 
-### 🔄 Roadmap
-
-**Recently Shipped:**
-- ✅ **v2.0.1**: Standard routes (`/health`, `/status`, `/.well-known/spl402.json`)
-- ✅ **v2.0.1**: Server metadata configuration
-- ✅ **v2.0.1**: Health check and metadata endpoints
-- ✅ **v2.0**: Client-side attestation verification support
-- ✅ **v2.0**: Documentation for on-chain server identity verification
-- ✅ **v2.0**: Integration with decentralized API server discovery
-
-**Coming Soon:**
-- [ ] Payment session management (avoid repeated payments)
-- [ ] Webhook notifications for payment events
-- [ ] Built-in rate limiting helpers
-- [ ] Analytics and metrics dashboard
-- [ ] Payment receipt generation
-- [ ] Subscription/recurring payment patterns
-- [ ] Multi-currency support
-- [ ] WebSocket payment streaming
-- [ ] P2P decentralized API discovery network (Phase 4)
-
-## Configuration Examples
-
-### Multiple Routes with Different Prices
-
-```javascript
-const spl402 = createServer({
-  network: 'mainnet-beta',
-  recipientAddress: 'YOUR_WALLET',
-  rpcUrl: process.env.SOLANA_RPC_URL,
-  routes: [
-    { path: '/api/basic', price: 0.0001 },
-    { path: '/api/premium', price: 0.001 },
-    { path: '/api/create', price: 0.005, method: 'POST' },
-    { path: '/api/public', price: 0 }  // FREE
-  ],
-});
-```
-
-### SPL Token Payments (SPL402, USDC, USDT, etc.)
+Accept SPL tokens (SPL402, USDC, USDT, etc.):
 
 ```javascript
 // Server
@@ -936,95 +607,82 @@ const spl402 = createServer({
   recipientAddress: 'YOUR_WALLET',
   rpcUrl: process.env.SOLANA_RPC_URL,
   scheme: 'token-transfer',
-  mint: 'DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump', // SPL402 token mint
-  decimals: 6, // SPL402 has 6 decimals
+  mint: 'DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump', // SPL402
+  decimals: 6,
   routes: [
     { path: '/api/data', price: 10 }, // 10 SPL402 tokens
   ],
 });
 
-// Client - no changes needed! Automatically uses token payments
+// Client - no changes needed!
 ```
 
-**Common SPL Token Configuration:**
+**Common Tokens:**
 
 | Token | Decimals | Mint Address |
 |-------|----------|-------------|
 | SPL402 | 6 | `DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump` |
 | USDC | 6 | `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v` |
 | USDT | 6 | `Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB` |
-| SOL | 9 | Native (use `transfer` scheme, not `token-transfer`) |
 
-For other tokens, check decimals on [Solana Explorer](https://explorer.solana.com) or [Solscan](https://solscan.io).
+## Testing
 
-### Using Devnet for Testing
+For devnet testing:
 
 ```javascript
 const spl402 = createServer({
   network: 'devnet',
   recipientAddress: 'YOUR_WALLET',
-  rpcUrl: 'https://api.devnet.solana.com', // or custom devnet RPC
+  rpcUrl: 'https://api.devnet.solana.com',
   routes: [{ path: '/api/test', price: 0.001 }],
 });
 
 // Get devnet SOL from: https://faucet.solana.com
 ```
 
-## Testing
-
-Run the test suite:
+**Run Tests:**
 
 ```bash
 npm test
-```
-
-**Development:**
-```bash
-npm run build  # Build TypeScript
-npm run dev    # Watch mode for development
-```
-
-**Run Specific Tests:**
-```bash
-cd tests
-npm run test:standard-routes  # Test v2.0.1 features
+npm run test:unit
+npm run test:integration
+npm run test:security
 ```
 
 ## Security Considerations
 
 **Critical Security Rules:**
 
-1. **Server-side verification only** - Never trust client-side payment claims; always verify on your server
-2. **HTTPS required** - Always use HTTPS in production to prevent payment data interception
-3. **Private key safety** - Never expose private keys in client code or frontend applications
-4. **Amount validation** - Server must verify payment amounts match expected prices exactly
-5. **Replay attack prevention** - SPL-402 includes built-in signature replay prevention via caching
+1. **Server-side verification only** - Never trust client-side payment claims
+2. **HTTPS required** - Always use HTTPS in production
+3. **Private key safety** - Never expose private keys in client code
+4. **Amount validation** - Server verifies exact payment amounts on-chain
+5. **Replay protection** - Built-in signature replay prevention via caching
 
 **Best Practices:**
 
-6. **Rate limiting** - Implement rate limiting to prevent abuse and excessive verification requests
-7. **Transaction monitoring** - Monitor for unusual patterns (repeated failures, abnormal amounts)
-8. **Custom RPC endpoints** - Use private RPC to avoid public rate limits and improve reliability
-9. **Error handling** - Implement proper error handling to avoid leaking sensitive information
-10. **Wallet validation** - Validate wallet addresses and permissions before processing payments
+6. **Rate limiting** - Implement rate limiting to prevent abuse
+7. **Transaction monitoring** - Monitor for unusual patterns
+8. **Custom RPC endpoints** - Use private RPC for reliability
+9. **Error handling** - Implement proper error handling
+10. **Wallet validation** - Validate wallet addresses before processing
 
 **What SPL-402 Handles Automatically:**
-- ✅ Signature verification (cryptographic proof of payment)
-- ✅ Amount verification (checks exact payment amount on-chain)
-- ✅ Replay attack prevention (signature deduplication)
-- ✅ Recipient verification (confirms payment went to correct wallet)
+- ✅ Signature verification
+- ✅ Amount verification
+- ✅ Replay attack prevention
+- ✅ Recipient verification
 - ✅ Transaction confirmation status
 
 ## Network Support
 
-- ✅ **Mainnet-beta** (production) - **Recommended**
+- ✅ **Mainnet-beta** (production)
 - ✅ **Devnet** (development/testing)
 - ✅ **Testnet** (staging)
 
 ## Browser Support
 
-Client works in:
-- ✅ Node.js 16+
+- ✅ Node.js 18+
 - ✅ Modern browsers (with bundler)
 - ✅ Cloudflare Workers
 - ✅ Deno
@@ -1033,32 +691,32 @@ Client works in:
 ## Troubleshooting
 
 ### "429 Too Many Requests"
-**Problem**: Hitting rate limits on public RPC
-**Solution**: Use a custom RPC endpoint (see [RPC Configuration](#important-rpc-configuration))
+**Problem**: Rate limits on public RPC
+**Solution**: Use a custom RPC endpoint
 
 ### "Transaction simulation failed"
-**Problem**: Wallet might not have enough SOL, or network congestion
-**Solution**: Ensure wallet has sufficient balance, try again, or use a better RPC endpoint
+**Problem**: Insufficient SOL or network congestion
+**Solution**: Ensure sufficient balance, retry, or use better RPC
 
 ### "Payment verification failed"
-**Problem**: Transaction might not be confirmed yet, or RPC is slow
-**Solution**: Wait a moment and retry, or use a faster RPC endpoint
+**Problem**: Transaction not confirmed yet
+**Solution**: Wait and retry, or use faster RPC
 
 ### "Payment validation failed"
-**Problem**: RPC URL not set or wallet insufficient balance
-**Solution**: Ensure RPC URL is configured on both server and client, verify wallet has enough SOL
+**Problem**: RPC URL not set or insufficient balance
+**Solution**: Configure RPC URL, verify wallet balance
 
 ### "Wallet not connected"
-**Problem**: Attempting payment without connected wallet
-**Solution**: Check that wallet is connected before calling makeRequest, verify wallet adapter is properly initialized
+**Problem**: Payment attempted without connected wallet
+**Solution**: Verify wallet is connected before calling makeRequest
 
 ### POST/PUT requests not working
 **Problem**: Options parameter incorrectly placed
-**Solution**: Pass options as the THIRD parameter: `makeRequest(url, wallet, { method: 'POST', body: '...' })`
+**Solution**: Pass options as third parameter: `makeRequest(url, wallet, { method: 'POST', body: '...' })`
 
 ## Decentralized API Network
 
-SPL402 is building toward a fully decentralized, peer-to-peer API network:
+SPL402 is building toward a fully decentralized P2P API network:
 
 ### Current Architecture
 
@@ -1067,7 +725,7 @@ AI Agent / Client
        ↓
 SPL402-enabled API Server
        ↓
-Solana Blockchain (Payment + Attestation Verification)
+Solana Blockchain (Payment + Attestation)
 ```
 
 ### Future Vision: P2P Mesh Network
@@ -1082,19 +740,12 @@ Solana Blockchain (Payment + Attestation Verification)
 ```
 
 **Key Features:**
-- **Self-Verifying Network**: Every node verifies peers through SAS attestations
-- **Open Discovery**: Browse verified APIs via SPL402 Explorer
-- **No Central Authority**: No gatekeepers, registries, or central control
-- **Censorship Resistant**: Impossible to block or throttle individual servers
-- **Scalable**: Network grows organically as nodes join
-- **Economic Incentives**: Token-based payment flows between nodes
-
-**Use Cases:**
-- AI agents discovering and paying for API services
-- Decentralized data marketplaces
-- Cross-service micropayments
-- Machine-to-machine economy
-- Censorship-resistant API infrastructure
+- Self-verifying network through SAS attestations
+- Open discovery via SPL402 Explorer
+- No central authority or gatekeepers
+- Censorship resistant
+- Scalable P2P architecture
+- Token-based economic incentives
 
 **Current Status:**
 - ✅ Phase 1: Payment protocol (live)
@@ -1105,7 +756,7 @@ Solana Blockchain (Payment + Attestation Verification)
 
 ## Contributing
 
-Contributions welcome! Please check the issues or submit PRs.
+Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
@@ -1122,6 +773,7 @@ MIT
 **Documentation:**
 - [Solana Docs](https://docs.solana.com)
 - [HTTP 402 Status Code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/402)
+- [Security Policy](./SECURITY.md)
 
 ---
 
