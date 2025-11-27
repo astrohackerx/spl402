@@ -13,7 +13,7 @@ We release patches for security vulnerabilities in the following versions:
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
-Instead, please report them via email to: **security@spl402.org**
+Instead, please report them via email to: **astrohacker@protonmail.com**
 
 You should receive a response within 48 hours. If for some reason you do not, please follow up via email to ensure we received your original message.
 
@@ -128,7 +128,7 @@ The 5-minute payment timeout window is a security vs. usability trade-off:
 
 ## Security Contact
 
-- **Email**: security@spl402.org
+- **Email**: astrohackerx@protonmail.com
 - **Response Time**: 48 hours for acknowledgment, 5 days for triage
 
 ## Acknowledgments
