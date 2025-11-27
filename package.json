@@ -35,7 +35,7 @@
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.6.0",
     "react-router-dom": "^7.9.5",
-    "spl402": "^2.0.1",
+    "spl402": "^2.0.6",
     "vite-plugin-node-polyfills": "^0.24.0"
   },
   "devDependencies": {
