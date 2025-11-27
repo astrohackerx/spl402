@@ -47,8 +47,8 @@ export class SPL402Server {
       // Convert route pattern to regex
       // Example: /v1/games/:code -> /v1/games/([^/]+)
       const pattern = route.path
-        .replace(/:[^/]+/g, '([^/]+)')  // Replace :param with regex group
-        .replace(/\//g, '\\/');          // Escape forward slashes
+        .replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')  // Escape all special regex chars
+        .replace(/:[^/]+/g, '([^/]+)');           // Replace :param with regex group
 
       const regex = new RegExp(`^${pattern}$`);
       if (regex.test(path)) {
