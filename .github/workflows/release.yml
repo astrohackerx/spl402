@@ -22,15 +22,19 @@ jobs:
       with:
         node-version: '20.x'
         cache: 'npm'
+        cache-dependency-path: 'sdk/package-lock.json'
         registry-url: 'https://registry.npmjs.org'
 
     - name: Install dependencies
+      working-directory: ./sdk
       run: npm ci
 
     - name: Run tests
+      working-directory: ./sdk
       run: npm run test:all
 
     - name: Build package
+      working-directory: ./sdk
       run: npm run build
 
     - name: Create GitHub Release
@@ -43,6 +47,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Publish to NPM
+      working-directory: ./sdk
       run: npm publish
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
