@@ -77,7 +77,7 @@ export default function Home() {
                       <Play size={12} />
                       Live Demo
                     </a>
-                    <a href="https://github.com/astrohackerx/templates/tree/main-spl402/community/spl402-starter-kit" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
+                    <a href="https://github.com/astrohackerx/spl402-starter-kit" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
                       <Github size={12} />
                       Code
                     </a>
@@ -90,7 +90,7 @@ export default function Home() {
                       <Sparkles size={20} className="text-white" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-bold text-base mb-1">GPT-402</h3>
+                      <h3 className="font-bold text-base mb-1">GPT402</h3>
                       <p className="text-xs text-gray-400">Pay-per-use AI chat interface</p>
                     </div>
                   </div>
@@ -165,7 +165,7 @@ export default function Home() {
                       <Play size={12} />
                       Live Demo
                     </a>
-                    <a href="https://github.com/astrohackerx/spl402/tree/main/aiagent" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
+                    <a href="https://github.com/astrohackerx/agent402" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
                       <Github size={12} />
                       Code
                     </a>
