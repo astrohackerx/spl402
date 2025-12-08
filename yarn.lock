@@ -6571,10 +6571,10 @@ source-map-js@^1.2.1:
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.2.1.tgz#1ce5650fddd87abc099eda37dcff024c2667ae46"
   integrity sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==
 
-spl402@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/spl402/-/spl402-2.0.1.tgz#e51a7d71ae1eba88df0e32037b9f9bf2867fa3a8"
-  integrity sha512-W8nM5tbHr1CORRXnBpAGIad9ql+TkyqPt60Udxog8HoXf3F5v/wmXBDR5SY74qQVsj1WXwEhHNAkojECFg23WA==
+spl402@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/spl402/-/spl402-2.0.6.tgz#b80b8f6adb33c187c04a7fd58f4a14c53fc00c9d"
+  integrity sha512-yMaOGh6aOJmuYhrZf+4w5cm4zym9IGAQEtibGOvBTcOescfRFT+xANSxZu/TvnOIH4kWQZgwM/sPSsSVSs/ZxA==
   dependencies:
     "@solana/kit" "^2.1.7"
     sas-lib latest
