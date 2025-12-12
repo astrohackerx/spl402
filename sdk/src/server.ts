@@ -73,6 +73,7 @@ export class SPL402Server {
       scheme: this.config.scheme || 'transfer',
       mint: this.config.mint,
       decimals: this.config.decimals,
+      tokenProgram: this.config.tokenProgram,
     };
   }
 
@@ -85,7 +86,8 @@ export class SPL402Server {
       expectedAmount,
       this.config.recipientAddress,
       this.config.network,
-      this.config.decimals
+      this.config.decimals,
+      this.config.tokenProgram
     );
 
     return {
@@ -182,6 +184,7 @@ export class SPL402Server {
       scheme: this.config.scheme || 'transfer',
       mint: this.config.mint,
       decimals: this.config.decimals,
+      tokenProgram: this.config.tokenProgram,
       routes: this.config.routes.map(route => ({
         path: route.path,
         method: route.method || 'GET',

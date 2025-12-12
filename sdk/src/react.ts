@@ -54,8 +54,9 @@ export function useSPL402(options: UseSPL402Options): UseSPL402Return {
       scheme: options.scheme,
       mint: options.mint,
       decimals: options.decimals,
+      tokenProgram: options.tokenProgram,
     }),
-    [options.network, options.rpcUrl, options.scheme, options.mint, options.decimals]
+    [options.network, options.rpcUrl, options.scheme, options.mint, options.decimals, options.tokenProgram]
   );
 
   const makeRequest = useCallback(async (

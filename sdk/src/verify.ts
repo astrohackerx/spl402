@@ -5,11 +5,17 @@ import {
   SolanaTokenTransferPayload,
   VerifyPaymentResponse,
   SolanaNetwork,
+  TokenProgram,
 } from './types';
 import { createConnection, validatePublicKey, validateSignature, solToLamports, toTokenAmount } from './utils';
 
 const PAYMENT_TIMEOUT_MS = 5 * 60 * 1000;
 const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
+const TOKEN_2022_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
+
+function getTokenProgramId(tokenProgram?: TokenProgram): PublicKey {
+  return tokenProgram === 'token-2022' ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID;
+}
 
 class SignatureCache {
   private cache: Map<string, { timestamp: number; verified: boolean }> = new Map();
@@ -58,7 +64,8 @@ export async function verifyPayment(
   expectedAmount: number,
   expectedRecipient: string,
   network: SolanaNetwork,
-  decimals?: number
+  decimals?: number,
+  tokenProgram?: TokenProgram
 ): Promise<VerifyPaymentResponse> {
   if (payment.spl402Version !== 1) {
     return { valid: false, reason: 'Unsupported SPL-402 version' };
@@ -75,7 +82,7 @@ export async function verifyPayment(
   if (payment.scheme === 'transfer') {
     return verifyTransfer(payment.payload as SolanaTransferPayload, expectedAmount, expectedRecipient, network);
   } else if (payment.scheme === 'token-transfer') {
-    return verifyTokenTransfer(payment.payload as SolanaTokenTransferPayload, expectedAmount, expectedRecipient, network, decimals);
+    return verifyTokenTransfer(payment.payload as SolanaTokenTransferPayload, expectedAmount, expectedRecipient, network, decimals, tokenProgram);
   }
 
   return { valid: false, reason: 'Unsupported payment scheme' };
@@ -161,7 +168,8 @@ async function verifyTokenTransfer(
   expectedAmount: number,
   expectedRecipient: string,
   network: SolanaNetwork,
-  decimals?: number
+  decimals?: number,
+  tokenProgram?: TokenProgram
 ): Promise<VerifyPaymentResponse> {
   if (!validateSignature(payload.signature)) {
     return { valid: false, reason: 'Invalid transaction signature' };
@@ -203,11 +211,13 @@ async function verifyTokenTransfer(
     let transferAmount = 0;
     let destinationAccountIndex = -1;
 
+    const expectedTokenProgramId = getTokenProgramId(tokenProgram);
+
     for (const ix of instructions) {
       const programIdIndex = ix.programIdIndex;
       const programId = accountKeys[programIdIndex];
 
-      if (!programId.equals(TOKEN_PROGRAM_ID)) continue;
+      if (!programId.equals(expectedTokenProgramId)) continue;
 
       const data = Buffer.from(ix.data);
 

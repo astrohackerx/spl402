@@ -4,6 +4,8 @@ export const SPL402_VERSION = 1;
 
 export type SolanaNetwork = 'mainnet-beta' | 'devnet' | 'testnet';
 
+export type TokenProgram = 'spl-token' | 'token-2022';
+
 export interface SPL402PaymentPayload {
   spl402Version: number;
   scheme: 'transfer' | 'token-transfer';
@@ -35,6 +37,7 @@ export interface SPL402PaymentRequirement {
   scheme: 'transfer' | 'token-transfer';
   mint?: string;
   decimals?: number;
+  tokenProgram?: TokenProgram;
 }
 
 export interface SPL402Response {
@@ -65,6 +68,7 @@ export interface SPL402Config {
   scheme?: 'transfer' | 'token-transfer';
   mint?: string;
   decimals?: number;
+  tokenProgram?: TokenProgram;
 }
 
 export interface RoutePrice {
@@ -79,6 +83,7 @@ export interface ServerConfig extends SPL402Config {
   scheme?: 'transfer' | 'token-transfer';
   mint?: string;
   decimals?: number;
+  tokenProgram?: TokenProgram;
   serverInfo?: {
     name?: string;
     description?: string;
@@ -99,6 +104,7 @@ export interface ServerMetadata {
   scheme: 'transfer' | 'token-transfer';
   mint?: string;
   decimals?: number;
+  tokenProgram?: TokenProgram;
   routes: Array<{
     path: string;
     method: string;

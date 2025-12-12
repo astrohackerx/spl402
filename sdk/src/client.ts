@@ -9,6 +9,8 @@ import {
   getAssociatedTokenAddress,
   createTransferInstruction,
   createAssociatedTokenAccountInstruction,
+  TOKEN_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID,
 } from '@solana/spl-token';
 import {
   SPL402PaymentPayload,
@@ -16,8 +18,13 @@ import {
   SPL402Config,
   SolanaNetwork,
   SPL402_VERSION,
+  TokenProgram,
 } from './types';
 import { createConnection, solToLamports, toTokenAmount } from './utils';
+
+function getTokenProgramId(tokenProgram?: TokenProgram): PublicKey {
+  return tokenProgram === 'token-2022' ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID;
+}
 
 // Wallet adapter interface for browser wallets (Phantom, Solflare, etc.)
 export interface WalletAdapter {
@@ -116,9 +123,10 @@ export class SPL402Client {
     const mintPubkey = new PublicKey(requirement.mint);
     const recipientPubkey = new PublicKey(requirement.recipient);
     const tokenAmount = toTokenAmount(requirement.amount, requirement.decimals);
+    const programId = getTokenProgramId(requirement.tokenProgram);
 
-    const senderAta = await getAssociatedTokenAddress(mintPubkey, wallet.publicKey);
-    const recipientAta = await getAssociatedTokenAddress(mintPubkey, recipientPubkey);
+    const senderAta = await getAssociatedTokenAddress(mintPubkey, wallet.publicKey, false, programId);
+    const recipientAta = await getAssociatedTokenAddress(mintPubkey, recipientPubkey, false, programId);
 
     const transaction = new Transaction();
 
@@ -129,7 +137,8 @@ export class SPL402Client {
           wallet.publicKey,
           recipientAta,
           recipientPubkey,
-          mintPubkey
+          mintPubkey,
+          programId
         )
       );
     }
@@ -139,7 +148,9 @@ export class SPL402Client {
         senderAta,
         recipientAta,
         wallet.publicKey,
-        tokenAmount
+        tokenAmount,
+        [],
+        programId
       )
     );
 
@@ -195,6 +206,7 @@ export class SPL402Client {
         scheme: this.config.scheme,
         mint: this.config.mint || requirement.mint,
         decimals: this.config.decimals !== undefined ? this.config.decimals : requirement.decimals,
+        tokenProgram: this.config.tokenProgram || requirement.tokenProgram,
       };
     }
 

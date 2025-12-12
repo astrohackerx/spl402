@@ -8,6 +8,7 @@ export * from './attestation';
 export { SPL402Client, createClient, WalletAdapter } from './client';
 export { SPL402Server, createServer, createExpressMiddleware, createFetchMiddleware } from './server';
 export { verifyPayment } from './verify';
+export type { TokenProgram } from './types';
 
 export {
   queryVerifiedServers,
