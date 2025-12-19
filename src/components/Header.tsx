@@ -13,8 +13,8 @@ export function Header() {
         <nav className="hidden lg:flex items-center gap-8">
           <a href="/" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Home</a>
          
-          <a href="/verify" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Verify</a>
-          <a href="/explorer" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Explorer</a>
+          {/* <a href="/verify" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Verify</a>
+          <a href="/explorer" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Explorer</a> */}
            <a href="/docs" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Docs</a>
           <a
             href="https://github.com/astrohackerx/spl402"
@@ -39,8 +39,8 @@ export function Header() {
         <div className="lg:hidden border-t border-white/10 bg-black/95 backdrop-blur-xl">
           <nav className="flex flex-col px-4 py-4 space-y-3">
             <a href="/" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Home</a>
-            <a href="/verify" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Verify</a>
-            <a href="/explorer" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Explorer</a>
+            {/* <a href="/verify" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Verify</a>
+            <a href="/explorer" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Explorer</a> */}
             <a href="/docs" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Docs</a>
             <a
               href="https://github.com/astrohackerx/spl402"
