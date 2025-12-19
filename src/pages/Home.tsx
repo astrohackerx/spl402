@@ -73,10 +73,10 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <a href="https://live.spl402.org" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
+                    {/* <a href="https://live.spl402.org" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
                       <Play size={12} />
                       Live Demo
-                    </a>
+                    </a> */}
                     <a href="https://github.com/astrohackerx/spl402-starter-kit" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
                       <Github size={12} />
                       Code
@@ -95,10 +95,10 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <a href="https://gpt.spl402.org" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
+                    {/* <a href="https://gpt.spl402.org" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
                       <Play size={12} />
                       Live Demo
-                    </a>
+                    </a> */}
                     <a href="https://github.com/astrohackerx/gpt-402" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
                       <Github size={12} />
                       Code
@@ -117,10 +117,10 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <a href="https://chess402.online" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
+                    {/* <a href="https://chess402.online" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
                       <Play size={12} />
                       Live Demo
-                    </a>
+                    </a> */}
                     <a href="https://github.com/astrohackerx/chess402" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
                       <Github size={12} />
                       Code
@@ -139,10 +139,10 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <a href="https://ai.spl402.org" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
+                    {/* <a href="https://ai.spl402.org" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
                       <Play size={12} />
                       Live Demo
-                    </a>
+                    </a> */}
                     <a href="https://github.com/astrohackerx/AiMarketplace" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
                       <Github size={12} />
                       Code
@@ -161,10 +161,10 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <a href="https://aiagent.spl402.org" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
+                    {/* <a href="https://aiagent.spl402.org" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
                       <Play size={12} />
                       Live Demo
-                    </a>
+                    </a> */}
                     <a href="https://github.com/astrohackerx/agent402" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
                       <Github size={12} />
                       Code
@@ -183,10 +183,10 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <a href="https://openrouter.spl402.org" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
+                    {/* <a href="https://openrouter.spl402.org" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
                       <Play size={12} />
                       Live Demo
-                    </a>
+                    </a> */}
                     <a href="https://github.com/astrohackerx/spl402-OpenRouter" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
                       <Github size={12} />
                       Code
