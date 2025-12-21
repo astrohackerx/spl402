@@ -71,10 +71,17 @@ export interface SPL402Config {
   tokenProgram?: TokenProgram;
 }
 
+export interface TokenGate {
+  mint: string;
+  minimumBalance: number;
+  tokenProgram?: TokenProgram;
+}
+
 export interface RoutePrice {
   path: string;
   price: number;
   method?: string;
+  tokenGate?: TokenGate;
 }
 
 export interface ServerConfig extends SPL402Config {
@@ -110,6 +117,15 @@ export interface ServerMetadata {
     method: string;
     price: number;
     description?: string;
+    tokenGate?: TokenGate;
   }>;
   capabilities?: string[];
+}
+
+export interface TokenGateVerifyResult {
+  authorized: boolean;
+  reason?: string;
+  wallet?: string;
+  balance?: number;
+  requiredBalance?: number;
 }

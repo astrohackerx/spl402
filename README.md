@@ -34,7 +34,11 @@ npm install @solana/wallet-adapter-react @solana/wallet-adapter-react-ui @solana
 - [Server Setup](#server-setup)
 - [Client Setup](#client-setup)
 - [Standard Routes](#standard-routes)
+- [SPL Token Payments](#spl-token-payments)
+- [Token2022 Support](#token2022-support)
+- [Token-Gated Access](#token-gated-access)
 - [RPC Configuration](#rpc-configuration)
+- [Payment Verification](#payment-verification)
 - [Solana Attestation Service (SAS)](#solana-attestation-service-sas)
 - [API Reference](#api-reference)
 - [Examples](#examples)
@@ -414,6 +418,89 @@ const client = createClient({
 });
 ```
 
+## Payment Verification
+
+SPL-402 performs comprehensive on-chain verification of all payments. Understanding this process helps with debugging and security audits.
+
+### Verification Steps
+
+When a client submits a payment proof, the server performs these checks in order:
+
+1. **Signature Format Validation**
+   - Decodes the bs58-encoded signature
+   - Verifies it's exactly 64 bytes
+
+2. **Replay Attack Prevention**
+   - Checks signature against in-memory cache
+   - Rejects previously used signatures
+   - Cache expires entries after 5 minutes
+
+3. **Timestamp Validation**
+   - Verifies payment was made within 5-minute window
+   - Prevents stale transaction reuse
+
+4. **On-Chain Transaction Fetch**
+   - Retrieves transaction from Solana RPC
+   - Verifies transaction exists and is confirmed
+
+5. **Payment Amount Verification**
+   - For SOL: Checks pre/post balance difference
+   - For tokens: Parses transfer instruction and verifies amount
+
+6. **Recipient Verification**
+   - Confirms payment went to the configured recipient wallet
+   - For tokens: Verifies the correct associated token account
+
+### Replay Attack Protection
+
+SPL-402 includes built-in protection against replay attacks:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    SignatureCache                           │
+├─────────────────────────────────────────────────────────────┤
+│  Max Size: 10,000 entries                                   │
+│  TTL: 5 minutes (300,000 ms)                               │
+│  Auto-cleanup: Removes expired entries on each check        │
+└─────────────────────────────────────────────────────────────┘
+```
+
+How it works:
+1. Each payment signature is stored with a timestamp
+2. Subsequent requests with the same signature are rejected
+3. Old entries are automatically purged to prevent memory bloat
+
+### Token Transfer Verification
+
+For SPL token payments, verification includes:
+
+- **Instruction Parsing**: Identifies transfer (opcode 3) or transferChecked (opcode 12)
+- **Program ID Check**: Validates against SPL-Token or Token2022 program
+- **Mint Verification**: Confirms payment used the correct token mint
+- **Decimal Handling**: Properly accounts for token decimals in amount
+
+### Verification Response Codes
+
+| Code | Status | Meaning |
+|------|--------|---------|
+| 200 | Success | Payment verified, content returned |
+| 402 | Payment Required | No payment proof provided |
+| 403 | Forbidden | Token gate failed (insufficient balance) |
+| 409 | Conflict | Replay attack detected (signature reused) |
+| 422 | Unprocessable | Payment verification failed |
+
+### Debugging Payment Issues
+
+Enable detailed logging by checking the verification result:
+
+```javascript
+// The server logs verification details internally
+// Check your server logs for:
+// - "Payment verification failed: [reason]"
+// - "Signature already used (replay attack)"
+// - "Transaction not found on network"
+```
+
 ## Solana Attestation Service (SAS)
 
 SPL402 supports on-chain server attestations that prove server ownership.
@@ -496,6 +583,7 @@ Creates an SPL-402 server instance.
   scheme?: 'transfer' | 'token-transfer',
   mint?: string,                   // Required for token-transfer
   decimals?: number,               // Required for token-transfer
+  tokenProgram?: 'spl-token' | 'token-2022',  // Token program (default: spl-token)
   rpcUrl?: string,                 // Custom RPC endpoint
   serverInfo?: {
     name?: string,
@@ -503,6 +591,20 @@ Creates an SPL-402 server instance.
     contact?: string,
     capabilities?: string[]
   }
+}
+
+// RoutePrice interface
+interface RoutePrice {
+  path: string;                    // Route path (supports :param patterns)
+  price: number;                   // Price in SOL or tokens
+  tokenGate?: TokenGate;           // Optional token gate requirement
+}
+
+// TokenGate interface
+interface TokenGate {
+  mint: string;                    // Token mint address
+  minimumBalance: number;          // Minimum token balance required
+  tokenProgram?: 'spl-token' | 'token-2022';  // Token program (default: spl-token)
 }
 ```
 
@@ -550,28 +652,32 @@ SPL-402 automatically handles:
 
 ## Examples
 
-Check the [`examples/`](./sdk/examples/) directory for production-ready code:
+Check the [`examples/`](./examples) directory for production-ready code:
 
 **Client Examples:**
-- **[react-example.tsx](./sdk/examples/react-example.tsx)** - React with `useSPL402` hook
-- **[nextjs-app.tsx](./sdk/examples/nextjs-app.tsx)** - Next.js App Router
-- **[vanilla-ts.ts](./sdk/examples/vanilla-ts.ts)** - Vanilla TypeScript
+- **[react-example.tsx](./examples/react-example.tsx)** - React with `useSPL402` hook
+- **[nextjs-app.tsx](./examples/nextjs-app.tsx)** - Next.js App Router
+- **[vanilla-ts.ts](./examples/vanilla-ts.ts)** - Vanilla TypeScript
 
 **Server Examples:**
-- **[basic-server.js](./sdk/examples/basic-server.js)** - Express with SOL payments
-- **[token-server.js](./sdk/examples/token-server.js)** - Accept SPL tokens
-- **[fetch-handler.js](./sdk/examples/fetch-handler.js)** - Edge runtime compatible
+- **[basic-server.js](./examples/basic-server.js)** - Express with SOL payments
+- **[token-server.js](./examples/token-server.js)** - Accept SPL tokens
+- **[tokengate-server.js](./examples/tokengate-server.js)** - Token-gated access
+- **[fetch-handler.js](./examples/fetch-handler.js)** - Edge runtime compatible
 
-See [examples/README.md](./sdk/examples/README.md) for setup instructions.
+See [examples/README.md](./examples/README.md) for setup instructions.
 
 ## Features
 
 ### Core Functionality
 - Direct SOL transfers (native Solana payments)
 - SPL token transfers (SPL402, USDC, USDT, custom tokens)
+- Token2022 support (next-gen Solana tokens with extensions)
+- Token-gated access (restrict routes to token holders)
 - Payment verification with replay attack prevention
 - Cryptographic signature validation
 - Multiple routes with individual pricing
+- Dynamic route parameters (`:param` style)
 - On-chain attestation verification support
 - Client-side server identity verification
 
@@ -624,6 +730,171 @@ const spl402 = createServer({
 | SPL402 | 6 | `DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump` |
 | USDC | 6 | `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v` |
 | USDT | 6 | `Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB` |
+
+## Token2022 Support
+
+SPL-402 fully supports Solana's Token2022 program (also known as Token Extensions). Token2022 is Solana's next-generation token standard with advanced features like transfer fees, interest-bearing tokens, and confidential transfers.
+
+### When to Use Token2022
+
+- **SPL-Token (legacy)**: Use for established tokens like USDC, USDT, and most existing tokens
+- **Token2022**: Use for newer tokens with advanced features, or tokens you're creating with extensions
+
+### Server Configuration
+
+```javascript
+const spl402 = createServer({
+  network: 'mainnet-beta',
+  recipientAddress: 'YOUR_WALLET',
+  rpcUrl: process.env.SOLANA_RPC_URL,
+  scheme: 'token-transfer',
+  mint: 'YOUR_TOKEN2022_MINT_ADDRESS',
+  decimals: 9,
+  tokenProgram: 'token-2022',  // Specify Token2022 program
+  routes: [
+    { path: '/api/premium', price: 100 },
+  ],
+});
+```
+
+### Token Gate with Token2022
+
+Token gates also support Token2022:
+
+```javascript
+routes: [
+  {
+    path: '/api/holders-only',
+    price: 0,
+    tokenGate: {
+      mint: 'YOUR_TOKEN2022_MINT',
+      minimumBalance: 1000,
+      tokenProgram: 'token-2022'  // Specify Token2022 for token gate
+    }
+  }
+]
+```
+
+### How It Works
+
+SPL-402 automatically selects the correct program ID based on the `tokenProgram` setting:
+
+- `'spl-token'` (default): Uses `TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA`
+- `'token-2022'`: Uses `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`
+
+The client automatically handles Token2022 transfers when the server specifies `tokenProgram: 'token-2022'` in the payment requirement.
+
+## Token-Gated Access
+
+Token-gated access allows you to restrict API endpoints to users who hold a minimum balance of a specific token. This is useful for creating exclusive content for token holders without requiring payment.
+
+### How Token Gates Work
+
+1. Client includes their wallet address in the `X-Wallet-Address` header
+2. Server checks the wallet's token balance on-chain
+3. If balance meets minimum requirement, access is granted (no payment needed)
+4. If balance is insufficient, server returns 403 Forbidden
+
+### Basic Token Gate Setup
+
+```javascript
+const spl402 = createServer({
+  network: 'mainnet-beta',
+  recipientAddress: 'YOUR_WALLET',
+  rpcUrl: process.env.SOLANA_RPC_URL,
+  routes: [
+    {
+      path: '/api/holders-only',
+      price: 0,  // Free for token holders
+      tokenGate: {
+        mint: 'DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump',  // SPL402 token
+        minimumBalance: 1000  // Must hold at least 1000 tokens
+      }
+    },
+    {
+      path: '/api/premium',
+      price: 0.001  // Regular paid route
+    }
+  ]
+});
+```
+
+### Token Gate with Payment Fallback
+
+You can combine token gates with payment fallback for hybrid access:
+
+```javascript
+routes: [
+  {
+    path: '/api/exclusive',
+    price: 0.01,  // Pay 0.01 SOL if not a token holder
+    tokenGate: {
+      mint: 'YOUR_TOKEN_MINT',
+      minimumBalance: 500
+    }
+  }
+]
+```
+
+With this configuration:
+- Token holders (500+ tokens): Access is FREE
+- Non-holders: Must pay 0.01 SOL
+
+### Client-Side Implementation
+
+```typescript
+const response = await fetch('https://api.example.com/api/holders-only', {
+  headers: {
+    'X-Wallet-Address': wallet.publicKey.toString()
+  }
+});
+
+if (response.status === 403) {
+  const error = await response.json();
+  console.log('Token gate failed:', error.message);
+  console.log('Required balance:', error.required);
+  console.log('Your balance:', error.balance);
+}
+```
+
+### Token Gate Response Format
+
+**Success (200):** Normal response from your endpoint
+
+**Failure (403):**
+```json
+{
+  "error": "Token gate authorization failed",
+  "message": "Insufficient token balance",
+  "required": 1000,
+  "balance": 250,
+  "mint": "DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump"
+}
+```
+
+### Token Gate with Token2022
+
+```javascript
+routes: [
+  {
+    path: '/api/exclusive',
+    price: 0,
+    tokenGate: {
+      mint: 'YOUR_TOKEN2022_MINT',
+      minimumBalance: 100,
+      tokenProgram: 'token-2022'
+    }
+  }
+]
+```
+
+### Use Cases
+
+- **DAO member areas**: Restrict access to governance token holders
+- **NFT holder perks**: Gate content behind NFT collection ownership
+- **Tiered access**: Different minimum balances for different content tiers
+- **Community features**: Exclusive API endpoints for community members
+- **Beta access**: Limit new features to early supporters
 
 ## Testing
 

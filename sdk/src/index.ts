@@ -4,11 +4,13 @@ export * from './client';
 export * from './server';
 export * from './verify';
 export * from './attestation';
+export * from './tokengate';
 
 export { SPL402Client, createClient, WalletAdapter } from './client';
 export { SPL402Server, createServer, createExpressMiddleware, createFetchMiddleware } from './server';
 export { verifyPayment } from './verify';
-export type { TokenProgram } from './types';
+export { verifyTokenGate, getTokenBalance } from './tokengate';
+export type { TokenProgram, TokenGate, TokenGateVerifyResult } from './types';
 
 export {
   queryVerifiedServers,

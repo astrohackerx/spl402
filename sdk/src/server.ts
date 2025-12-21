@@ -5,8 +5,11 @@ import {
   RoutePrice,
   SPL402_VERSION,
   ServerMetadata,
+  TokenGate,
+  TokenGateVerifyResult,
 } from './types';
 import { verifyPayment } from './verify';
+import { verifyTokenGate } from './tokengate';
 
 export class SPL402Server {
   private config: ServerConfig;
@@ -77,6 +80,30 @@ export class SPL402Server {
     };
   }
 
+  getRouteTokenGate(path: string, method: string = 'GET'): TokenGate | null {
+    const route = this.matchRoute(path, method);
+    return route?.tokenGate || null;
+  }
+
+  async verifyTokenGateAccess(
+    walletAddress: string,
+    path: string,
+    method: string = 'GET'
+  ): Promise<TokenGateVerifyResult> {
+    const tokenGate = this.getRouteTokenGate(path, method);
+
+    if (!tokenGate) {
+      return { authorized: false, reason: 'No token gate configured' };
+    }
+
+    return verifyTokenGate(
+      walletAddress,
+      tokenGate,
+      this.config.network,
+      this.config.rpcUrl
+    );
+  }
+
   async verifyPayment(payment: SPL402PaymentPayload, expectedAmount: number): Promise<{
     valid: boolean;
     reason?: string;
@@ -128,15 +155,35 @@ export class SPL402Server {
     path: string,
     method: string = 'GET',
     headers: Record<string, string>
-  ): Promise<{ authorized: boolean; reason?: string; payment?: SPL402PaymentPayload }> {
-    const requirement = this.getPaymentRequirement(path, method);
+  ): Promise<{
+    authorized: boolean;
+    reason?: string;
+    payment?: SPL402PaymentPayload;
+    tokenGateResult?: TokenGateVerifyResult;
+  }> {
+    const route = this.matchRoute(path, method);
 
-    if (!requirement) {
+    if (!route) {
       return { authorized: false, reason: 'Route not found' };
     }
 
-    if (requirement.amount === 0) {
+    if (route.price === 0 && !route.tokenGate) {
       return { authorized: true };
+    }
+
+    const walletHeader = headers['x-wallet'] || headers['X-Wallet'];
+    if (route.tokenGate && walletHeader) {
+      const tokenGateResult = await this.verifyTokenGateAccess(walletHeader, path, method);
+      if (tokenGateResult.authorized) {
+        return { authorized: true, tokenGateResult };
+      }
+    }
+
+    if (route.price === 0 && route.tokenGate) {
+      return {
+        authorized: false,
+        reason: 'Token gate verification failed',
+      };
     }
 
     const paymentHeader = headers['x-payment'] || headers['X-Payment'];
@@ -154,7 +201,7 @@ export class SPL402Server {
       return { authorized: false, reason: 'Invalid payment format' };
     }
 
-    const verification = await this.verifyPayment(payment, requirement.amount);
+    const verification = await this.verifyPayment(payment, route.price);
 
     if (!verification.valid) {
       return {
@@ -189,6 +236,7 @@ export class SPL402Server {
         path: route.path,
         method: route.method || 'GET',
         price: route.price,
+        tokenGate: route.tokenGate,
       })),
       capabilities: this.config.serverInfo?.capabilities,
     };
@@ -272,6 +320,7 @@ export function createExpressMiddleware(server: SPL402Server) {
     }
 
     req.spl402Payment = result.payment;
+    req.spl402TokenGate = result.tokenGateResult;
     next();
   };
 }

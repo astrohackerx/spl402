@@ -144,6 +144,16 @@ Accept SPL tokens (USDC, etc.):
 
 **Use case:** Stablecoin payments
 
+#### Token-Gated Access (`tokengate-server.js`)
+
+Restrict routes to token holders:
+- Token balance verification on-chain
+- Free access for token holders
+- Hybrid routes (free for holders, paid for others)
+- Token2022 support
+
+**Use case:** DAO member areas, holder-only content, tiered access
+
 #### Edge Functions (`fetch-handler.js`)
 
 Serverless/edge compatible:

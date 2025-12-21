@@ -249,6 +249,66 @@ const spl402 = createServer({
 // Client - no changes needed! Automatically uses token payments
 ```
 
+### Token2022 Payments
+
+For tokens using Solana's Token2022 program:
+
+```javascript
+const spl402 = createServer({
+  network: 'mainnet-beta',
+  recipientAddress: 'YOUR_WALLET',
+  rpcUrl: process.env.SOLANA_RPC_URL,
+  scheme: 'token-transfer',
+  mint: 'YOUR_TOKEN2022_MINT',
+  decimals: 9,
+  tokenProgram: 'token-2022',  // Use Token2022 program
+  routes: [
+    { path: '/api/data', price: 100 }
+  ]
+});
+```
+
+### Token-Gated Access
+
+Restrict routes to token holders (no payment required):
+
+```javascript
+const spl402 = createServer({
+  network: 'mainnet-beta',
+  recipientAddress: 'YOUR_WALLET',
+  rpcUrl: process.env.SOLANA_RPC_URL,
+  routes: [
+    {
+      path: '/api/holders-only',
+      price: 0,  // Free for token holders
+      tokenGate: {
+        mint: 'DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump',
+        minimumBalance: 1000  // Must hold 1000+ tokens
+      }
+    },
+    {
+      path: '/api/hybrid',
+      price: 0.01,  // Pay if not a holder
+      tokenGate: {
+        mint: 'YOUR_TOKEN_MINT',
+        minimumBalance: 500
+      }
+    }
+  ]
+});
+```
+
+**Client-side for token gates:**
+
+```typescript
+// Include wallet address in header
+const response = await fetch('https://api.example.com/api/holders-only', {
+  headers: {
+    'X-Wallet-Address': wallet.publicKey.toString()
+  }
+});
+```
+
 ## Common Issues
 
 **"Payment validation failed"**
