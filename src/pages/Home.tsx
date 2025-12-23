@@ -1,4 +1,4 @@
-import { Code, Zap, Lock, Globe, ArrowRight, Github, Check, ExternalLink, Download, Sparkles, Rocket, BookOpen, Play } from 'lucide-react';
+import { Code, Zap, Lock, Globe, ArrowRight, Github, Check, ExternalLink, Download, Rocket, BookOpen, Server } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
@@ -35,18 +35,18 @@ export default function Home() {
           <div className="text-center max-w-4xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#14F195]/10 border border-[#14F195]/20 rounded-full mb-8 flex-wrap justify-center">
               <Zap size={14} className="text-[#14F195]" />
-              <span className="text-xs sm:text-sm text-[#14F195] font-medium text-center">Solana Native &nbsp;|&nbsp; Built from scratch</span>
+              <span className="text-xs sm:text-sm text-[#14F195] font-medium text-center">Payment-Gated APIs &nbsp;|&nbsp; Agent Economy</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-6">
-              HTTP 402 for{' '}
+              Accept Crypto Payments for{' '}
               <span className="bg-gradient-to-r from-[#9945FF] to-[#14F195] text-transparent bg-clip-text">
-                Solana
+                APIs & AI Agents
               </span>
             </h1>
 
             <p className="text-base sm:text-lg md:text-xl text-gray-400 mb-8 leading-relaxed max-w-2xl mx-auto">
-              Decentralized Solana Payment Layer for APIs & Autonomous agents. Instant micropayments. 3x faster than x402. SAS-backed verification.
+              Add crypto payments to any API in one line of code. Zero fees, instant settlement on Solana.
             </p>
 
             {npmDownloads && (
@@ -60,146 +60,22 @@ export default function Home() {
               </div>
             )}
 
-            <div className="flex flex-col items-center gap-6 mb-6 w-full">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-6xl">
-                <div className="group bg-gradient-to-br from-[#0D0D0D] to-[#1a1a1a] border border-white/10 hover:border-[#9945FF]/30 rounded-xl p-5 transition-all">
-                  <div className="flex items-start gap-3 mb-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-[#9945FF] to-[#14F195] rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Rocket size={20} className="text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-base mb-1">Starter Kit</h3>
-                      <p className="text-xs text-gray-400">Full-stack template ready to deploy</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    {/* <a href="https://live.spl402.org" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
-                      <Play size={12} />
-                      Live Demo
-                    </a> */}
-                    <a href="https://github.com/astrohackerx/spl402-starter-kit" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
-                      <Github size={12} />
-                      Code
-                    </a>
-                  </div>
-                </div>
-
-                <div className="group bg-gradient-to-br from-[#0D0D0D] to-[#1a1a1a] border border-white/10 hover:border-[#9945FF]/30 rounded-xl p-5 transition-all">
-                  <div className="flex items-start gap-3 mb-3">
-                    <div className="w-10 h-10 bg-[#9945FF] rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Sparkles size={20} className="text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-base mb-1">GPT402</h3>
-                      <p className="text-xs text-gray-400">Pay-per-use AI chat interface</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    {/* <a href="https://gpt.spl402.org" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
-                      <Play size={12} />
-                      Live Demo
-                    </a> */}
-                    <a href="https://github.com/astrohackerx/gpt-402" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
-                      <Github size={12} />
-                      Code
-                    </a>
-                  </div>
-                </div>
-
-                <div className="group bg-gradient-to-br from-[#0D0D0D] to-[#1a1a1a] border border-white/10 hover:border-[#14F195]/30 rounded-xl p-5 transition-all">
-                  <div className="flex items-start gap-3 mb-3">
-                    <div className="w-10 h-10 bg-[#14F195] rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Sparkles size={20} className="text-black" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-base mb-1">Chess402</h3>
-                      <p className="text-xs text-gray-400">Blockchain-powered chess platform</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    {/* <a href="https://chess402.online" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
-                      <Play size={12} />
-                      Live Demo
-                    </a> */}
-                    <a href="https://github.com/astrohackerx/chess402" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
-                      <Github size={12} />
-                      Code
-                    </a>
-                  </div>
-                </div>
-
-                <div className="group bg-gradient-to-br from-[#0D0D0D] to-[#1a1a1a] border border-white/10 hover:border-[#9945FF]/30 rounded-xl p-5 transition-all">
-                  <div className="flex items-start gap-3 mb-3">
-                    <div className="w-10 h-10 bg-[#9945FF] rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Globe size={20} className="text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-base mb-1">AI Agent Marketplace</h3>
-                      <p className="text-xs text-gray-400">Decentralized AI service platform</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    {/* <a href="https://ai.spl402.org" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
-                      <Play size={12} />
-                      Live Demo
-                    </a> */}
-                    <a href="https://github.com/astrohackerx/AiMarketplace" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
-                      <Github size={12} />
-                      Code
-                    </a>
-                  </div>
-                </div>
-
-                <div className="group bg-gradient-to-br from-[#0D0D0D] to-[#1a1a1a] border border-white/10 hover:border-[#9945FF]/30 rounded-xl p-5 transition-all">
-                  <div className="flex items-start gap-3 mb-3">
-                    <div className="w-10 h-10 bg-[#9945FF] rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Zap size={20} className="text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-base mb-1">Decider Agent</h3>
-                      <p className="text-xs text-gray-400">Autonomous AI decision making</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    {/* <a href="https://aiagent.spl402.org" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
-                      <Play size={12} />
-                      Live Demo
-                    </a> */}
-                    <a href="https://github.com/astrohackerx/agent402" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
-                      <Github size={12} />
-                      Code
-                    </a>
-                  </div>
-                </div>
-
-                <div className="group bg-gradient-to-br from-[#0D0D0D] to-[#1a1a1a] border border-white/10 hover:border-[#9945FF]/30 rounded-xl p-5 transition-all">
-                  <div className="flex items-start gap-3 mb-3">
-                    <div className="w-10 h-10 bg-[#9945FF] rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Code size={20} className="text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-base mb-1">OpenRouter</h3>
-                      <p className="text-xs text-gray-400">Unified AI model routing</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    {/* <a href="https://openrouter.spl402.org" target="_blank" className="flex-1 px-3 py-2 bg-[#14F195]/10 hover:bg-[#14F195]/20 border border-[#14F195]/30 rounded-lg text-xs font-medium text-[#14F195] flex items-center justify-center gap-1 transition-colors">
-                      <Play size={12} />
-                      Live Demo
-                    </a> */}
-                    <a href="https://github.com/astrohackerx/spl402-OpenRouter" target="_blank" className="flex-1 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
-                      <Github size={12} />
-                      Code
-                    </a>
-                  </div>
-                </div>
+            <div className="flex flex-col items-center gap-4 w-full max-w-3xl mx-auto">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full">
+                <a
+                  href="/templates"
+                  className="group px-8 py-4 bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:opacity-90 rounded-xl font-semibold transition-opacity flex items-center justify-center gap-2"
+                >
+                  View All Templates & Examples
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                </a>
               </div>
 
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full max-w-2xl mt-4">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full">
                 <a
                   href="https://pump.fun/coin/DXgxW5ESEpvTA194VJZRxwXADRuZKPoeadLoK7o5pump"
                   target='_blank'
-                  className="group px-8 py-4 bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:opacity-90 rounded-xl font-semibold transition-opacity flex items-center justify-center gap-2"
+                  className="group px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#9945FF]/30 rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
                 >
                   <Rocket size={18} />
                   Trade SPL402
@@ -261,29 +137,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="mt-12 max-w-2xl mx-auto">
-              <div className="bg-[#0D0D0D] border border-white/10 rounded-xl p-6">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm text-gray-400">Quick Install</span>
-                  <button
-                    onClick={handleCopy}
-                    className="flex items-center gap-1 text-xs text-[#14F195] hover:text-[#14F195]/80 transition-colors"
-                  >
-                    {copied ? (
-                      <>
-                        <Check size={14} />
-                        Copied!
-                      </>
-                    ) : (
-                      'Copy'
-                    )}
-                  </button>
-                </div>
-                <code className="text-sm font-mono text-[#14F195]">
-                  npm install spl402
-                </code>
-              </div>
-            </div>
+          
           </div>
         </div>
 
@@ -295,7 +149,7 @@ export default function Home() {
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-black mb-4">What is SPL-402?</h2>
             <p className="text-xl text-gray-400 leading-relaxed">
-              Solana Payment Layer 402 brings the HTTP 402 Payment Required status code to life on Solana
+              Payment protocol for payment-gated APIs and autonomous commerce. Accept crypto payments for any API, data service, or AI agent interaction. HTTP 402 Payment Required on Solana.
             </p>
           </div>
 
@@ -730,6 +584,39 @@ export default function Home() {
                 <p className="text-gray-400">Built-in replay attack prevention. On-chain verification. No trust required.</p>
               </div>
             </div>
+
+            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
+              <div className="relative">
+                <div className="w-12 h-12 bg-[#9945FF]/10 border border-[#9945FF]/20 rounded-xl flex items-center justify-center mb-4">
+                  <Zap size={24} className="text-[#9945FF]" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">Token2022 Support</h3>
+                <p className="text-gray-400">Full support for Solana's next-gen token standard with advanced features.</p>
+              </div>
+            </div>
+
+            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
+              <div className="relative">
+                <div className="w-12 h-12 bg-[#14F195]/10 border border-[#14F195]/20 rounded-xl flex items-center justify-center mb-4">
+                  <Lock size={24} className="text-[#14F195]" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">Token-Gated Access</h3>
+                <p className="text-gray-400">Restrict endpoints to token holders without requiring payment. Perfect for DAOs and communities.</p>
+              </div>
+            </div>
+
+            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
+              <div className="relative">
+                <div className="w-12 h-12 bg-[#9945FF]/10 border border-[#9945FF]/20 rounded-xl flex items-center justify-center mb-4">
+                  <Check size={24} className="text-[#9945FF]" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">SAS Attestation</h3>
+                <p className="text-gray-400">On-chain server identity verification. Build trust with cryptographic proof.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -855,10 +742,10 @@ app.listen(3000);`}</code>
       <section className="py-20 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-6">
-            Ready to add payments?
+            Ready to build the agent economy?
           </h2>
           <p className="text-xl text-gray-400 mb-8">
-            Start accepting payments in minutes. No middlemen, no platform fees.
+            Enable autonomous payments for AI agents in minutes. Direct transfers, zero platform fees, built for machine commerce.
           </p>
           <div className="flex items-center justify-center gap-4">
             <a

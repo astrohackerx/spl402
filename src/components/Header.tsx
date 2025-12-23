@@ -12,10 +12,14 @@ export function Header() {
 
         <nav className="hidden lg:flex items-center gap-8">
           <a href="/" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Home</a>
-         
+
           {/* <a href="/verify" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Verify</a>
           <a href="/explorer" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Explorer</a> */}
-           <a href="/docs" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Docs</a>
+          
+           
+           <a href="/templates" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Templates</a>
+           <a href="/proxy" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Proxy</a>
+            <a href="/docs" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm">Docs</a>
           <a
             href="https://github.com/astrohackerx/spl402"
             target="_blank"
@@ -41,7 +45,11 @@ export function Header() {
             <a href="/" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Home</a>
             {/* <a href="/verify" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Verify</a>
             <a href="/explorer" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Explorer</a> */}
-            <a href="/docs" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Docs</a>
+            
+           
+            <a href="/templates" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Templates</a>
+             <a href="/proxy" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Proxy</a>
+<a href="/docs" className="text-gray-400 hover:text-[#14F195] transition-colors text-sm py-2" onClick={() => setMobileMenuOpen(false)}>Docs</a>
             <a
               href="https://github.com/astrohackerx/spl402"
               target="_blank"
