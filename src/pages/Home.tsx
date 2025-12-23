@@ -66,7 +66,15 @@ export default function Home() {
                   href="/templates"
                   className="group px-8 py-4 bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:opacity-90 rounded-xl font-semibold transition-opacity flex items-center justify-center gap-2"
                 >
-                  View All Templates & Examples
+                  View Templates
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                </a>
+                  <a
+                  href="https://arena402.org"
+                  target="_blank"
+                  className="group px-8 py-4 bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:opacity-90 rounded-xl font-semibold transition-opacity flex items-center justify-center gap-2"
+                >
+                  Enter Arena402
                   <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </a>
               </div>
@@ -143,71 +151,112 @@ export default function Home() {
 
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-gradient-to-br from-[#9945FF]/20 to-[#14F195]/20 blur-3xl -z-10" />
       </section>
-
-      <section className="py-20 px-4 sm:px-6 bg-gradient-to-b from-black to-[#0D0D0D]">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-black mb-4">What is SPL-402?</h2>
-            <p className="text-xl text-gray-400 leading-relaxed">
-              Payment protocol for payment-gated APIs and autonomous commerce. Accept crypto payments for any API, data service, or AI agent interaction. HTTP 402 Payment Required on Solana.
-            </p>
+      <section id="features" className="py-20 px-4 sm:px-6 bg-[#0D0D0D]">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-black mb-4">What is spl402</h2>
+            <p className="text-gray-400 text-lg">Payment protocol for payment-gated APIs and autonomous commerce. Accept crypto payments for any API, data service, or AI agent interaction. HTTP 402 Payment Required on Solana.</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 mb-12">
-            <div className="bg-[#0D0D0D] border border-[#9945FF]/20 rounded-xl p-6">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-[#9945FF]/10 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <Zap size={16} className="text-[#9945FF]" />
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
+              <div className="relative">
+                <div className="w-12 h-12 bg-[#9945FF]/10 border border-[#9945FF]/20 rounded-xl flex items-center justify-center mb-4">
+                  <Zap size={24} className="text-[#9945FF]" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-bold mb-2">Direct Payments</h3>
-                  <p className="text-gray-400 text-sm">Wallet-to-wallet transfers with no intermediaries</p>
-                </div>
+                <h3 className="text-xl font-bold mb-2">Lightning Fast</h3>
+                <p className="text-gray-400">~500ms payment verification. 2-3x faster than alternatives. Zero middlemen.</p>
               </div>
             </div>
 
-            <div className="bg-[#0D0D0D] border border-[#14F195]/20 rounded-xl p-6">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-[#14F195]/10 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <Lock size={16} className="text-[#14F195]" />
+            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
+              <div className="relative">
+                <div className="w-12 h-12 bg-[#14F195]/10 border border-[#14F195]/20 rounded-xl flex items-center justify-center mb-4">
+                  <Lock size={24} className="text-[#14F195]" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-bold mb-2">Zero Platform Fees</h3>
-                  <p className="text-gray-400 text-sm">Only pay Solana network transaction fees (~$0.00001)</p>
-                </div>
+                <h3 className="text-xl font-bold mb-2">Zero Platform Fees</h3>
+                <p className="text-gray-400">Direct wallet transfers. Only pay Solana network fees (~$0.00001 per transaction).</p>
               </div>
             </div>
 
-            <div className="bg-[#0D0D0D] border border-[#9945FF]/20 rounded-xl p-6">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-[#9945FF]/10 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <Globe size={16} className="text-[#9945FF]" />
+            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
+              <div className="relative">
+                <div className="w-12 h-12 bg-[#9945FF]/10 border border-[#9945FF]/20 rounded-xl flex items-center justify-center mb-4">
+                  <Code size={24} className="text-[#9945FF]" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-bold mb-2">HTTP-Native</h3>
-                  <p className="text-gray-400 text-sm">Works with standard HTTP/fetch APIs</p>
-                </div>
+                <h3 className="text-xl font-bold mb-2">Simple Integration</h3>
+                <p className="text-gray-400">React hooks, TypeScript support, wallet adapter ready. 5 minutes to production.</p>
               </div>
             </div>
 
-            <div className="bg-[#0D0D0D] border border-[#14F195]/20 rounded-xl p-6">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-[#14F195]/10 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <Code size={16} className="text-[#14F195]" />
+            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
+              <div className="relative">
+                <div className="w-12 h-12 bg-[#14F195]/10 border border-[#14F195]/20 rounded-xl flex items-center justify-center mb-4">
+                  <Globe size={24} className="text-[#14F195]" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-bold mb-2">Token Flexibility</h3>
-                  <p className="text-gray-400 text-sm">Accept SOL, USDC, USDT, or any SPL token</p>
-                </div>
+                <h3 className="text-xl font-bold mb-2">Edge Compatible</h3>
+                <p className="text-gray-400">Works with Cloudflare Workers, Vercel Edge, Deno Deploy. Universal runtime support.</p>
               </div>
             </div>
-          </div>
 
-          <div className="text-center">
-            <p className="text-lg text-gray-400">
-              Think of it as <span className="text-[#14F195] font-semibold">"pay-per-request"</span> for your APIs,
-              without the overhead of traditional payment processors.
-            </p>
+            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
+              <div className="relative">
+                <div className="w-12 h-12 bg-[#9945FF]/10 border border-[#9945FF]/20 rounded-xl flex items-center justify-center mb-4">
+                  <Check size={24} className="text-[#9945FF]" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">Production Ready</h3>
+                <p className="text-gray-400">Full TypeScript support. React hooks. Battle-tested with comprehensive examples.</p>
+              </div>
+            </div>
+
+            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
+              <div className="relative">
+                <div className="w-12 h-12 bg-[#14F195]/10 border border-[#14F195]/20 rounded-xl flex items-center justify-center mb-4">
+                  <Lock size={24} className="text-[#14F195]" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">Secure by Default</h3>
+                <p className="text-gray-400">Built-in replay attack prevention. On-chain verification. No trust required.</p>
+              </div>
+            </div>
+
+            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
+              <div className="relative">
+                <div className="w-12 h-12 bg-[#9945FF]/10 border border-[#9945FF]/20 rounded-xl flex items-center justify-center mb-4">
+                  <Zap size={24} className="text-[#9945FF]" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">Token2022 Support</h3>
+                <p className="text-gray-400">Full support for Solana's next-gen token standard with advanced features.</p>
+              </div>
+            </div>
+
+            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
+              <div className="relative">
+                <div className="w-12 h-12 bg-[#14F195]/10 border border-[#14F195]/20 rounded-xl flex items-center justify-center mb-4">
+                  <Lock size={24} className="text-[#14F195]" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">Token-Gated Access</h3>
+                <p className="text-gray-400">Restrict endpoints to token holders without requiring payment. Perfect for DAOs and communities.</p>
+              </div>
+            </div>
+
+            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
+              <div className="relative">
+                <div className="w-12 h-12 bg-[#9945FF]/10 border border-[#9945FF]/20 rounded-xl flex items-center justify-center mb-4">
+                  <Check size={24} className="text-[#9945FF]" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">SAS Attestation</h3>
+                <p className="text-gray-400">On-chain server identity verification. Build trust with cryptographic proof.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -511,115 +560,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="features" className="py-20 px-4 sm:px-6 bg-[#0D0D0D]">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-black mb-4">Features</h2>
-            <p className="text-gray-400 text-lg">Everything you need for production</p>
-          </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
-              <div className="relative">
-                <div className="w-12 h-12 bg-[#9945FF]/10 border border-[#9945FF]/20 rounded-xl flex items-center justify-center mb-4">
-                  <Zap size={24} className="text-[#9945FF]" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">Lightning Fast</h3>
-                <p className="text-gray-400">~500ms payment verification. 2-3x faster than alternatives. Zero middlemen.</p>
-              </div>
-            </div>
-
-            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
-              <div className="relative">
-                <div className="w-12 h-12 bg-[#14F195]/10 border border-[#14F195]/20 rounded-xl flex items-center justify-center mb-4">
-                  <Lock size={24} className="text-[#14F195]" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">Zero Platform Fees</h3>
-                <p className="text-gray-400">Direct wallet transfers. Only pay Solana network fees (~$0.00001 per transaction).</p>
-              </div>
-            </div>
-
-            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
-              <div className="relative">
-                <div className="w-12 h-12 bg-[#9945FF]/10 border border-[#9945FF]/20 rounded-xl flex items-center justify-center mb-4">
-                  <Code size={24} className="text-[#9945FF]" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">Simple Integration</h3>
-                <p className="text-gray-400">React hooks, TypeScript support, wallet adapter ready. 5 minutes to production.</p>
-              </div>
-            </div>
-
-            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
-              <div className="relative">
-                <div className="w-12 h-12 bg-[#14F195]/10 border border-[#14F195]/20 rounded-xl flex items-center justify-center mb-4">
-                  <Globe size={24} className="text-[#14F195]" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">Edge Compatible</h3>
-                <p className="text-gray-400">Works with Cloudflare Workers, Vercel Edge, Deno Deploy. Universal runtime support.</p>
-              </div>
-            </div>
-
-            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
-              <div className="relative">
-                <div className="w-12 h-12 bg-[#9945FF]/10 border border-[#9945FF]/20 rounded-xl flex items-center justify-center mb-4">
-                  <Check size={24} className="text-[#9945FF]" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">Production Ready</h3>
-                <p className="text-gray-400">Full TypeScript support. React hooks. Battle-tested with comprehensive examples.</p>
-              </div>
-            </div>
-
-            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
-              <div className="relative">
-                <div className="w-12 h-12 bg-[#14F195]/10 border border-[#14F195]/20 rounded-xl flex items-center justify-center mb-4">
-                  <Lock size={24} className="text-[#14F195]" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">Secure by Default</h3>
-                <p className="text-gray-400">Built-in replay attack prevention. On-chain verification. No trust required.</p>
-              </div>
-            </div>
-
-            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
-              <div className="relative">
-                <div className="w-12 h-12 bg-[#9945FF]/10 border border-[#9945FF]/20 rounded-xl flex items-center justify-center mb-4">
-                  <Zap size={24} className="text-[#9945FF]" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">Token2022 Support</h3>
-                <p className="text-gray-400">Full support for Solana's next-gen token standard with advanced features.</p>
-              </div>
-            </div>
-
-            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
-              <div className="relative">
-                <div className="w-12 h-12 bg-[#14F195]/10 border border-[#14F195]/20 rounded-xl flex items-center justify-center mb-4">
-                  <Lock size={24} className="text-[#14F195]" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">Token-Gated Access</h3>
-                <p className="text-gray-400">Restrict endpoints to token holders without requiring payment. Perfect for DAOs and communities.</p>
-              </div>
-            </div>
-
-            <div className="group relative bg-[#0D0D0D] border border-white/10 hover:border-[#14F195]/30 rounded-2xl p-8 transition-all">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF]/0 to-[#14F195]/0 group-hover:from-[#9945FF]/5 group-hover:to-[#14F195]/5 rounded-2xl transition-all" />
-              <div className="relative">
-                <div className="w-12 h-12 bg-[#9945FF]/10 border border-[#9945FF]/20 rounded-xl flex items-center justify-center mb-4">
-                  <Check size={24} className="text-[#9945FF]" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">SAS Attestation</h3>
-                <p className="text-gray-400">On-chain server identity verification. Build trust with cryptographic proof.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section id="docs" className="py-20 px-4 sm:px-6 bg-gradient-to-b from-black to-[#0D0D0D]">
         <div className="max-w-7xl mx-auto">
